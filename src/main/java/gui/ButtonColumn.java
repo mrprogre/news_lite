@@ -11,10 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
-    JTable table;
-    JButton renderButton;
-    JButton editButton;
-    String text;
+    final JTable table;
+    final JButton renderButton;
+    final JButton editButton;
+    //String text;
 
     public ButtonColumn(JTable table, int column) {
         super();
@@ -49,21 +49,23 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        //text = (value == null) ? ";" : value.toString();
-        //editButton.setText( text );
         return editButton;
     }
 
     public Object getCellEditorValue() {
-        return text;
+        try {
+            return ButtonColumn.class.getMethod("getCellEditorValue");
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
         SQLite sqlite = new SQLite();
         fireEditingStopped();
-        int row_with_source = table.getSelectedRow();
-        int row_with_exlude_word = Gui.tableForAnalysis.getSelectedRow();
-        int del_row_with_exlude_word = 0;
+        int rowWithSource = table.getSelectedRow();
+        int rowWithExcludeWord = Gui.tableForAnalysis.getSelectedRow();
+        int delRowWithExcludeWord = 0;
 
         // определяем активное окно
         Window window = FocusManager.getCurrentManager().getActiveWindow();
@@ -76,25 +78,25 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         }
         if (window.toString().contains("Excluded")) {
             activeWindow = 3;
-            del_row_with_exlude_word = Dialogs.table.getSelectedRow();
+            delRowWithExcludeWord = Dialogs.table.getSelectedRow();
         }
 
         // окно таблицы с анализом частоты слов на основной панели (добавляем в базу)
-        if (activeWindow == 1 && row_with_exlude_word != -1) {
-            row_with_exlude_word = Gui.tableForAnalysis.convertRowIndexToModel(row_with_exlude_word);
-            String source = (String) Gui.modelForAnalysis.getValueAt(row_with_exlude_word, 1);
+        if (activeWindow == 1 && rowWithExcludeWord != -1) {
+            rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
+            String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
             // удаление из диалогового окна
-            Gui.modelForAnalysis.removeRow(row_with_exlude_word);
+            Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
             // добавление в базу данных и файл excluded.txt
             sqlite.insertNewExcludedWord(source);
         }
 
         // окно источников RSS
-        if (activeWindow == 2 && row_with_source != -1) {
-            row_with_source = table.convertRowIndexToModel(row_with_source);
-            String source = (String) Dialogs.model.getValueAt(row_with_source, 1);
+        if (activeWindow == 2 && rowWithSource != -1) {
+            rowWithSource = table.convertRowIndexToModel(rowWithSource);
+            String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
             // удаление из диалогового окна
-            Dialogs.model.removeRow(row_with_source);
+            Dialogs.model.removeRow(rowWithSource);
             // удаление из файла sources.txt
             //Common.delLine(source, Main.sourcesPath);
             // удаление из базы данных
@@ -102,11 +104,11 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         }
 
         // окно с исключенными из анализа слов (удаляем из базы)
-        if (activeWindow == 3 && del_row_with_exlude_word != -1) {
-            del_row_with_exlude_word = Dialogs.table.convertRowIndexToModel(del_row_with_exlude_word);
-            String source = (String) Dialogs.model.getValueAt(del_row_with_exlude_word, 1);
+        if (activeWindow == 3 && delRowWithExcludeWord != -1) {
+            delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
+            String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
             // удаление из диалогового окна
-            Dialogs.model.removeRow(del_row_with_exlude_word);
+            Dialogs.model.removeRow(delRowWithExcludeWord);
             // удаление из файла excluded.txt
             //Common.delLine(source, Main.excludedPath);
             // удаление из базы данных

@@ -58,7 +58,7 @@ public class ExportToExcel {
                 wcf_link.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 wcf_link.setWrap(true);
 
-                //WritableCellFormat wcf_noborder = new WritableCellFormat(wf);
+                //WritableCellFormat wcf_no_border = new WritableCellFormat(wf);
 
                 WritableCellFormat wcf = new WritableCellFormat(wf);
                 wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);

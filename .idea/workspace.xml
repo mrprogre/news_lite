@@ -9,7 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9e6d6f99-cebb-4fd8-99d4-ae1b59f22e89" name="Default Changelist" comment="feat: рефакторинг" />
+    <list default="true" id="9e6d6f99-cebb-4fd8-99d4-ae1b59f22e89" name="Default Changelist" comment="feat: уточнение пути к БД" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +33,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="1" />
   </component>
@@ -51,7 +54,9 @@
     &quot;last_opened_file_path&quot;: &quot;D:/Downloads/!work/Seafile/files/java&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -163,76 +168,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1616704248449</updated>
-    </task>
-    <task id="LOCAL-00210" summary="feat: отображение долгого времени поиска в консоли">
-      <created>1648195372484</created>
-      <option name="number" value="00210" />
-      <option name="presentableId" value="LOCAL-00210" />
-      <option name="project" value="LOCAL" />
-      <updated>1648195372484</updated>
-    </task>
-    <task id="LOCAL-00211" summary="feat: отображение долгого времени поиска в консоли">
-      <created>1648195404236</created>
-      <option name="number" value="00211" />
-      <option name="presentableId" value="LOCAL-00211" />
-      <option name="project" value="LOCAL" />
-      <updated>1648195404236</updated>
-    </task>
-    <task id="LOCAL-00212" summary="feat: отображение долгого времени поиска в консоли">
-      <created>1648196418888</created>
-      <option name="number" value="00212" />
-      <option name="presentableId" value="LOCAL-00212" />
-      <option name="project" value="LOCAL" />
-      <updated>1648196418891</updated>
-    </task>
-    <task id="LOCAL-00213" summary="info: оптимизация работы с БД">
-      <created>1648826332453</created>
-      <option name="number" value="00213" />
-      <option name="presentableId" value="LOCAL-00213" />
-      <option name="project" value="LOCAL" />
-      <updated>1648826332453</updated>
-    </task>
-    <task id="LOCAL-00214" summary="info: время поиска">
-      <created>1648906899583</created>
-      <option name="number" value="00214" />
-      <option name="presentableId" value="LOCAL-00214" />
-      <option name="project" value="LOCAL" />
-      <updated>1648906899583</updated>
-    </task>
-    <task id="LOCAL-00215" summary="feat: добавлен тест проверки соединения с интернетом">
-      <created>1649409544158</created>
-      <option name="number" value="00215" />
-      <option name="presentableId" value="LOCAL-00215" />
-      <option name="project" value="LOCAL" />
-      <updated>1649409544159</updated>
-    </task>
-    <task id="LOCAL-00216" summary="feat: добавлен тест">
-      <created>1649409807158</created>
-      <option name="number" value="00216" />
-      <option name="presentableId" value="LOCAL-00216" />
-      <option name="project" value="LOCAL" />
-      <updated>1649409807158</updated>
-    </task>
-    <task id="LOCAL-00217" summary="feat: добавлен тест">
-      <created>1649409823612</created>
-      <option name="number" value="00217" />
-      <option name="presentableId" value="LOCAL-00217" />
-      <option name="project" value="LOCAL" />
-      <updated>1649409823612</updated>
-    </task>
-    <task id="LOCAL-00218" summary="feat: тест подключения к SQLite">
-      <created>1649410741408</created>
-      <option name="number" value="00218" />
-      <option name="presentableId" value="LOCAL-00218" />
-      <option name="project" value="LOCAL" />
-      <updated>1649410741409</updated>
-    </task>
-    <task id="LOCAL-00219" summary="feat: шире интерфейс">
-      <created>1651238676663</created>
-      <option name="number" value="00219" />
-      <option name="presentableId" value="LOCAL-00219" />
-      <option name="project" value="LOCAL" />
-      <updated>1651238676664</updated>
     </task>
     <task id="LOCAL-00220" summary="feat: шире интерфейс 1.2.">
       <created>1651239688634</created>
@@ -507,7 +442,77 @@
       <option name="project" value="LOCAL" />
       <updated>1651851000625</updated>
     </task>
-    <option name="localTasksCounter" value="259" />
+    <task id="LOCAL-00259" summary="feat: рефакторинг">
+      <created>1651851286619</created>
+      <option name="number" value="00259" />
+      <option name="presentableId" value="LOCAL-00259" />
+      <option name="project" value="LOCAL" />
+      <updated>1651851286619</updated>
+    </task>
+    <task id="LOCAL-00260" summary="feat: рефакторинг">
+      <created>1651851322171</created>
+      <option name="number" value="00260" />
+      <option name="presentableId" value="LOCAL-00260" />
+      <option name="project" value="LOCAL" />
+      <updated>1651851322171</updated>
+    </task>
+    <task id="LOCAL-00261" summary="feat: рефакторинг - цвет шрифтов и бэк">
+      <created>1652101159640</created>
+      <option name="number" value="00261" />
+      <option name="presentableId" value="LOCAL-00261" />
+      <option name="project" value="LOCAL" />
+      <updated>1652101159640</updated>
+    </task>
+    <task id="LOCAL-00262" summary="feat: рефакторинг - убрать лишний цикл">
+      <created>1652101493032</created>
+      <option name="number" value="00262" />
+      <option name="presentableId" value="LOCAL-00262" />
+      <option name="project" value="LOCAL" />
+      <updated>1652101493032</updated>
+    </task>
+    <task id="LOCAL-00263" summary="feat: рефакторинг общий">
+      <created>1652183080938</created>
+      <option name="number" value="00263" />
+      <option name="presentableId" value="LOCAL-00263" />
+      <option name="project" value="LOCAL" />
+      <updated>1652183080938</updated>
+    </task>
+    <task id="LOCAL-00264" summary="feat: рефакторинг общий">
+      <created>1652183118019</created>
+      <option name="number" value="00264" />
+      <option name="presentableId" value="LOCAL-00264" />
+      <option name="project" value="LOCAL" />
+      <updated>1652183118019</updated>
+    </task>
+    <task id="LOCAL-00265" summary="feat: рефакторинг общий">
+      <created>1652183143415</created>
+      <option name="number" value="00265" />
+      <option name="presentableId" value="LOCAL-00265" />
+      <option name="project" value="LOCAL" />
+      <updated>1652183143415</updated>
+    </task>
+    <task id="LOCAL-00266" summary="feat: рефакторинг">
+      <created>1652183314260</created>
+      <option name="number" value="00266" />
+      <option name="presentableId" value="LOCAL-00266" />
+      <option name="project" value="LOCAL" />
+      <updated>1652183314260</updated>
+    </task>
+    <task id="LOCAL-00267" summary="feat: уточнение пути к БД">
+      <created>1652535529056</created>
+      <option name="number" value="00267" />
+      <option name="presentableId" value="LOCAL-00267" />
+      <option name="project" value="LOCAL" />
+      <updated>1652535529056</updated>
+    </task>
+    <task id="LOCAL-00268" summary="feat: уточнение пути к БД">
+      <created>1652535539497</created>
+      <option name="number" value="00268" />
+      <option name="presentableId" value="LOCAL-00268" />
+      <option name="project" value="LOCAL" />
+      <updated>1652535539497</updated>
+    </task>
+    <option name="localTasksCounter" value="269" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -525,10 +530,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="fix: refactor" />
-    <MESSAGE value="feat: дополнен readme" />
-    <MESSAGE value="feat: рефактор" />
-    <MESSAGE value="feat: отображение долгого времени поиска в консоли" />
     <MESSAGE value="info: оптимизация работы с БД" />
     <MESSAGE value="info: время поиска" />
     <MESSAGE value="feat: добавлен тест проверки соединения с интернетом" />
@@ -549,8 +550,12 @@
     <MESSAGE value="feat: добавлено логирование" />
     <MESSAGE value="feat: логирование" />
     <MESSAGE value="feat: таблица анализа" />
+    <MESSAGE value="feat: рефакторинг - цвет шрифтов и бэк" />
+    <MESSAGE value="feat: рефакторинг - убрать лишний цикл" />
+    <MESSAGE value="feat: рефакторинг общий" />
     <MESSAGE value="feat: рефакторинг" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: рефакторинг" />
+    <MESSAGE value="feat: уточнение пути к БД" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: уточнение пути к БД" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

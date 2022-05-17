@@ -19,17 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
-    public static String directoryPath = System.getProperty("user.home") + File.separator + "News" + File.separator;
-    public static String settingsPath = directoryPath + "config.txt";
-    public static Calendar minPubDate = Calendar.getInstance();
-    public static int fontRed;
-    public static int fontGreen;
-    public static int fontBlue;
-    public static int backRed;
-    public static int backGreen;
-    public static int backBlue;
+    public static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "News" + File.separator;
+    public static final String SETTINGS_PATH = DIRECTORY_PATH + "config.txt";
+    public static final Calendar MIN_PUB_DATE = Calendar.getInstance();
+    public static final int [] GUI_FONT = new int[3];
+    public static final int [] GUI_BACKGROUND = new int[3];
     // Console search
-    public static AtomicBoolean isConsoleSearch = new AtomicBoolean(false);
+    public static final AtomicBoolean IS_CONSOLE_SEARCH = new AtomicBoolean(false);
     public static String emailToFromConsole;
     public static int minutesIntervalForConsoleSearch;
     public static String[] keywordsFromConsole;
@@ -37,36 +33,42 @@ public class Main {
     // создание директорий и файлов
     static {
         // Минимальная дата публикации новости 01.01.2021
-        minPubDate.set(Calendar.YEAR, 2022);
-        minPubDate.set(Calendar.DAY_OF_YEAR, 1);
+        MIN_PUB_DATE.set(Calendar.YEAR, 2022);
+        MIN_PUB_DATE.set(Calendar.DAY_OF_YEAR, 1);
 
-        File mainDirectory = new File(directoryPath);
+        File mainDirectory = new File(DIRECTORY_PATH);
         if (!mainDirectory.exists()) mainDirectory.mkdirs();
 
         // создание файлов программы
-        File sqliteExeIsExists = new File(directoryPath + "sqlite3.exe");
+        File sqliteExeIsExists = new File(DIRECTORY_PATH + "sqlite3.exe");
         if (!sqliteExeIsExists.exists()) {
-            Common.copyFiles(Main.class.getResource("/sqlite3.exe"), directoryPath + "sqlite3.exe");
+            Common.copyFiles(Main.class.getResource("/sqlite3.exe"), DIRECTORY_PATH + "sqlite3.exe");
         }
-        File sqliteDllIsExists = new File(directoryPath + "sqlite3.dll");
+        File sqliteDllIsExists = new File(DIRECTORY_PATH + "sqlite3.dll");
         if (!sqliteDllIsExists.exists()) {
-            Common.copyFiles(Main.class.getResource("/sqlite3.dll"), directoryPath + "sqlite3.dll");
+            Common.copyFiles(Main.class.getResource("/sqlite3.dll"), DIRECTORY_PATH + "sqlite3.dll");
         }
-        File sqliteDefIsExists = new File(directoryPath + "sqlite3.def");
+        File sqliteDefIsExists = new File(DIRECTORY_PATH + "sqlite3.def");
         if (!sqliteDefIsExists.exists()) {
-            Common.copyFiles(Main.class.getResource("/sqlite3.def"), directoryPath + "sqlite3.def");
+            Common.copyFiles(Main.class.getResource("/sqlite3.def"), DIRECTORY_PATH + "sqlite3.def");
         }
-        File dbIsExists = new File(directoryPath + "news.db");
+        File dbIsExists = new File(DIRECTORY_PATH + "news.db");
         if (!dbIsExists.exists()) {
-            Common.copyFiles(Main.class.getResource("/news.db"), directoryPath + "news.db");
+            Common.copyFiles(Main.class.getResource("/news.db"), DIRECTORY_PATH + "news.db");
         }
-        File configIsExists = new File(directoryPath + "config.txt");
+        File configIsExists = new File(DIRECTORY_PATH + "config.txt");
         if (!configIsExists.exists()) {
-            Common.copyFiles(Main.class.getResource("/config.txt"), directoryPath + "config.txt");
+            Common.copyFiles(Main.class.getResource("/config.txt"), DIRECTORY_PATH + "config.txt");
         }
     }
 
-    public static void main(String[] args) throws IOException { //args1 = email, args2 = interval, args3 = keyword1,.., argsN = keywordN
+    /**
+     * Main arguments:
+     * args1 = email
+     * args2 = interval in minutes
+     * args3 = keyword1, keyword2 ... argsN = search keywords
+     */
+    public static void main(String[] args) throws IOException {
         keywordsFromConsole = new String[args.length];
         SQLite sqlite = new SQLite();
         if (args.length == 0) {
@@ -79,21 +81,22 @@ public class Main {
             UIManager.put("ProgressBar.arc", 6);
             UIManager.put("Button.arc", 8);
             Common.getColorsSettingsFromFile();
-            UIManager.put("Table.background", new Color(backRed, backGreen, backBlue));
+            UIManager.put("Table.background", new Color(GUI_BACKGROUND[0], GUI_BACKGROUND[1], GUI_BACKGROUND[2]));
             UIManager.put("Table.alternateRowColor", new Color(59, 59, 59));
-            UIManager.put("Table.foreground", new Color(fontRed, fontGreen, fontBlue));
+            UIManager.put("Table.foreground", new Color(GUI_FONT[0], GUI_FONT[1], GUI_FONT[2]));
             UIManager.put("TextField.background", Color.GRAY);
             UIManager.put("TextField.foreground", Color.BLACK);
             FlatHiberbeeDarkIJTheme.setup();
 
             new Gui();
+            // загрузка конфигураций из файла config.txt
             Common.getSettingsFromFile();
-            Gui.newsIntervalCbox.setVisible(Gui.todayOrNotCbx.getState());
-            Gui.isOnlyLastNews = Gui.filterNewsChbx.getState();
+            Gui.newsInterval.setVisible(Gui.todayOrNotCbx.getState());
+            Gui.isOnlyLastNews = Gui.onlyNewNews.getState();
             sqlite.openSQLiteConnection();
         } else {
             // Console search
-            isConsoleSearch.set(true);
+            IS_CONSOLE_SEARCH.set(true);
             emailToFromConsole = args[0];
             minutesIntervalForConsoleSearch = Integer.parseInt(args[1]);
             sqlite.openSQLiteConnection();

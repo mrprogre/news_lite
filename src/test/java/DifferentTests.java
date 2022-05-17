@@ -34,7 +34,7 @@ class DifferentTests {
     public void shouldOpenSQLiteConnectionTest() throws SQLException {
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + Main.directoryPath + "news.db");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:" + Main.DIRECTORY_PATH + "news.db");
             assertFalse(connection.isClosed());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

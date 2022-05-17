@@ -19,7 +19,7 @@ public class SQLite {
     public void openSQLiteConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + Main.directoryPath + "news.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + Main.DIRECTORY_PATH + "news.db");
             isConnectionToSQLite = true;
             LOGGER.warn("Connected to SQLite");
             Thread.sleep(1000L);
@@ -82,8 +82,8 @@ public class SQLite {
             switch (pDialog) {
                 case "smi":
                     //sources
-                    Common.smi_source.clear();
-                    Common.smi_link.clear();
+                    Common.SMI_SOURCE.clear();
+                    Common.SMI_LINK.clear();
                     try {
                         Statement st = connection.createStatement();
                         String query = "SELECT id, source, link FROM rss_list where is_active = 1  ORDER BY id";
@@ -92,8 +92,8 @@ public class SQLite {
                             //int id = rs.getInt("id");
                             String source = rs.getString("source");
                             String link = rs.getString("link");
-                            Common.smi_source.add(source);
-                            Common.smi_link.add(link);
+                            Common.SMI_SOURCE.add(source);
+                            Common.SMI_LINK.add(link);
                         }
                         rs.close();
                         st.close();
@@ -103,14 +103,14 @@ public class SQLite {
                     break;
                 case "excl":
                     //excluded words
-                    Common.excludedWords.clear();
+                    Common.EXCLUDED_WORDS.clear();
                     try {
                         Statement st = connection.createStatement();
                         String query = "SELECT word FROM exclude";
                         ResultSet rs = st.executeQuery(query);
                         while (rs.next()) {
                             String word = rs.getString("word");
-                            Common.excludedWords.add(word);
+                            Common.EXCLUDED_WORDS.add(word);
                         }
                         rs.close();
                         st.close();
@@ -119,9 +119,9 @@ public class SQLite {
                     }
                     break;
                 case "active_smi":
-                    Common.smi_source.clear();
-                    Common.smi_link.clear();
-                    Common.smi_is_active.clear();
+                    Common.SMI_SOURCE.clear();
+                    Common.SMI_LINK.clear();
+                    Common.SMI_IS_ACTIVE.clear();
                     try {
                         Statement st = connection.createStatement();
                         String query = "SELECT id, source, link, is_active FROM rss_list ORDER BY id";
@@ -132,9 +132,9 @@ public class SQLite {
                             String link = rs.getString("link");
                             boolean isActive = rs.getBoolean("is_active");
 
-                            Common.smi_source.add(source);
-                            Common.smi_link.add(link);
-                            Common.smi_is_active.add(isActive);
+                            Common.SMI_SOURCE.add(source);
+                            Common.SMI_LINK.add(link);
+                            Common.SMI_IS_ACTIVE.add(isActive);
                         }
                         rs.close();
                         st.close();
@@ -336,7 +336,7 @@ public class SQLite {
         }
     }
 
-    // закрытие соединения с SQLite
+    // закрытие соединения SQLite
     public void closeSQLiteConnection() {
         try {
             if (isConnectionToSQLite) {

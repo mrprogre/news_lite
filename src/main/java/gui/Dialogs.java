@@ -39,9 +39,9 @@ public class Dialogs extends JDialog implements KeyListener {
                 Object[] columns = {"", "Source", "", " "};
                 model = new DefaultTableModel(new Object[][]{
                 }, columns) {
-                    final boolean[] columnEditables = new boolean[]{false, false, true, true};
+                    final boolean[] columnEditable = new boolean[]{false, false, true, true};
                     public boolean isCellEditable(int row, int column) {
-                        return columnEditables[column];
+                        return columnEditable[column];
                     }
                     // Сортировка
                     final Class[] types_unique = {Integer.class, String.class, Boolean.class, Button.class};
@@ -57,8 +57,6 @@ public class Dialogs extends JDialog implements KeyListener {
                 DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
                 renderer.setHorizontalAlignment(JLabel.CENTER);
                 table.setRowHeight(20);
-                //table.setColumnSelectionAllowed(true);
-                //table.setCellSelectionEnabled(true);
                 table.setFont(new Font("SansSerif", Font.PLAIN, 13));
                 JTableHeader header = table.getTableHeader();
                 header.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -66,9 +64,6 @@ public class Dialogs extends JDialog implements KeyListener {
                 table.getColumnModel().getColumn(0).setMaxWidth(24);
                 table.getColumnModel().getColumn(2).setMaxWidth(30);
                 table.getColumnModel().getColumn(3).setMaxWidth(30);
-                //table.setForeground(new Color(Main.red, Main.green, Main.blue));
-                //table.setSelectionForeground(new Color(26, 79, 164));
-                //table.setSelectionBackground(new Color(255, 255, 160));
                 getContentPane().add(table, BorderLayout.CENTER);
 
                 scrollPane.setBounds(10, 27, 324, 233);
@@ -109,10 +104,10 @@ public class Dialogs extends JDialog implements KeyListener {
                 Object[] columns = {"Num", "Word", "Del"};
                 model = new DefaultTableModel(new Object[][]{
                 }, columns) {
-                    final boolean[] columnEditables = new boolean[]{false, false, true};
+                    final boolean[] columnEditable = new boolean[]{false, false, true};
 
                     public boolean isCellEditable(int row, int column) {
-                        return columnEditables[column];
+                        return columnEditable[column];
                     }
 
                     // Сортировка
@@ -129,17 +124,12 @@ public class Dialogs extends JDialog implements KeyListener {
                 DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
                 renderer.setHorizontalAlignment(JLabel.CENTER);
                 table.setRowHeight(20);
-                //table.setColumnSelectionAllowed(true);
-                //table.setCellSelectionEnabled(true);
                 table.setFont(new Font("SansSerif", Font.PLAIN, 13));
                 JTableHeader header = table.getTableHeader();
                 header.setFont(new Font("Tahoma", Font.BOLD, 13));
                 table.getColumnModel().getColumn(0).setCellRenderer(renderer);
                 table.getColumnModel().getColumn(0).setMaxWidth(40);
                 table.getColumnModel().getColumn(2).setMaxWidth(40);
-                //table.setForeground(new Color(Main.red, Main.green, Main.blue));
-                //table.setSelectionForeground(new Color(26, 79, 164));
-                //table.setSelectionBackground(new Color(255, 255, 160));
                 getContentPane().add(table, BorderLayout.CENTER);
 
                 scrollPane.setBounds(10, 27, 324, 233);

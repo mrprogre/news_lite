@@ -20,7 +20,7 @@ public class EmailSender {
     public void sendMessage(){
         Common.getEmailSettingsFromFile();
 
-        if (!Main.isConsoleSearch.get()) {
+        if (!Main.IS_CONSOLE_SEARCH.get()) {
             String to = Gui.sendEmailTo.getText();
             // Отправка из GUI
             StringBuilder text = new StringBuilder();
@@ -41,13 +41,13 @@ public class EmailSender {
                 Common.console("status: e-mail sent successfully");
                 log.info("Email has been sent");
                 Gui.sendEmailBtn.setIcon(Gui.SEND_3);
-                Common.isSending.set(true);
+                Common.IS_SENDING.set(true);
                 Search.isSearchFinished.set(true);
                 Gui.progressBar.setValue(100);
             } catch (Exception mex) {
                 mex.printStackTrace();
                 Common.console("status: e-mail wasn't send: " + mex.getMessage() + "\n" + mex.getCause());
-                Common.isSending.set(true);
+                Common.IS_SENDING.set(true);
                 Search.isSearchFinished.set(true);
                 Gui.progressBar.setValue(100);
                 log.warn("E-mail wasn't send");

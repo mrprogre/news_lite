@@ -40,14 +40,14 @@ public class Search {
     }
 
     public static int j = 1;
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    LocalDateTime now = LocalDateTime.now();
-    public String today = dtf.format(now);
-    SimpleDateFormat date_format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-    SimpleDateFormat dateFormatHoursFirst = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
-    public static ArrayList<String> dataForEmail = new ArrayList<>();
+    final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    final LocalDateTime now = LocalDateTime.now();
+    public final String today = dtf.format(now);
+    final SimpleDateFormat date_format = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    final SimpleDateFormat dateFormatHoursFirst = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
+    public static final ArrayList<String> dataForEmail = new ArrayList<>();
     int newsCount = 0;
-    Date minDate = Main.minPubDate.getTime();
+    final Date minDate = Main.MIN_PUB_DATE.getTime();
     int checkDate;
     LocalTime timeStart;
     LocalTime timeEnd;
@@ -64,8 +64,8 @@ public class Search {
             isSearchNow.set(true);
             timeStart = LocalTime.now();
             Search.j = 1;
-            if (!Gui.guiInTray.get()) Gui.model.setRowCount(0);
-            if (!Gui.wasClickInTableForAnalysis.get()) Gui.modelForAnalysis.setRowCount(0);
+            if (!Gui.GUI_IN_TRAY.get()) Gui.model.setRowCount(0);
+            if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) Gui.modelForAnalysis.setRowCount(0);
             newsCount = 0;
             Gui.labelSum.setText("" + newsCount);
             Search.isStop.set(false);
@@ -90,17 +90,17 @@ public class Search {
                 st_begin.execute(q_begin);
                 st_begin.close();
 
-                SyndParser parser = new SyndParser();
-                for (Common.smi_number = 0; Common.smi_number < Common.smi_link.size(); Common.smi_number++) {
+                Parser parser = new Parser();
+                for (Common.SMI_ID = 0; Common.SMI_ID < Common.SMI_LINK.size(); Common.SMI_ID++) {
                     try {
                         try {
                             if (isStop.get()) return;
-                            SyndFeed feed = parser.parseFeed(Common.smi_link.get(Common.smi_number));
+                            SyndFeed feed = parser.parseFeed(Common.SMI_LINK.get(Common.SMI_ID));
                             for (Object message : feed.getEntries()) {
                                 j++;
                                 SyndEntry entry = (SyndEntry) message;
                                 SyndContent content = entry.getDescription();
-                                String smi_source = Common.smi_source.get(Common.smi_number);
+                                String smi_source = Common.SMI_SOURCE.get(Common.SMI_ID);
                                 String title = entry.getTitle();
                                 assert content != null;
                                 String newsDescribe = content.getValue()
@@ -209,8 +209,8 @@ public class Search {
                                             }
 
                                             //Data for a table
-                                            Date curent_date = new Date();
-                                            int date_diff = Common.compareDatesOnly(curent_date, pubDate);
+                                            Date currentDate = new Date();
+                                            int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
                                             if (Gui.todayOrNotCbx.getState() && (date_diff != 0)) {
                                                 newsCount++;
@@ -270,7 +270,7 @@ public class Search {
                             }
                             if (!Gui.isOnlyLastNews && SQLite.isConnectionToSQLite) sqlite.deleteFrom256();
                         } catch (Exception no_rss) {
-                            String smi = Common.smi_link.get(Common.smi_number)
+                            String smi = Common.SMI_LINK.get(Common.SMI_ID)
                                     .replaceAll(("https://|http://|www."), "");
                             smi = smi.substring(0, smi.indexOf("/"));
                             Common.console("rss is not available: " + smi);
@@ -286,7 +286,7 @@ public class Search {
                 //Время поиска
                 timeEnd = LocalTime.now();
                 searchTime = Duration.between(timeStart, timeEnd);
-                if (!Gui.guiInTray.get()) Common.console("status: search completed in " +
+                if (!Gui.GUI_IN_TRAY.get()) Common.console("status: search completed in " +
                         searchTime.getSeconds() + " s.");
                 isSearchNow.set(false);
 
@@ -298,7 +298,7 @@ public class Search {
                 Gui.tableForAnalysis.setAutoCreateRowSorter(true);
 
                 // итоги в трей
-                if (newsCount != 0 && newsCount != modelRowCount && Gui.guiInTray.get())
+                if (newsCount != 0 && newsCount != modelRowCount && Gui.GUI_IN_TRAY.get())
                     Common.trayMessage("News found: " + newsCount);
                 log.info("News found: " + newsCount);
 
@@ -310,7 +310,7 @@ public class Search {
                     Gui.stopBtnBottom.setVisible(false);
                 }
 
-                // коммитим транзакцию
+                // коммит транзакции
                 String q_commit = "COMMIT";
                 Statement st_commit = SQLite.connection.createStatement();
                 st_commit.execute(q_commit);
@@ -323,7 +323,7 @@ public class Search {
                 st_del.close();
 
                 // Заполняем таблицу анализа
-                if (!Gui.wasClickInTableForAnalysis.get()) sqlite.selectSqlite();
+                if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) sqlite.selectSqlite();
 
                 // Автоматическая отправка результатов
                 if (Gui.autoSendMessage.getState() && (Gui.model.getRowCount() > 0)) {
@@ -331,7 +331,7 @@ public class Search {
                 }
 
                 sqlite.deleteDuplicates();
-                Gui.wasClickInTableForAnalysis.set(false);
+                Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
                 if (pSearchType.equals("word"))
                     Common.console("info: number of news items in the archive = " + sqlite.archiveNewsCount());
                 log.info("number of news items in the archive = " + sqlite.archiveNewsCount());
@@ -366,17 +366,17 @@ public class Search {
                 Statement st_begin = SQLite.connection.createStatement();
                 st_begin.executeUpdate(q_begin);
 
-                SyndParser parser = new SyndParser();
-                for (Common.smi_number = 0; Common.smi_number < Common.smi_link.size(); Common.smi_number++) {
+                Parser parser = new Parser();
+                for (Common.SMI_ID = 0; Common.SMI_ID < Common.SMI_LINK.size(); Common.SMI_ID++) {
                     try {
                         try {
                             if (isStop.get()) return;
-                            SyndFeed feed = parser.parseFeed(Common.smi_link.get(Common.smi_number));
+                            SyndFeed feed = parser.parseFeed(Common.SMI_LINK.get(Common.SMI_ID));
                             for (Object message : feed.getEntries()) {
                                 j++;
                                 SyndEntry entry = (SyndEntry) message;
                                 SyndContent content = entry.getDescription();
-                                String smi_source = Common.smi_source.get(Common.smi_number);
+                                String smi_source = Common.SMI_SOURCE.get(Common.SMI_ID);
                                 String title = entry.getTitle();
                                 assert content != null;
                                 String newsDescribe = content.getValue()
@@ -437,7 +437,7 @@ public class Search {
                 }
                 isSearchNow.set(false);
 
-                // коммитим транзакцию
+                // коммит транзакции
                 String q_commit = "COMMIT";
                 Statement st_commit = SQLite.connection.createStatement();
                 st_commit.execute(q_commit);
@@ -449,12 +449,12 @@ public class Search {
 
                 // Автоматическая отправка результатов
                 if (dataForEmail.size() > 0) {
-                    Common.isSending.set(false);
+                    Common.IS_SENDING.set(false);
                     EmailSender email = new EmailSender();
                     email.sendMessage();
                 }
                 sqlite.deleteDuplicates();
-                Gui.wasClickInTableForAnalysis.set(false);
+                Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
