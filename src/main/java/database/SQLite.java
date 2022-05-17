@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.sql.*;
 
 public class SQLite {
-    private static final Logger log = LoggerFactory.getLogger(SQLite.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SQLite.class);
     public static Connection connection;
     public static boolean isConnectionToSQLite;
     private static final int WORD_FREQ_MATCHES = 2;
@@ -21,11 +21,11 @@ public class SQLite {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + Main.directoryPath + "news.db");
             isConnectionToSQLite = true;
-            log.warn("Connected to SQLite");
+            LOGGER.warn("Connected to SQLite");
             Thread.sleep(1000L);
         } catch (Exception e) {
             e.printStackTrace();
-            log.warn(e.getMessage());
+            LOGGER.warn(e.getMessage());
         }
     }
 
@@ -181,7 +181,7 @@ public class SQLite {
                     st.close();
 
                     Common.console("status: source added");
-                    log.warn("New source added");
+                    LOGGER.warn("New source added");
                 } else {
                     Common.console("status: adding source canceled");
                 }
@@ -203,7 +203,7 @@ public class SQLite {
                 st.close();
 
                 Common.console("status: word \"" + pWord + "\" excluded from analysis");
-                log.warn("New word excluded from analysis");
+                LOGGER.warn("New word excluded from analysis");
             } catch (Exception e) {
                 e.printStackTrace();
                 Common.console("status: " + e.getMessage());
@@ -341,7 +341,7 @@ public class SQLite {
         try {
             if (isConnectionToSQLite) {
                 connection.close();
-                log.warn("Connection closed");
+                LOGGER.warn("Connection closed");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
