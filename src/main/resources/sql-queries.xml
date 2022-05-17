@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="deleteTitles">DELETE FROM news_dual</entry>
+    <entry key="deleteFrom256">DELETE FROM titles256</entry>
+    <entry key="smiQuery">SELECT id, source, link FROM rss_list WHERE is_active = 1 ORDER BY id</entry>
+    <entry key="exclQuery">SELECT word FROM exclude</entry>
+    <entry key="activeSmiQuery">SELECT id, source, link, is_active FROM rss_list ORDER BY id</entry>
+    <entry key="maxIdQuery">SELECT max(id) AS id FROM rss_list</entry>
+    <entry key="archiveNewsCount">SELECT count(*) FROM all_news</entry>
+    <entry key="deleteAllDuplicates">DELETE FROM all_news WHERE rowid NOT IN (SELECT min(rowid) FROM all_news GROUP BY
+        title, news_date)
+    </entry>
+</properties>

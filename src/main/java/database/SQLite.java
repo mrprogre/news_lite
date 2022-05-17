@@ -33,6 +33,7 @@ public class SQLite {
     public void selectSqlite() {
         try {
             Statement st = connection.createStatement();
+            // TODO: Add SQL Query to properties
             String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum > " +
                     WORD_FREQ_MATCHES +
                     " AND title NOT IN (SELECT word FROM all_titles_to_exclude)" +
@@ -175,6 +176,7 @@ public class SQLite {
                 if (result == JOptionPane.YES_OPTION) {
 
                     //запись в БД
+                    // TODO: Add SQL Query to properties
                     String query = "INSERT INTO rss_list(id, source, link, is_active) " + "VALUES (" + new_id + ", '" + source_name.getText() + "', '" + rss_link.getText() + "', " + 1 +")";
                     Statement st = connection.createStatement();
                     st.executeUpdate(query);
@@ -197,6 +199,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 //запись в БД
+                // TODO: Add SQL Query to properties
                 String query = "INSERT INTO exclude(word) " + "VALUES ('" + pWord + "')";
                 Statement st = connection.createStatement();
                 st.executeUpdate(query);
@@ -215,6 +218,7 @@ public class SQLite {
     public void insertTitleIn256(String pTitle) {
         if (isConnectionToSQLite) {
             try {
+                // TODO: Add SQL Query to properties
                 String query256 = "INSERT INTO titles256(title) VALUES ('" + pTitle + "')";
                 Statement st256 = connection.createStatement();
                 st256.executeUpdate(query256);
@@ -229,6 +233,7 @@ public class SQLite {
     public void insertAllTitles(String pTitle, String pDate) {
         if (isConnectionToSQLite) {
             try {
+                // TODO: Add SQL Query to properties
                 String q = "INSERT INTO all_news(title, news_date) VALUES ('" + pTitle + "', '" + pDate + "')";
                 Statement st = connection.createStatement();
                 st.executeUpdate(q);
@@ -244,6 +249,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
+                // TODO: Add SQL Query to properties
                 String query = "SELECT max(1) FROM titles256 WHERE exists (SELECT title FROM titles256 t WHERE t.title = '" + pString256 + "')";
                 ResultSet rs = st.executeQuery(query);
 
@@ -284,6 +290,7 @@ public class SQLite {
     public void deleteSource(String p_source) {
         if (isConnectionToSQLite) {
             try {
+                // TODO: Add SQL Query to properties
                 String query = "DELETE FROM rss_list WHERE source = '" + p_source + "'";
                 Statement del_st = connection.createStatement();
                 del_st.executeUpdate(query);
@@ -298,6 +305,7 @@ public class SQLite {
     public void deleteExcluded(String p_source) {
         if (isConnectionToSQLite) {
             try {
+                // TODO: Add SQL Query to properties
                 String query = "DELETE FROM exclude WHERE word = '" + p_source + "'";
                 Statement del_st = connection.createStatement();
                 del_st.executeUpdate(query);
@@ -313,6 +321,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
+                // TODO: Add SQL Query to properties
                 String query = "UPDATE rss_list SET is_active = " + pBoolean + " WHERE source = '" + pSource + "'";
                 st.executeUpdate(query);
                 st.close();
