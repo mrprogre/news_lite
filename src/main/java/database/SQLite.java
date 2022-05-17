@@ -33,10 +33,10 @@ public class SQLite {
     public void selectSqlite() {
         try {
             Statement st = connection.createStatement();
-            String query = "select SUM, TITLE from v_news_dual where sum > " +
+            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum > " +
                     WORD_FREQ_MATCHES +
-                    " and title not in (select word from all_titles_to_exclude)" +
-                    " order by SUM desc";
+                    " AND title NOT IN (SELECT word FROM all_titles_to_exclude)" +
+                    " ORDER BY SUM DESC ";
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 String word = rs.getString("TITLE");
@@ -56,7 +56,7 @@ public class SQLite {
     public void deleteTitles() {
         try {
             Statement st = connection.createStatement();
-            String query = "delete from news_dual";
+            String query = "DELETE FROM news_dual";
             st.executeUpdate(query);
             st.close();
         } catch (Exception e) {
@@ -68,7 +68,7 @@ public class SQLite {
     public void deleteFrom256() {
         try {
             Statement st = connection.createStatement();
-            String query = "delete from titles256";
+            String query = "DELETE FROM titles256";
             st.executeUpdate(query);
             st.close();
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class SQLite {
                     Common.SMI_LINK.clear();
                     try {
                         Statement st = connection.createStatement();
-                        String query = "SELECT id, source, link FROM rss_list where is_active = 1  ORDER BY id";
+                        String query = "SELECT id, source, link FROM rss_list WHERE is_active = 1  ORDER BY id";
                         ResultSet rs = st.executeQuery(query);
                         while (rs.next()) {
                             //int id = rs.getInt("id");
@@ -153,7 +153,7 @@ public class SQLite {
             int max_id_in_source = 0;
             int new_id;
             try {
-                String max_id_query = "SELECT max(id) as id FROM rss_list";
+                String max_id_query = "SELECT max(id) AS id FROM rss_list";
                 Statement max_id_st = connection.createStatement();
                 ResultSet rs = max_id_st.executeQuery(max_id_query);
                 while (rs.next()) {
@@ -244,7 +244,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                String query = "SELECT max(1) FROM titles256 where exists (select title from titles256 t where t.title = '" + pString256 + "')";
+                String query = "SELECT max(1) FROM titles256 WHERE exists (SELECT title FROM titles256 t WHERE t.title = '" + pString256 + "')";
                 ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
@@ -313,7 +313,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                String query = "UPDATE rss_list SET is_active = " + pBoolean + " where source = '" + pSource + "'";
+                String query = "UPDATE rss_list SET is_active = " + pBoolean + " WHERE source = '" + pSource + "'";
                 st.executeUpdate(query);
                 st.close();
             } catch (Exception e) {
