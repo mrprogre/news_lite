@@ -36,7 +36,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Gui extends JFrame {
-    private static final Logger log = LoggerFactory.getLogger(Gui.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Gui.class);
     final SQLite sqlite = new SQLite();
     final Search search = new Search();
     private static final Font GUI_FONT = new Font("Tahoma", Font.PLAIN, 11);
@@ -112,7 +112,7 @@ public class Gui extends JFrame {
                 Search.isSearchFinished.set(true);
                 SQLite.isConnectionToSQLite = false;
                 Common.saveState();
-                log.info("Application closed");
+                LOGGER.info("Application closed");
                 if (SQLite.isConnectionToSQLite) sqlite.closeSQLiteConnection();
             }
 
@@ -252,7 +252,7 @@ public class Gui extends JFrame {
                             uri = new URI(url);
                         } catch (URISyntaxException ex) {
                             ex.printStackTrace();
-                            log.warn(ex.getMessage());
+                            LOGGER.warn(ex.getMessage());
                         }
                         Desktop desktop = Desktop.getDesktop();
                         assert uri != null;
@@ -260,7 +260,7 @@ public class Gui extends JFrame {
                             desktop.browse(uri);
                         } catch (IOException ex) {
                             ex.printStackTrace();
-                            log.warn(ex.getMessage());
+                            LOGGER.warn(ex.getMessage());
                         }
                     }
                 }
@@ -466,7 +466,7 @@ public class Gui extends JFrame {
             } catch (Exception t) {
                 Common.console(t.getMessage());
                 t.printStackTrace();
-                log.warn(t.getMessage());
+                LOGGER.warn(t.getMessage());
             }
         });
         getContentPane().add(clearBtnTop);
@@ -521,7 +521,7 @@ public class Gui extends JFrame {
                     Common.delSettings("keyword=" + Objects.requireNonNull(item));
                 } catch (IOException io) {
                     io.printStackTrace();
-                    log.warn(io.getMessage());
+                    LOGGER.warn(io.getMessage());
                 }
             }
 
@@ -1002,7 +1002,7 @@ public class Gui extends JFrame {
                         desktop.browse(uri);
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        log.warn(ex.getMessage());
+                        LOGGER.warn(ex.getMessage());
                     }
                 }
             }
