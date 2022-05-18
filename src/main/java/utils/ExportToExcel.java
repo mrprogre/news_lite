@@ -55,6 +55,7 @@ public class ExportToExcel implements ExportManager{
 
                 WritableWorkbook newExcel = Workbook.createWorkbook(baseExcelFile);
                 WritableSheet page = newExcel.createSheet("001", 0);
+                
                 page.getSettings().setShowGridLines(true);
                 page.setColumnView(0, 10);
                 page.setColumnView(1, 16);
@@ -118,8 +119,8 @@ public class ExportToExcel implements ExportManager{
 
                 String[] headers = {"Number", "Source", "Title", "Date", "Link"};
                 for (int s = 0; s < headers.length; s++) {
-                    Label x = new Label(s, 0, headers[s], wcf_centre_bold);
-                    page.addCell(x);
+                    Label cellName = new Label(s, 0, headers[s], wcf_centre_bold);
+                    page.addCell(cellName);
                 }
 
                 for (int z = 0; z < Gui.model.getRowCount(); z++) {
