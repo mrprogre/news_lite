@@ -19,15 +19,27 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
     public ButtonColumn(JTable table, int column) {
         super();
         this.table = table;
+
         renderButton = new JButton();
 
-        editButton = new JButton();
-        editButton.setFocusPainted(false);
-        editButton.addActionListener(this);
+        editButton = initEditButton();
 
+        initColumnModel(table, column);
+    }
+
+    private void initColumnModel(JTable table, int column) {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(column).setCellRenderer(this);
         columnModel.getColumn(column).setCellEditor(this);
+    }
+
+    private JButton initEditButton() {
+
+        final JButton editButton;
+        editButton = new JButton();
+        editButton.setFocusPainted(false);
+        editButton.addActionListener(this);
+        return editButton;
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
