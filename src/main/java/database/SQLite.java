@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import utils.Common;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 
 public class SQLite {
@@ -34,7 +36,8 @@ public class SQLite {
         try {
             Statement st = connection.createStatement();
             // TODO: Import query from sql-queries.xml
-            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum > ? AND title NOT IN (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
+            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum >  ? AND title NOT IN" +
+                    " (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, WORD_FREQ_MATCHES);
             ResultSet rs = st.executeQuery(query);
@@ -172,10 +175,7 @@ public class SQLite {
                 // Диалоговое окно добавления источника новостей в базу данных
                 JTextField source_name = new JTextField();
                 JTextField rss_link = new JTextField();
-                Object[] new_source = {
-                        "Source:", source_name,
-                        "Link to rss:", rss_link
-                };
+                Object[] new_source = {"Source:", source_name, "Link to rss:", rss_link};
 
                 int result = JOptionPane.showConfirmDialog(Gui.scrollPane, new_source, "New source", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
@@ -381,6 +381,17 @@ public class SQLite {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public void loadSQLQueries() {
+        try (InputStream input = SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml")) {
+            if (input == null) {
+                LOGGER.warn("Unable to find sql-queries.xml");
+            }
+            Main.prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

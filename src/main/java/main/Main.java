@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
@@ -29,6 +30,7 @@ public class Main {
     public static String emailToFromConsole;
     public static int minutesIntervalForConsoleSearch;
     public static String[] keywordsFromConsole;
+    public static Properties prop = new Properties();
 
     // создание директорий и файлов
     static {
@@ -71,6 +73,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         keywordsFromConsole = new String[args.length];
         SQLite sqlite = new SQLite();
+        sqlite.loadSQLQueries();
         if (args.length == 0) {
             log.info("Application started");
 
