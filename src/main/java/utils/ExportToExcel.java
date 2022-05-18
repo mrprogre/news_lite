@@ -83,10 +83,10 @@ public class ExportToExcel implements ExportManager{
 
                 //WritableCellFormat wcf_no_border = new WritableCellFormat(wf);
 
-                WritableCellFormat wcf = new WritableCellFormat(writableFontNoBold);
-                wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf.setWrap(true);
+                WritableCellFormat writableCellFormat = new WritableCellFormat(writableFontNoBold);
+                writableCellFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                writableCellFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                writableCellFormat.setWrap(true);
 
                 WritableCellFormat wcfCentreNoBold = new WritableCellFormat(writableFontNoBold);
                 wcfCentreNoBold.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
@@ -125,7 +125,7 @@ public class ExportToExcel implements ExportManager{
                 for (int z = 0; z < Gui.model.getRowCount(); z++) {
                     jxl.write.Number y1 = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), wcfCentreNoBold); //num
                     Label y2 = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), wcfCentreNoBold); //Source
-                    Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), wcf); //Title
+                    Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), writableCellFormat); //Title
                     Label y4 = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), wcfDate); //Date
                     //Link
                     Label y5 = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), hyperlinkCellFormat);
