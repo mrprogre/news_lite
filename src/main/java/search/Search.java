@@ -109,14 +109,7 @@ public class Search {
                                         .replace("</p>", "")
                                         .replace("<br />", "");
                                 if (newsDescribe.contains("<img")
-                                        || newsDescribe.contains("href")
-                                        || newsDescribe.contains("<div")
-                                        || newsDescribe.contains("&#34")
-                                        || newsDescribe.contains("<p lang")
-                                        || newsDescribe.contains("&quot")
-                                        || newsDescribe.contains("<span")
-                                        || newsDescribe.contains("<ol")
-                                        || newsDescribe.equals("")
+  
                                 ) newsDescribe = title;
                                 Date pubDate = entry.getPublishedDate();
                                 String dateToEmail = date_format.format(pubDate);
