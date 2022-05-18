@@ -25,14 +25,14 @@ public class ExportToExcel implements ExportManager{
     private final String extension = ".xls";
 
     private FileNameExtensionFilter extensionFilter;
-    private File file;
+    private File baseExcelFile;
     private JFileChooser jFileChooser;
     
 
     public ExportToExcel() {
         this.extensionFilter = new FileNameExtensionFilter("*.xls", "*.xls", "*.XLS", "*.*");
         this.jFileChooser = setJFileChooser();
-        this.file = new File(jFileChooser.getSelectedFile() + extension);
+        this.baseExcelFile = new File(jFileChooser.getSelectedFile() + extension);
     }
     
 
@@ -53,7 +53,7 @@ public class ExportToExcel implements ExportManager{
             if (jFileChooser.showDialog(null,"Save") == APPROVE_OPTION) {
 //                File file = new File(jFileChooser.getSelectedFile() + ".xls");
 
-                WritableWorkbook newExcel = Workbook.createWorkbook(file);
+                WritableWorkbook newExcel = Workbook.createWorkbook(baseExcelFile);
                 WritableSheet page = newExcel.createSheet("001", 0);
                 page.getSettings().setShowGridLines(true);
                 page.setColumnView(0, 10);
