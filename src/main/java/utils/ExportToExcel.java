@@ -6,6 +6,7 @@ import jxl.format.Alignment;
 import jxl.format.Colour;
 import jxl.format.UnderlineStyle;
 import jxl.write.*;
+import jxl.write.biff.RowsExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,20 +48,24 @@ public class ExportToExcel implements ExportManager{
     }
 
 
+    private void initPage(WritableSheet page) throws WriteException, RowsExceededException {
+        page.getSettings().setShowGridLines(true);
+        page.setColumnView(0, 10);
+        page.setColumnView(1, 16);
+        page.setColumnView(2, 100);
+        page.setColumnView(3, 30);
+        page.setColumnView(4, 120);
+        page.setRowView(0, 600);
+    }
+    
     public void exportResultsToExcel() {
         try {
             if (jFileChooser.showDialog(null,"Save") == APPROVE_OPTION) {
 
                 WritableWorkbook newExcel = Workbook.createWorkbook(baseExcelFile);
                 WritableSheet page = newExcel.createSheet("001", 0);
-                
-                page.getSettings().setShowGridLines(true);
-                page.setColumnView(0, 10);
-                page.setColumnView(1, 16);
-                page.setColumnView(2, 100);
-                page.setColumnView(3, 30);
-                page.setColumnView(4, 120);
-                page.setRowView(0, 600);
+
+                initPage(page);
 
                 //no bold
                 WritableFont writableFontNoBold = new WritableFont(WritableFont.ARIAL, 11,
