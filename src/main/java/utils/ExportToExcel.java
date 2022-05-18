@@ -118,27 +118,30 @@ public class ExportToExcel implements ExportManager{
                 wcfDate.setAlignment(Alignment.CENTRE);
 
                 String[] headers = {"Number", "Source", "Title", "Date", "Link"};
-                for (int s = 0; s < headers.length; s++) {
-                    Label cellName = new Label(s, 0, headers[s], wcf_centre_bold);
+                for (int col = 0; col < headers.length; col++) {
+                    Label cellName = new Label(col, 0, headers[col], wcf_centre_bold);
                     page.addCell(cellName);
                 }
 
                 for (int z = 0; z < Gui.model.getRowCount(); z++) {
-                    jxl.write.Number y1 = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), wcfCentreNoBold); //num
-                    Label y2 = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), wcfCentreNoBold); //Source
-                    Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), writableCellFormat); //Title
-                    Label y4 = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), wcfDate); //Date
-                    //Link
-                    Label y5 = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), hyperlinkCellFormat);
-                    WritableHyperlink hl = new WritableHyperlink(4, z + 1, new URL(Gui.model.getValueAt(z, 4).toString()));
-                    page.addHyperlink(hl);
-                    page.addCell(y1);
-                    page.addCell(y2);
-                    page.addCell(y3);
-                    page.addCell(y4);
-                    page.addCell(y5);
+                    jxl.write.Number jxlNumber = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), wcfCentreNoBold); //num
+                    
+                    Label source = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), wcfCentreNoBold); //Source
+                    Label title = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), writableCellFormat); //Title
+                    Label date = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), wcfDate); //Date
+                    Label link = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), hyperlinkCellFormat); //Link
+                    
+                    WritableHyperlink hyperlink = new WritableHyperlink(4, z + 1, new URL(Gui.model.getValueAt(z, 4).toString()));
+                    
+                    page.addHyperlink(hyperlink);
+                    page.addCell(jxlNumber);
+                    page.addCell(source);
+                    page.addCell(title);
+                    page.addCell(date);
+                    page.addCell(link);
                     page.setRowView(z + 1, 600);
                 }
+                
                 newExcel.write();
                 newExcel.close();
                 
