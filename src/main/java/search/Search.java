@@ -87,10 +87,7 @@ public class Search {
             try {
                 // начало транзакции
                 PreparedStatement st = SQLite.connection.prepareStatement("insert into news_dual(title) values (?)");
-                String q_begin = "BEGIN TRANSACTION";
-                Statement st_begin = SQLite.connection.createStatement();
-                st_begin.execute(q_begin);
-                st_begin.close();
+                transCommand("BEGIN TRANSACTION");
 
                 Parser parser = new Parser();
                 for (Common.SMI_ID = 0; Common.SMI_ID < Common.SMI_LINK.size(); Common.SMI_ID++) {
@@ -203,16 +200,10 @@ public class Search {
                 }
 
                 // коммит транзакции
-                String q_commit = "COMMIT";
-                Statement st_commit = SQLite.connection.createStatement();
-                st_commit.execute(q_commit);
-                st_commit.close();
+                transCommand("COMMIT");
 
                 // удаляем все пустые строки
-                String q_del = "delete from news_dual where title = ''";
-                Statement st_del = SQLite.connection.createStatement();
-                st_del.executeUpdate(q_del);
-                st_del.close();
+                transDelete();
 
                 // Заполняем таблицу анализа
                 if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) sqlite.selectSqlite();
@@ -230,10 +221,7 @@ public class Search {
             } catch (Exception e) {
                 log.warn(e.getMessage());
                 try {
-                    String q_begin = "ROLLBACK";
-                    Statement st_begin = SQLite.connection.createStatement();
-                    st_begin.execute(q_begin);
-                    st_begin.close();
+                    transCommand("ROLLBACK");
                 } catch (SQLException i) {
                     log.warn(i.getMessage());
                 }
@@ -241,6 +229,21 @@ public class Search {
             }
         }
     }
+    private void transCommand(String command) throws SQLException {
+        String q_command = command;
+        Statement st_command = SQLite.connection.createStatement();
+        st_command.execute(q_command);
+        st_command.close();
+    }
+
+    private void transDelete() throws SQLException {
+        String q_del = "delete from news_dual where title = ''";
+        Statement st_del = SQLite.connection.createStatement();
+        st_del.executeUpdate(q_del);
+        st_del.close();
+    }
+
+
 
     private boolean isHref(String newsDescribe) {
         return newsDescribe.contains("<img")
