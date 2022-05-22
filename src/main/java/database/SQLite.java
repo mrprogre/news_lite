@@ -156,34 +156,25 @@ public class SQLite {
     // вставка нового источника
     public void insertNewSource() {
         if (isConnectionToSQLite) {
-            int max_id_in_source = 0;
-            int new_id;
             try {
-                Statement max_id_st = connection.createStatement();
-                ResultSet rs = max_id_st.executeQuery(dbUtil.getSQLQueryFromProp("maxIdQuery"));
-                while (rs.next()) {
-                    max_id_in_source = rs.getInt("ID");
-                }
-                rs.close();
-                max_id_st.close();
-                new_id = max_id_in_source + 1;
-
                 // Диалоговое окно добавления источника новостей в базу данных
-                JTextField source_name = new JTextField();
-                JTextField rss_link = new JTextField();
-                Object[] new_source = {"Source:", source_name, "Link to rss:", rss_link};
+                JTextField sourceName = new JTextField();
+                JTextField rssLink = new JTextField();
+                Object[] newSource = {"Source:", sourceName, "Link to rss:", rssLink};
+                int result =
+                        JOptionPane.showConfirmDialog(Gui.scrollPane, newSource,
+                                "New source", JOptionPane.OK_CANCEL_OPTION);
+                RSSInfoFromUI rssInfoFromUI = getRSSInfoFromUI();
 
-                int result = JOptionPane.showConfirmDialog(Gui.scrollPane, new_source, "New source", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.YES_OPTION) {
-
+                if (rssInfoFromUI.getResult() == JOptionPane.YES_OPTION) {
                     //запись в БД
-                    PreparedStatement preparedStatement = connection.prepareStatement(Main.prop.getProperty("insertNewSource"));
-                    preparedStatement.setInt(1, new_id);
-                    preparedStatement.setString(2, source_name.getText());
-                    preparedStatement.setString(3, rss_link.getText());
+                    PreparedStatement preparedStatement =
+                            connection.prepareStatement(Main.prop.getProperty("insertNewSource"));
+                    preparedStatement.setInt(1, getNextMaxID());
+                    preparedStatement.setString(2, rssInfoFromUI.getSourceName().getText());
+                    preparedStatement.setString(3, rssInfoFromUI.getRssLink().getText());
                     preparedStatement.executeUpdate();
                     Common.console("status: source added");
-                    LOGGER.warn("New source added");
                 } else {
                     Common.console("status: adding source canceled");
                 }
@@ -192,6 +183,28 @@ public class SQLite {
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    private RSSInfoFromUI getRSSInfoFromUI() {
+        JTextField sourceName = new JTextField();
+        JTextField rssLink = new JTextField();
+        Object[] newSource = {"Source:", sourceName, "Link to rss:", rssLink};
+        int result =
+                JOptionPane.showConfirmDialog(Gui.scrollPane, newSource,
+                        "New source", JOptionPane.OK_CANCEL_OPTION);
+        return new RSSInfoFromUI(sourceName, rssLink, result);
+    }
+
+    private int getNextMaxID() throws SQLException {
+        Statement maxIdSt = connection.createStatement();
+        ResultSet rs = maxIdSt.executeQuery(dbUtil.getSQLQueryFromProp("maxIdQuery"));
+        int maxIdInSource = 0;
+        while (rs.next()) {
+            maxIdInSource = rs.getInt("ID");
+        }
+        rs.close();
+        maxIdSt.close();
+        return maxIdInSource + 1;
     }
 
     // вставка нового слова для исключения из анализа частоты употребления слов
