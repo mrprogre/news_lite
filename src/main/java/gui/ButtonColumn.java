@@ -44,19 +44,23 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (hasFocus) {
-            renderBtnSet(table);
+            setRenderBtn(table);
         } else if (isSelected) {
-            renderButton.setForeground(table.getSelectionForeground());
-            //renderButton.setBackground(table.getSelectionBackground());
-            renderButton.setIcon(Gui.DELETE_ICON);
+            configureRenderBtn(table);
         } else {
-            renderBtnSet(table);
+            setRenderBtn(table);
         }
         //renderButton.setText((value == null) ? ";" : value.toString() );
         return renderButton;
     }
 
-    private void renderBtnSet(JTable table) {
+    private void configureRenderBtn(JTable table) {
+        renderButton.setForeground(table.getSelectionForeground());
+        //renderButton.setBackground(table.getSelectionBackground());
+        renderButton.setIcon(Gui.DELETE_ICON);
+    }
+
+    private void setRenderBtn(JTable table) {
         renderButton.setForeground(table.getForeground());
         renderButton.setBackground(UIManager.getColor("Button.background"));
         renderButton.setIcon(Gui.DELETE_ICON);
