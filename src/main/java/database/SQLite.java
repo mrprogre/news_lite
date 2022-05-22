@@ -20,8 +20,7 @@ public class SQLite {
     public void openSQLiteConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:" + SQLite.class.getClassLoader().getResource("news.db"));
-            LOGGER.info("jdbc:sqlite:" + Main.DIRECTORY_PATH + "news.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + Main.DIRECTORY_PATH + "news.db");
             isConnectionToSQLite = true;
             LOGGER.warn("Connected to SQLite");
             Thread.sleep(1000L);
