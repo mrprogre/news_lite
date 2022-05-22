@@ -167,39 +167,42 @@ public class Common {
                 lines[i++] = line.split("=");
             }
 
-            for (String[] f : lines) {
-                switch (f[0]) {
-                    case "interval":
-                        if (f[1].equals("1h")) {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hour");
-                        } else if (f[1].equals("1m") || f[1].equals("5m") || f[1].equals("15m")
-                                || f[1].equals("30m") || f[1].equals("45m")) {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("m", "") + " min");
-                        } else {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hours");
-                        }
-                        break;
-                    case "email":
-                        Gui.sendEmailTo.setText(f[1].trim());
-                        break;
-                    case "keyword":
-                        Gui.keywords.addItem(f[1]);
-                        KEYWORDS_LIST.add(f[1]);
-                        break;
-                    case "checkbox:todayOrNotChbx":
-                        Gui.todayOrNotCbx.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                    case "checkbox:filterNewsChbx":
-                        Gui.onlyNewNews.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                    case "checkbox:autoSendChbx":
-                        Gui.autoSendMessage.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                }
-
-            }
+            settingCase(lines);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void settingCase(String[][] lines) {
+        for (String[] f : lines) {
+            switch (f[0]) {
+                case "interval":
+                    if (f[1].equals("1h")) {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hour");
+                    } else if (f[1].equals("1m") || f[1].equals("5m") || f[1].equals("15m")
+                            || f[1].equals("30m") || f[1].equals("45m")) {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("m", "") + " min");
+                    } else {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hours");
+                    }
+                    break;
+                case "email":
+                    Gui.sendEmailTo.setText(f[1].trim());
+                    break;
+                case "keyword":
+                    Gui.keywords.addItem(f[1]);
+                    KEYWORDS_LIST.add(f[1]);
+                    break;
+                case "checkbox:todayOrNotChbx":
+                    Gui.todayOrNotCbx.setState(Boolean.parseBoolean(f[1]));
+                    break;
+                case "checkbox:filterNewsChbx":
+                    Gui.onlyNewNews.setState(Boolean.parseBoolean(f[1]));
+                    break;
+                case "checkbox:autoSendChbx":
+                    Gui.autoSendMessage.setState(Boolean.parseBoolean(f[1]));
+                    break;
+            }
         }
     }
 
@@ -217,30 +220,34 @@ public class Common {
                 lines[i++] = line.split("=");
             }
 
-            for (String[] f : lines) {
-                switch (f[0]) {
-                    case "fontColorRed":
-                        Main.GUI_FONT[0] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "fontColorGreen":
-                        Main.GUI_FONT[1] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "fontColorBlue":
-                        Main.GUI_FONT[2] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorRed":
-                        Main.GUI_BACKGROUND[0] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorGreen":
-                        Main.GUI_BACKGROUND[1] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorBlue":
-                        Main.GUI_BACKGROUND[2] = Integer.parseInt(f[1].trim());
-                        break;
-                }
-            }
+            colorSettingCase(lines);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void colorSettingCase(String[][] lines) {
+        for (String[] f : lines) {
+            switch (f[0]) {
+                case "fontColorRed":
+                    Main.GUI_FONT[0] = Integer.parseInt(f[1].trim());
+                    break;
+                case "fontColorGreen":
+                    Main.GUI_FONT[1] = Integer.parseInt(f[1].trim());
+                    break;
+                case "fontColorBlue":
+                    Main.GUI_FONT[2] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorRed":
+                    Main.GUI_BACKGROUND[0] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorGreen":
+                    Main.GUI_BACKGROUND[1] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorBlue":
+                    Main.GUI_BACKGROUND[2] = Integer.parseInt(f[1].trim());
+                    break;
+            }
         }
     }
 
