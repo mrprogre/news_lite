@@ -21,7 +21,7 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     public static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "News" + File.separator;
     public static final String SETTINGS_PATH = DIRECTORY_PATH + "config.txt";
-    public static final Calendar MIN_PUB_DATE = Calendar.getInstance();
+    public static final Calendar OLDEST_PUBLISH_DATE = Calendar.getInstance();
     public static final int [] GUI_FONT = new int[3];
     public static final int [] GUI_BACKGROUND = new int[3];
     // Console search
@@ -32,9 +32,9 @@ public class Main {
 
     // создание директорий и файлов
     static {
-        // Минимальная дата публикации новости 01.01.2021
-        MIN_PUB_DATE.set(Calendar.YEAR, 2022);
-        MIN_PUB_DATE.set(Calendar.DAY_OF_YEAR, 1);
+        // Минимальная дата публикации новости 01.01.2022 -> 최소 게시일
+        OLDEST_PUBLISH_DATE.set(Calendar.YEAR, 2022);
+        OLDEST_PUBLISH_DATE.set(Calendar.DAY_OF_YEAR, 1);
 
         File mainDirectory = new File(DIRECTORY_PATH);
         if (!mainDirectory.exists()) mainDirectory.mkdirs();

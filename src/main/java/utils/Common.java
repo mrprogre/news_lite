@@ -276,6 +276,11 @@ public class Common {
     public static String getSmtp() {
         String smtp = "";
         String serviceName = EmailSender.from.substring(EmailSender.from.indexOf(64) + 1);
+        smtp = smtpSet(smtp, serviceName);
+        return smtp;
+    }
+
+    private static String smtpSet(String smtp, String serviceName) {
         switch (serviceName) {
             case "mail.ru":
             case "internet.ru":
