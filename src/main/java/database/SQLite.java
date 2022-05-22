@@ -8,7 +8,6 @@ import utils.Common;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 
 public class SQLite {
@@ -34,13 +33,16 @@ public class SQLite {
     // Заполняем таблицу анализа
     public void selectSqlite() {
         try {
-            Statement st = connection.createStatement();
+//            Statement st = connection.createStatement();
             // TODO: Import query from sql-queries.xml
-            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum >  ? AND title NOT IN" +
-                    " (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+//            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum >  ? AND title NOT IN" +
+//                    " (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
+            PreparedStatement preparedStatement = connection.prepareStatement(Main.prop.getProperty("selectSQLite"));
             preparedStatement.setInt(1, WORD_FREQ_MATCHES);
-            ResultSet rs = st.executeQuery(query);
+//            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = preparedStatement.executeQuery();
+
             while (rs.next()) {
                 String word = rs.getString("TITLE");
                 int sum = rs.getInt("SUM");
@@ -49,7 +51,7 @@ public class SQLite {
             }
             deleteTitles();
             rs.close();
-            st.close();
+//            st.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,20 +179,16 @@ public class SQLite {
                 JTextField rss_link = new JTextField();
                 Object[] new_source = {"Source:", source_name, "Link to rss:", rss_link};
 
+
                 int result = JOptionPane.showConfirmDialog(Gui.scrollPane, new_source, "New source", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
 
                     //запись в БД
-                    // TODO: Import query from sql-queries.xml
-                    String query = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
-                    PreparedStatement preparedStatement = connection.prepareStatement(query);
+                    PreparedStatement preparedStatement = connection.prepareStatement(Main.prop.getProperty("insertNewSource"));
                     preparedStatement.setInt(1, new_id);
                     preparedStatement.setString(2, source_name.getText());
                     preparedStatement.setString(3, rss_link.getText());
-                    Statement st = connection.createStatement();
-                    st.executeUpdate(query);
-                    st.close();
-
+                    preparedStatement.executeUpdate();
                     Common.console("status: source added");
                     LOGGER.warn("New source added");
                 } else {
@@ -385,11 +383,9 @@ public class SQLite {
     }
 
     public void loadSQLQueries() {
-        try (InputStream input = SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml")) {
-            if (input == null) {
-                LOGGER.warn("Unable to find sql-queries.xml");
-            }
-            Main.prop.load(input);
+        try {
+            Main.prop.loadFromXML(SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml"));
+            LOGGER.info("SQL queries loaded.");
         } catch (IOException ex) {
             ex.printStackTrace();
         }
