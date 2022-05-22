@@ -97,38 +97,50 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
 
         // окно таблицы с анализом частоты слов на основной панели (добавляем в базу)
         if (activeWindow == 1 && rowWithExcludeWord != -1) {
-            rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
-            String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
-            // удаление из диалогового окна
-            Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
-            // добавление в базу данных и файл excluded.txt
-            sqlite.insertNewExcludedWord(source);
+            setRowWithExcludeWord(sqlite, rowWithExcludeWord);
         }
 
         // окно источников RSS
         if (activeWindow == 2 && rowWithSource != -1) {
-            rowWithSource = table.convertRowIndexToModel(rowWithSource);
-            String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
-            // удаление из диалогового окна
-            Dialogs.model.removeRow(rowWithSource);
-            // удаление из файла sources.txt
-            //Common.delLine(source, Main.sourcesPath);
-            // удаление из базы данных
-            sqlite.deleteSource(source);
+            delRowWithSource(sqlite, rowWithSource);
         }
 
         // окно с исключенными из анализа слов (удаляем из базы)
         if (activeWindow == 3 && delRowWithExcludeWord != -1) {
-            delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
-            String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
-            // удаление из диалогового окна
-            Dialogs.model.removeRow(delRowWithExcludeWord);
-            // удаление из файла excluded.txt
-            //Common.delLine(source, Main.excludedPath);
-            // удаление из базы данных
-            sqlite.deleteExcluded(source);
+            delRowWithExcluded(sqlite, delRowWithExcludeWord);
         }
 
+    }
+
+    private void delRowWithExcluded(SQLite sqlite, int delRowWithExcludeWord) {
+        delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
+        String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
+        // удаление из диалогового окна
+        Dialogs.model.removeRow(delRowWithExcludeWord);
+        // удаление из файла excluded.txt
+        //Common.delLine(source, Main.excludedPath);
+        // удаление из базы данных
+        sqlite.deleteExcluded(source);
+    }
+
+    private void delRowWithSource(SQLite sqlite, int rowWithSource) {
+        rowWithSource = table.convertRowIndexToModel(rowWithSource);
+        String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
+        // удаление из диалогового окна
+        Dialogs.model.removeRow(rowWithSource);
+        // удаление из файла sources.txt
+        //Common.delLine(source, Main.sourcesPath);
+        // удаление из базы данных
+        sqlite.deleteSource(source);
+    }
+
+    private void setRowWithExcludeWord(SQLite sqlite, int rowWithExcludeWord) {
+        rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
+        String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
+        // удаление из диалогового окна
+        Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
+        // добавление в базу данных и файл excluded.txt
+        sqlite.insertNewExcludedWord(source);
     }
 
 }
