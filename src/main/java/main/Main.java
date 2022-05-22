@@ -1,7 +1,9 @@
 package main;
 
 import com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme;
+import database.ManageDB;
 import database.SQLite;
+import database.Utilities;
 import gui.Gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
@@ -29,6 +32,7 @@ public class Main {
     public static String emailToFromConsole;
     public static int minutesIntervalForConsoleSearch;
     public static String[] keywordsFromConsole;
+    public static Properties prop;
 
     // создание директорий и файлов
     static {
@@ -74,7 +78,9 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         keywordsFromConsole = new String[args.length];
+        prop = new Properties();
         SQLite sqlite = new SQLite();
+        Utilities dbUtils = new Utilities();
         if (args.length == 0) {
             log.info("Application started");
 
@@ -98,12 +104,14 @@ public class Main {
             Gui.newsInterval.setVisible(Gui.todayOrNotCbx.getState());
             Gui.isOnlyLastNews = Gui.onlyNewNews.getState();
             sqlite.openSQLiteConnection();
+            dbUtils.loadSQLQueries();
         } else {
             // Console search
             IS_CONSOLE_SEARCH.set(true);
             emailToFromConsole = args[0];
             minutesIntervalForConsoleSearch = Integer.parseInt(args[1]);
             sqlite.openSQLiteConnection();
+            dbUtils.loadSQLQueries();
             System.arraycopy(args, 0, keywordsFromConsole, 0, args.length);
             System.out.println(Arrays.toString(keywordsFromConsole)); //***
             Search search = new Search();

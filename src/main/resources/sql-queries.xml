@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="selectSQLite">SELECT SUM, TITLE FROM v_news_dual WHERE sum > ? AND title NOT IN (SELECT word FROM
+        all_titles_to_exclude) ORDER BY SUM DESC
+    </entry>
+    <entry key="deleteTitles">DELETE FROM news_dual</entry>
+    <entry key="deleteFrom256">DELETE FROM titles256</entry>
+    <entry key="smiQuery">SELECT id, source, link FROM rss_list WHERE is_active = 1 ORDER BY id</entry>
+    <entry key="exclQuery">SELECT word FROM exclude</entry>
+    <entry key="activeSmiQuery">SELECT id, source, link, is_active FROM rss_list ORDER BY id</entry>
+    <entry key="insertNewSource">INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")</entry>
+    <entry key="insertExcludeWord">INSERT INTO exclude(word) VALUES (?)</entry>
+    <entry key="insertTitle256">INSERT INTO titles256(title) VALUES (?)</entry>
+    <entry key="insertAllTitles">INSERT INTO all_news(title, news_date) VALUES (?, ?)</entry>
+    <entry key="titleExists">SELECT max(1) FROM titles256 WHERE exists (SELECT title FROM titles256 t WHERE t.title =
+        ?)
+    </entry>
+    <entry key="maxIdQuery">SELECT max(id) AS id FROM rss_list</entry>
+    <entry key="archiveNewsCount">SELECT count(*) FROM all_news</entry>
+    <entry key="deleteSource">DELETE FROM rss_list WHERE source = ?</entry>
+    <entry key="deleteExcluded">DELETE FROM exclude WHERE word = ?</entry>
+    <entry key="deleteAllDuplicates">DELETE FROM all_news WHERE rowid NOT IN (SELECT min(rowid) FROM all_news GROUP BY
+        title, news_date)
+    </entry>
+    <entry key="updateActiveStatus">UPDATE rss_list SET is_active = ? WHERE source = ?</entry>
+</properties>
