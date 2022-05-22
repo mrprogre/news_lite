@@ -36,6 +36,10 @@ public class Main {
         OLDEST_PUBLISH_DATE.set(Calendar.YEAR, 2022);
         OLDEST_PUBLISH_DATE.set(Calendar.DAY_OF_YEAR, 1);
 
+        initialFileSetting();
+    }
+
+    private static void initialFileSetting() {
         File mainDirectory = new File(DIRECTORY_PATH);
         if (!mainDirectory.exists()) mainDirectory.mkdirs();
 
