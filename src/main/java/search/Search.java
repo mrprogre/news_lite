@@ -56,6 +56,8 @@ public class Search {
     //Main search
     public void mainSearch(String pSearchType) {
         SQLite sqlite = new SQLite();
+        boolean isword = pSearchType.equals("word");
+        boolean iswords = pSearchType.equals("words");
         if (!isSearchNow.get()) {
             int modelRowCount = Gui.model.getRowCount();
             dataForEmail.clear();
@@ -71,10 +73,10 @@ public class Search {
             Search.isStop.set(false);
             Gui.findWord = Gui.topKeyword.getText().toLowerCase();
 
-            if (pSearchType.equals("word")) {
+            if (isword) {
                 Gui.searchBtnTop.setVisible(false);
                 Gui.stopBtnTop.setVisible(true);
-            } else if (pSearchType.equals("words")) {
+            } else if (iswords) {
                 Gui.searchBtnBottom.setVisible(false);
                 Gui.stopBtnBottom.setVisible(true);
             }
@@ -108,8 +110,7 @@ public class Search {
                                         .replace("<p>", "")
                                         .replace("</p>", "")
                                         .replace("<br />", "");
-                                if (isHref(newsDescribe)
-                                ) newsDescribe = title;
+                                if (isHref(newsDescribe)) newsDescribe = title;
                                 Date pubDate = entry.getPublishedDate();
                                 String dateToEmail = date_format.format(pubDate);
                                 String link = entry.getLink();
@@ -118,7 +119,7 @@ public class Search {
                                 if (pubDate.after(minDate)) checkDate = 1;
                                 else checkDate = 0;
 
-                                if (pSearchType.equals("word")) {
+                                if (isword) {
                                     if (title.toLowerCase().contains(Gui.findWord.toLowerCase())
                                             && title.length() > 15 && checkDate == 1
                                             && !title.toLowerCase().contains(excludeFromSearch.get(0))
@@ -140,7 +141,7 @@ public class Search {
 
                                         getTodayOrNotCbx(sqlite, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                     }
-                                } else if (pSearchType.equals("words")) {
+                                } else if (iswords) {
                                     for (String it : Common.getKeywordsFromFile()) {
                                         if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
 
@@ -193,10 +194,10 @@ public class Search {
                     Common.trayMessage("News found: " + newsCount);
                 log.info("News found: " + newsCount);
 
-                if (pSearchType.equals("word")) {
+                if (isword) {
                     Gui.searchBtnTop.setVisible(true);
                     Gui.stopBtnTop.setVisible(false);
-                } else if (pSearchType.equals("words")) {
+                } else if (iswords) {
                     Gui.searchBtnBottom.setVisible(true);
                     Gui.stopBtnBottom.setVisible(false);
                 }
@@ -223,7 +224,7 @@ public class Search {
 
                 sqlite.deleteDuplicates();
                 Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
-                if (pSearchType.equals("word"))
+                if (isword)
                     Common.console("info: number of news items in the archive = " + sqlite.archiveNewsCount());
                 log.info("number of news items in the archive = " + sqlite.archiveNewsCount());
             } catch (Exception e) {
@@ -317,8 +318,7 @@ public class Search {
                                         .replace("<p>", "")
                                         .replace("</p>", "")
                                         .replace("<br />", "");
-                                if (isHref(newsDescribe)
-                                ) newsDescribe = title;
+                                if (isHref(newsDescribe)) newsDescribe = title;
                                 Date pubDate = entry.getPublishedDate();
                                 String dateToEmail = date_format.format(pubDate);
                                 String link = entry.getLink();
