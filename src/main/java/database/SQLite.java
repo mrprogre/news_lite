@@ -47,7 +47,7 @@ public class SQLite {
             deleteTitles();
             rs.close();
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -58,7 +58,7 @@ public class SQLite {
             Statement st = connection.createStatement();
             st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteTitles"));
             st.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -69,7 +69,7 @@ public class SQLite {
             Statement st = connection.createStatement();
             st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteFrom256"));
             st.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -89,7 +89,6 @@ public class SQLite {
                     activeSMISearch();
                     break;
             }
-
         }
     }
 
@@ -112,7 +111,7 @@ public class SQLite {
             }
             rs.close();
             st.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -128,7 +127,7 @@ public class SQLite {
             }
             rs.close();
             st.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -149,7 +148,7 @@ public class SQLite {
             }
             rs.close();
             st.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -189,7 +188,7 @@ public class SQLite {
                     Common.console("status: adding source canceled");
                 }
 
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -207,7 +206,7 @@ public class SQLite {
 
                 Common.console("status: word \"" + pWord + "\" excluded from analysis");
                 LOGGER.warn("New word excluded from analysis");
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
                 Common.console("status: " + e.getMessage());
             }
@@ -256,7 +255,7 @@ public class SQLite {
                     isExists = rs.getInt(1);
                 }
                 rs.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -276,7 +275,7 @@ public class SQLite {
                 }
                 rs.close();
                 st.close();
-            } catch (Exception ignored) {
+            } catch (SQLException ignored) {
             }
         }
         return countNews;
@@ -290,7 +289,7 @@ public class SQLite {
                         connection.prepareStatement(dbUtil.getSQLQueryFromProp("deleteSource"));
                 preparedStatement.setString(1, p_source);
                 preparedStatement.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 Common.console("status: " + e.getMessage());
             }
         }
@@ -304,7 +303,7 @@ public class SQLite {
                         connection.prepareStatement(dbUtil.getSQLQueryFromProp("deleteExcluded"));
                 preparedStatement.setString(1, p_source);
                 preparedStatement.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 Common.console("status: " + e.getMessage());
             }
         }
@@ -319,7 +318,7 @@ public class SQLite {
                 preparedStatement.setBoolean(1, pBoolean);
                 preparedStatement.setString(2, pSource);
                 preparedStatement.executeUpdate();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -332,7 +331,7 @@ public class SQLite {
                 Statement st = connection.createStatement();
                 st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates"));
                 st.close();
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -345,7 +344,7 @@ public class SQLite {
                 connection.close();
                 LOGGER.warn("Connection closed");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
