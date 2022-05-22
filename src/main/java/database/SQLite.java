@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import utils.Common;
 
 import javax.swing.*;
-import java.io.IOException;
 import java.sql.*;
 
 public class SQLite {
@@ -15,6 +14,7 @@ public class SQLite {
     public static Connection connection;
     public static boolean isConnectionToSQLite;
     private static final int WORD_FREQ_MATCHES = 2;
+    private final Utilities dbUtil = new Utilities();
 
     // Открытие соединения с базой данных
     public void openSQLiteConnection() {
@@ -34,7 +34,7 @@ public class SQLite {
     public void selectSqlite() {
         try {
             PreparedStatement preparedStatement =
-                    connection.prepareStatement(getSQLQueryFromProp("selectSQLite"));
+                    connection.prepareStatement(dbUtil.getSQLQueryFromProp("selectSQLite"));
             preparedStatement.setInt(1, WORD_FREQ_MATCHES);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -56,7 +56,7 @@ public class SQLite {
     public void deleteTitles() {
         try {
             Statement st = connection.createStatement();
-            st.executeUpdate(getSQLQueryFromProp("deleteTitles"));
+            st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteTitles"));
             st.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +67,7 @@ public class SQLite {
     public void deleteFrom256() {
         try {
             Statement st = connection.createStatement();
-            st.executeUpdate(getSQLQueryFromProp("deleteFrom256"));
+            st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteFrom256"));
             st.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,66 +79,78 @@ public class SQLite {
         if (isConnectionToSQLite) {
             switch (pDialog) {
                 case "smi":
-                    //sources
-                    Common.SMI_SOURCE.clear();
-                    Common.SMI_LINK.clear();
-                    try {
-                        Statement st = connection.createStatement();
-                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("smiQuery"));
-                        while (rs.next()) {
-                            //int id = rs.getInt("id");
-                            String source = rs.getString("source");
-                            String link = rs.getString("link");
-                            Common.SMI_SOURCE.add(source);
-                            Common.SMI_LINK.add(link);
-                        }
-                        rs.close();
-                        st.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    smiSearch();
                     break;
                 case "excl":
                     //excluded words
-                    Common.EXCLUDED_WORDS.clear();
-                    try {
-                        Statement st = connection.createStatement();
-                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("exclQuery"));
-                        while (rs.next()) {
-                            String word = rs.getString("word");
-                            Common.EXCLUDED_WORDS.add(word);
-                        }
-                        rs.close();
-                        st.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    excludedSearch();
                     break;
                 case "active_smi":
-                    Common.SMI_SOURCE.clear();
-                    Common.SMI_LINK.clear();
-                    Common.SMI_IS_ACTIVE.clear();
-                    try {
-                        Statement st = connection.createStatement();
-                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("activeSmiQuery"));
-                        while (rs.next()) {
-                            //int id = rs.getInt("id");
-                            String source = rs.getString("source");
-                            String link = rs.getString("link");
-                            boolean isActive = rs.getBoolean("is_active");
-
-                            Common.SMI_SOURCE.add(source);
-                            Common.SMI_LINK.add(link);
-                            Common.SMI_IS_ACTIVE.add(isActive);
-                        }
-                        rs.close();
-                        st.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    activeSMISearch();
                     break;
             }
 
+        }
+    }
+
+    private void activeSMISearch() {
+        Common.SMI_SOURCE.clear();
+        Common.SMI_LINK.clear();
+        Common.SMI_IS_ACTIVE.clear();
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("activeSmiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                boolean isActive = rs.getBoolean("is_active");
+
+                Common.SMI_SOURCE.add(source);
+                Common.SMI_LINK.add(link);
+                Common.SMI_IS_ACTIVE.add(isActive);
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void excludedSearch() {
+        Common.EXCLUDED_WORDS.clear();
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("exclQuery"));
+            while (rs.next()) {
+                String word = rs.getString("word");
+                Common.EXCLUDED_WORDS.add(word);
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void smiSearch() {
+        //sources
+        Common.SMI_SOURCE.clear();
+        Common.SMI_LINK.clear();
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("smiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                Common.SMI_SOURCE.add(source);
+                Common.SMI_LINK.add(link);
+            }
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -149,7 +161,7 @@ public class SQLite {
             int new_id;
             try {
                 Statement max_id_st = connection.createStatement();
-                ResultSet rs = max_id_st.executeQuery(getSQLQueryFromProp("maxIdQuery"));
+                ResultSet rs = max_id_st.executeQuery(dbUtil.getSQLQueryFromProp("maxIdQuery"));
                 while (rs.next()) {
                     max_id_in_source = rs.getInt("ID");
                 }
@@ -161,7 +173,6 @@ public class SQLite {
                 JTextField source_name = new JTextField();
                 JTextField rss_link = new JTextField();
                 Object[] new_source = {"Source:", source_name, "Link to rss:", rss_link};
-
 
                 int result = JOptionPane.showConfirmDialog(Gui.scrollPane, new_source, "New source", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
@@ -190,7 +201,7 @@ public class SQLite {
             try {
                 //запись в БД
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("insertExcludeWord"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("insertExcludeWord"));
                 preparedStatement.setString(1, pWord);
                 preparedStatement.executeUpdate();
 
@@ -208,7 +219,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("insertTitle256"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("insertTitle256"));
                 preparedStatement.setString(1, pTitle);
                 preparedStatement.executeUpdate();
             } catch (SQLException t) {
@@ -222,7 +233,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("insertAllTitles"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("insertAllTitles"));
                 preparedStatement.setString(1, pTitle);
                 preparedStatement.setString(2, pDate);
                 preparedStatement.executeUpdate();
@@ -237,7 +248,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("titleExists"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("titleExists"));
                 preparedStatement.setString(1, pString256);
                 ResultSet rs = preparedStatement.executeQuery();
 
@@ -258,7 +269,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                ResultSet rs = st.executeQuery(getSQLQueryFromProp("archiveNewsCount"));
+                ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("archiveNewsCount"));
 
                 while (rs.next()) {
                     countNews = rs.getInt(1);
@@ -276,7 +287,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("deleteSource"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("deleteSource"));
                 preparedStatement.setString(1, p_source);
                 preparedStatement.executeUpdate();
             } catch (Exception e) {
@@ -290,7 +301,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("deleteExcluded"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("deleteExcluded"));
                 preparedStatement.setString(1, p_source);
                 preparedStatement.executeUpdate();
             } catch (Exception e) {
@@ -304,7 +315,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 PreparedStatement preparedStatement =
-                        connection.prepareStatement(getSQLQueryFromProp("updateActiveStatus"));
+                        connection.prepareStatement(dbUtil.getSQLQueryFromProp("updateActiveStatus"));
                 preparedStatement.setBoolean(1, pBoolean);
                 preparedStatement.setString(2, pSource);
                 preparedStatement.executeUpdate();
@@ -319,7 +330,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                st.executeUpdate(getSQLQueryFromProp("deleteAllDuplicates"));
+                st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates"));
                 st.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -337,18 +348,5 @@ public class SQLite {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    public void loadSQLQueries() {
-        try {
-            Main.prop.loadFromXML(SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml"));
-            LOGGER.info("SQL queries loaded.");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public String getSQLQueryFromProp(String entryKey) {
-        return Main.prop.getProperty(entryKey);
     }
 }
