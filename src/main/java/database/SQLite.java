@@ -33,14 +33,9 @@ public class SQLite {
     // Заполняем таблицу анализа
     public void selectSqlite() {
         try {
-//            Statement st = connection.createStatement();
-            // TODO: Import query from sql-queries.xml
-
-//            String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum >  ? AND title NOT IN" +
-//                    " (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
-            PreparedStatement preparedStatement = connection.prepareStatement(Main.prop.getProperty("selectSQLite"));
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(getSQLQueryFromProp("selectSQLite"));
             preparedStatement.setInt(1, WORD_FREQ_MATCHES);
-//            ResultSet rs = st.executeQuery(query);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
@@ -51,7 +46,7 @@ public class SQLite {
             }
             deleteTitles();
             rs.close();
-//            st.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,9 +56,7 @@ public class SQLite {
     public void deleteTitles() {
         try {
             Statement st = connection.createStatement();
-            // TODO: Import query from sql-queries.xml
-            String query = "DELETE FROM news_dual";
-            st.executeUpdate(query);
+            st.executeUpdate(getSQLQueryFromProp("deleteTitles"));
             st.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,9 +67,7 @@ public class SQLite {
     public void deleteFrom256() {
         try {
             Statement st = connection.createStatement();
-            // TODO: Import query from sql-queries.xml
-            String query = "DELETE FROM titles256";
-            st.executeUpdate(query);
+            st.executeUpdate(getSQLQueryFromProp("deleteFrom256"));
             st.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,9 +84,7 @@ public class SQLite {
                     Common.SMI_LINK.clear();
                     try {
                         Statement st = connection.createStatement();
-                        // TODO: Import query from sql-queries.xml
-                        String query = "SELECT id, source, link FROM rss_list WHERE is_active = 1  ORDER BY id";
-                        ResultSet rs = st.executeQuery(query);
+                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("smiQuery"));
                         while (rs.next()) {
                             //int id = rs.getInt("id");
                             String source = rs.getString("source");
@@ -114,9 +103,7 @@ public class SQLite {
                     Common.EXCLUDED_WORDS.clear();
                     try {
                         Statement st = connection.createStatement();
-                        // TODO: Import query from sql-queries.xml
-                        String query = "SELECT word FROM exclude";
-                        ResultSet rs = st.executeQuery(query);
+                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("exclQuery"));
                         while (rs.next()) {
                             String word = rs.getString("word");
                             Common.EXCLUDED_WORDS.add(word);
@@ -133,9 +120,7 @@ public class SQLite {
                     Common.SMI_IS_ACTIVE.clear();
                     try {
                         Statement st = connection.createStatement();
-                        // TODO: Import query from sql-queries.xml
-                        String query = "SELECT id, source, link, is_active FROM rss_list ORDER BY id";
-                        ResultSet rs = st.executeQuery(query);
+                        ResultSet rs = st.executeQuery(getSQLQueryFromProp("activeSmiQuery"));
                         while (rs.next()) {
                             //int id = rs.getInt("id");
                             String source = rs.getString("source");
@@ -163,10 +148,8 @@ public class SQLite {
             int max_id_in_source = 0;
             int new_id;
             try {
-                // TODO: Import query from sql-queries.xml
-                String max_id_query = "SELECT max(id) AS id FROM rss_list";
                 Statement max_id_st = connection.createStatement();
-                ResultSet rs = max_id_st.executeQuery(max_id_query);
+                ResultSet rs = max_id_st.executeQuery(getSQLQueryFromProp("maxIdQuery"));
                 while (rs.next()) {
                     max_id_in_source = rs.getInt("ID");
                 }
@@ -206,13 +189,10 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 //запись в БД
-                // TODO: Import query from sql-queries.xml
-                String query = "INSERT INTO exclude(word) VALUES (?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("insertExcludeWord"));
                 preparedStatement.setString(1, pWord);
-                Statement st = connection.createStatement();
-                st.executeUpdate(query);
-                st.close();
+                preparedStatement.executeUpdate();
 
                 Common.console("status: word \"" + pWord + "\" excluded from analysis");
                 LOGGER.warn("New word excluded from analysis");
@@ -227,13 +207,10 @@ public class SQLite {
     public void insertTitleIn256(String pTitle) {
         if (isConnectionToSQLite) {
             try {
-                // TODO: Import query from sql-queries.xml
-                String query256 = "INSERT INTO titles256(title) VALUES (?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query256);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("insertTitle256"));
                 preparedStatement.setString(1, pTitle);
-                Statement st256 = connection.createStatement();
-                st256.executeUpdate(query256);
-                st256.close();
+                preparedStatement.executeUpdate();
             } catch (SQLException t) {
                 t.printStackTrace();
             }
@@ -244,14 +221,11 @@ public class SQLite {
     public void insertAllTitles(String pTitle, String pDate) {
         if (isConnectionToSQLite) {
             try {
-                // TODO: Import query from sql-queries.xml
-                String query = "INSERT INTO all_news(title, news_date) VALUES (?, ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("insertAllTitles"));
                 preparedStatement.setString(1, pTitle);
                 preparedStatement.setString(2, pDate);
-                Statement st = connection.createStatement();
-                st.executeUpdate(query);
-                st.close();
+                preparedStatement.executeUpdate();
             } catch (SQLException ignored) {
             }
         }
@@ -262,19 +236,15 @@ public class SQLite {
         int isExists = 0;
         if (isConnectionToSQLite) {
             try {
-                Statement st = connection.createStatement();
-                // TODO: Import query from sql-queries.xml
-                String query = "SELECT max(1) FROM titles256 WHERE exists (SELECT title FROM titles256 t WHERE t.title = ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("titleExists"));
                 preparedStatement.setString(1, pString256);
-                ResultSet rs = st.executeQuery(query);
+                ResultSet rs = preparedStatement.executeQuery();
 
                 while (rs.next()) {
                     isExists = rs.getInt(1);
                 }
                 rs.close();
-                st.close();
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -288,9 +258,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                // TODO: Import query from sql-queries.xml
-                String query = "SELECT count(*) FROM all_news";
-                ResultSet rs = st.executeQuery(query);
+                ResultSet rs = st.executeQuery(getSQLQueryFromProp("archiveNewsCount"));
 
                 while (rs.next()) {
                     countNews = rs.getInt(1);
@@ -307,13 +275,10 @@ public class SQLite {
     public void deleteSource(String p_source) {
         if (isConnectionToSQLite) {
             try {
-                // TODO: Import query from sql-queries.xml
-                String query = "DELETE FROM rss_list WHERE source = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("deleteSource"));
                 preparedStatement.setString(1, p_source);
-                Statement del_st = connection.createStatement();
-                del_st.executeUpdate(query);
-                del_st.close();
+                preparedStatement.executeUpdate();
             } catch (Exception e) {
                 Common.console("status: " + e.getMessage());
             }
@@ -324,13 +289,10 @@ public class SQLite {
     public void deleteExcluded(String p_source) {
         if (isConnectionToSQLite) {
             try {
-                // TODO: Import query from sql-queries.xml
-                String query = "DELETE FROM exclude WHERE word = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("deleteExcluded"));
                 preparedStatement.setString(1, p_source);
-                Statement del_st = connection.createStatement();
-                del_st.executeUpdate(query);
-                del_st.close();
+                preparedStatement.executeUpdate();
             } catch (Exception e) {
                 Common.console("status: " + e.getMessage());
             }
@@ -341,14 +303,11 @@ public class SQLite {
     public void updateIsActiveStatus(boolean pBoolean, String pSource) {
         if (isConnectionToSQLite) {
             try {
-                Statement st = connection.createStatement();
-                // TODO: Import query from sql-queries.xml
-                String query = "UPDATE rss_list SET is_active = ? WHERE source = ?";
-                PreparedStatement preparedStatement = connection.prepareStatement(query);
+                PreparedStatement preparedStatement =
+                        connection.prepareStatement(getSQLQueryFromProp("updateActiveStatus"));
                 preparedStatement.setBoolean(1, pBoolean);
                 preparedStatement.setString(2, pSource);
-                st.executeUpdate(query);
-                st.close();
+                preparedStatement.executeUpdate();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -360,9 +319,7 @@ public class SQLite {
         if (isConnectionToSQLite) {
             try {
                 Statement st = connection.createStatement();
-                // TODO: Import query from sql-queries.xml
-                String query = "DELETE FROM all_news WHERE rowid NOT IN (SELECT min(rowid) FROM all_news GROUP BY title, news_date)";
-                st.executeUpdate(query);
+                st.executeUpdate(getSQLQueryFromProp("deleteAllDuplicates"));
                 st.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -389,5 +346,9 @@ public class SQLite {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getSQLQueryFromProp(String entryKey) {
+        return Main.prop.getProperty(entryKey);
     }
 }
