@@ -26,8 +26,8 @@ public class ExportToExcel {
             save_to.setFileFilter(filter);
             save_to.setCurrentDirectory(new File
                     (System.getProperty("user.home") + System.getProperty("file.separator")+ "Desktop"));
-            int ret = save_to.showDialog(null,"Save");
-            if (ret == JFileChooser.APPROVE_OPTION) {
+            int willBeApproved = save_to.showDialog(null,"Save");
+            if (willBeApproved == JFileChooser.APPROVE_OPTION) {
                 File file = new File(save_to.getSelectedFile() + ".xls");
 
                 WritableWorkbook new_excel = Workbook.createWorkbook(file);
@@ -41,48 +41,48 @@ public class ExportToExcel {
                 page.setRowView(0, 600);
 
                 //no bold
-                WritableFont wf = new WritableFont(WritableFont.ARIAL, 11,
+                WritableFont _writableFont = new WritableFont(WritableFont.ARIAL, 11,
                         WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE,
                         jxl.format.Colour.BLACK);
 
                 //bold
-                WritableFont wf_bold = new WritableFont(WritableFont.ARIAL, 11,
+                WritableFont _writableFont_Bold = new WritableFont(WritableFont.ARIAL, 11,
                         WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
                         jxl.format.Colour.BLACK);
 
                 //Hyperlinks
-                WritableFont wf_link = new WritableFont(WritableFont.ARIAL, 11, WritableFont.NO_BOLD);
-                wf_link.setColour(Colour.DARK_GREEN);
-                WritableCellFormat wcf_link = new WritableCellFormat(wf_link);
+                WritableFont _writableFont_link = new WritableFont(WritableFont.ARIAL, 11, WritableFont.NO_BOLD);
+                _writableFont_link.setColour(Colour.DARK_GREEN);
+                WritableCellFormat wcf_link = new WritableCellFormat(_writableFont_link);
                 wcf_link.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
                 wcf_link.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 wcf_link.setWrap(true);
 
-                //WritableCellFormat wcf_no_border = new WritableCellFormat(wf);
+                //WritableCellFormat wcf_no_border = new WritableCellFormat(_writableFont);
 
-                WritableCellFormat wcf = new WritableCellFormat(wf);
-                wcf.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf.setWrap(true);
+                WritableCellFormat _writableCellFormat = new WritableCellFormat(_writableFont);
+                _writableCellFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                _writableCellFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat.setWrap(true);
 
-                WritableCellFormat wcf_centre_no_bold = new WritableCellFormat(wf);
-                wcf_centre_no_bold.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf_centre_no_bold.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf_centre_no_bold.setAlignment(Alignment.CENTRE);
+                WritableCellFormat _writableCellFormat_centre_no_bold = new WritableCellFormat(_writableFont);
+                _writableCellFormat_centre_no_bold.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                _writableCellFormat_centre_no_bold.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat_centre_no_bold.setAlignment(Alignment.CENTRE);
 
                 //no bold
-                WritableCellFormat wcf_centre = new WritableCellFormat(wf);
-                wcf_centre.setAlignment(jxl.format.Alignment.CENTRE);
-                wcf_centre.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf_centre.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf_centre.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                WritableCellFormat _writableCellFormat_centre = new WritableCellFormat(_writableFont);
+                _writableCellFormat_centre.setAlignment(jxl.format.Alignment.CENTRE);
+                _writableCellFormat_centre.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat_centre.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                _writableCellFormat_centre.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
 
                 //HEADERS: color, bold
-                WritableCellFormat wcf_centre_bold = new WritableCellFormat(wf_bold);
-                wcf_centre_bold.setAlignment(jxl.format.Alignment.CENTRE);
-                wcf_centre_bold.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf_centre_bold.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf_centre_bold.setBackground(Colour.LIGHT_GREEN);
+                WritableCellFormat _writableCellFormat_centre_bold = new WritableCellFormat(_writableFont_Bold);
+                _writableCellFormat_centre_bold.setAlignment(jxl.format.Alignment.CENTRE);
+                _writableCellFormat_centre_bold.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                _writableCellFormat_centre_bold.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat_centre_bold.setBackground(Colour.LIGHT_GREEN);
 
                 //DATE: no bold
                 DateFormat dateFormat = new DateFormat("dd-MM-yyyy HH:mm") ;
@@ -95,14 +95,14 @@ public class ExportToExcel {
 
                 String[] headers = {"Number", "Source", "Title", "Date", "Link"};
                 for (int s = 0; s < headers.length; s++) {
-                    Label x = new Label(s, 0, headers[s], wcf_centre_bold);
+                    Label x = new Label(s, 0, headers[s], _writableCellFormat_centre_bold);
                     page.addCell(x);
                 }
 
                 for (int z = 0; z < Gui.model.getRowCount(); z++) {
-                    jxl.write.Number y1 = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), wcf_centre_no_bold); //num
-                    Label y2 = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), wcf_centre_no_bold); //Source
-                    Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), wcf); //Title
+                    jxl.write.Number y1 = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), _writableCellFormat_centre_no_bold); //num
+                    Label y2 = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), _writableCellFormat_centre_no_bold); //Source
+                    Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), _writableCellFormat); //Title
                     Label y4 = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), wcf_date); //Date
                     //Link
                     Label y5 = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), wcf_link);
