@@ -40,9 +40,7 @@ public class Dialogs extends JDialog implements KeyListener {
                 setSmiTable();
                 getContentPane().add(table, BorderLayout.CENTER);
 
-                scrollPane.setBounds(10, 27, 324, 233);
-                this.getContentPane().add(scrollPane);
-                scrollPane.setViewportView(table);
+                setScrollPane(scrollPane);
 
                 Common.showDialog("smi");
                 break;
@@ -79,9 +77,7 @@ public class Dialogs extends JDialog implements KeyListener {
                 table = new JTable(model);
                 setExclTable();
 
-                scrollPane.setBounds(10, 27, 324, 233);
-                this.getContentPane().add(scrollPane);
-                scrollPane.setViewportView(table);
+                setScrollPane(scrollPane);
 
                 Common.showDialog("excl");
                 break;
@@ -90,6 +86,12 @@ public class Dialogs extends JDialog implements KeyListener {
         // делаем фокус на окно, чтобы работал захват клавиш
         this.requestFocusInWindow();
         this.setVisible(true);
+    }
+
+    private void setScrollPane(JScrollPane scrollPane) {
+        scrollPane.setBounds(10, 27, 324, 233);
+        this.getContentPane().add(scrollPane);
+        scrollPane.setViewportView(table);
     }
 
     private void setSmiTable() {
