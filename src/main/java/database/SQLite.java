@@ -34,13 +34,13 @@ public class SQLite {
     // Заполняем таблицу анализа
     public void selectSqlite() {
         try {
-            Statement statement = connection.createStatement();
+            Statement st = connection.createStatement();
             // TODO: Import query from sql-queries.xml
             String query = "SELECT SUM, TITLE FROM v_news_dual WHERE sum >  ? AND title NOT IN" +
                     " (SELECT word FROM all_titles_to_exclude) ORDER BY SUM DESC ";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, WORD_FREQ_MATCHES);
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
                 String word = rs.getString("TITLE");
                 int sum = rs.getInt("SUM");
@@ -49,7 +49,7 @@ public class SQLite {
             }
             deleteTitles();
             rs.close();
-            statement.close();
+            st.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,11 +71,11 @@ public class SQLite {
     // Delete from titles256
     public void deleteFrom256() {
         try {
-            Statement statement = connection.createStatement();
+            Statement st = connection.createStatement();
             // TODO: Import query from sql-queries.xml
             String query = "DELETE FROM titles256";
-            statement.executeUpdate(query);
-            statement.close();
+            st.executeUpdate(query);
+            st.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,10 +90,10 @@ public class SQLite {
                     Common.SMI_SOURCE.clear();
                     Common.SMI_LINK.clear();
                     try {
-                        Statement statement = connection.createStatement();
+                        Statement st = connection.createStatement();
                         // TODO: Import query from sql-queries.xml
                         String query = "SELECT id, source, link FROM rss_list WHERE is_active = 1  ORDER BY id";
-                        ResultSet rs = statement.executeQuery(query);
+                        ResultSet rs = st.executeQuery(query);
                         while (rs.next()) {
                             //int id = rs.getInt("id");
                             String source = rs.getString("source");
@@ -102,7 +102,7 @@ public class SQLite {
                             Common.SMI_LINK.add(link);
                         }
                         rs.close();
-                        statement.close();
+                        st.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -111,16 +111,16 @@ public class SQLite {
                     //excluded words
                     Common.EXCLUDED_WORDS.clear();
                     try {
-                        Statement statement = connection.createStatement();
+                        Statement st = connection.createStatement();
                         // TODO: Import query from sql-queries.xml
                         String query = "SELECT word FROM exclude";
-                        ResultSet rs = statement.executeQuery(query);
+                        ResultSet rs = st.executeQuery(query);
                         while (rs.next()) {
                             String word = rs.getString("word");
                             Common.EXCLUDED_WORDS.add(word);
                         }
                         rs.close();
-                        statement.close();
+                        st.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -130,10 +130,10 @@ public class SQLite {
                     Common.SMI_LINK.clear();
                     Common.SMI_IS_ACTIVE.clear();
                     try {
-                        Statement statement = connection.createStatement();
+                        Statement st = connection.createStatement();
                         // TODO: Import query from sql-queries.xml
                         String query = "SELECT id, source, link, is_active FROM rss_list ORDER BY id";
-                        ResultSet rs = statement.executeQuery(query);
+                        ResultSet rs = st.executeQuery(query);
                         while (rs.next()) {
                             //int id = rs.getInt("id");
                             String source = rs.getString("source");
@@ -145,7 +145,7 @@ public class SQLite {
                             Common.SMI_IS_ACTIVE.add(isActive);
                         }
                         rs.close();
-                        statement.close();
+                        st.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -187,9 +187,9 @@ public class SQLite {
                     preparedStatement.setInt(1, new_id);
                     preparedStatement.setString(2, source_name.getText());
                     preparedStatement.setString(3, rss_link.getText());
-                    Statement statement = connection.createStatement();
-                    statement.executeUpdate(query);
-                    statement.close();
+                    Statement st = connection.createStatement();
+                    st.executeUpdate(query);
+                    st.close();
 
                     Common.console("status: source added");
                     LOGGER.warn("New source added");
@@ -264,18 +264,18 @@ public class SQLite {
         int isExists = 0;
         if (isConnectionToSQLite) {
             try {
-                Statement statement = connection.createStatement();
+                Statement st = connection.createStatement();
                 // TODO: Import query from sql-queries.xml
                 String query = "SELECT max(1) FROM titles256 WHERE exists (SELECT title FROM titles256 t WHERE t.title = ?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, pString256);
-                ResultSet rs = statement.executeQuery(query);
+                ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
                     isExists = rs.getInt(1);
                 }
                 rs.close();
-                statement.close();
+                st.close();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -289,16 +289,16 @@ public class SQLite {
         int countNews = 0;
         if (isConnectionToSQLite) {
             try {
-                Statement statement = connection.createStatement();
+                Statement st = connection.createStatement();
                 // TODO: Import query from sql-queries.xml
                 String query = "SELECT count(*) FROM all_news";
-                ResultSet rs = statement.executeQuery(query);
+                ResultSet rs = st.executeQuery(query);
 
                 while (rs.next()) {
                     countNews = rs.getInt(1);
                 }
                 rs.close();
-                statement.close();
+                st.close();
             } catch (Exception ignored) {
             }
         }
@@ -343,14 +343,14 @@ public class SQLite {
     public void updateIsActiveStatus(boolean pBoolean, String pSource) {
         if (isConnectionToSQLite) {
             try {
-                Statement statement = connection.createStatement();
+                Statement st = connection.createStatement();
                 // TODO: Import query from sql-queries.xml
                 String query = "UPDATE rss_list SET is_active = ? WHERE source = ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setBoolean(1, pBoolean);
                 preparedStatement.setString(2, pSource);
-                statement.executeUpdate(query);
-                statement.close();
+                st.executeUpdate(query);
+                st.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -361,11 +361,11 @@ public class SQLite {
     public void deleteDuplicates() {
         if (isConnectionToSQLite) {
             try {
-                Statement statement = connection.createStatement();
+                Statement st = connection.createStatement();
                 // TODO: Import query from sql-queries.xml
                 String query = "DELETE FROM all_news WHERE rowid NOT IN (SELECT min(rowid) FROM all_news GROUP BY title, news_date)";
-                statement.executeUpdate(query);
-                statement.close();
+                st.executeUpdate(query);
+                st.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
