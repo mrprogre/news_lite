@@ -100,20 +100,32 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         }
 
         // окно таблицы с анализом частоты слов на основной панели (добавляем в базу)
-        if (activeWindow == 1 && rowWithExcludeWord != -1) {
-            setRowWithExcludeWord(sqlite, rowWithExcludeWord);
-        }
+        setActive_1(sqlite, rowWithExcludeWord, activeWindow);
 
         // окно источников RSS
-        if (activeWindow == 2 && rowWithSource != -1) {
-            delRowWithSource(sqlite, rowWithSource);
-        }
+        setActive_2(sqlite, rowWithSource, activeWindow);
 
         // окно с исключенными из анализа слов (удаляем из базы)
+        setActive_3(sqlite, delRowWithExcludeWord, activeWindow);
+
+    }
+
+    private void setActive_3(SQLite sqlite, int delRowWithExcludeWord, int activeWindow) {
         if (activeWindow == 3 && delRowWithExcludeWord != -1) {
             delRowWithExcluded(sqlite, delRowWithExcludeWord);
         }
+    }
 
+    private void setActive_2(SQLite sqlite, int rowWithSource, int activeWindow) {
+        if (activeWindow == 2 && rowWithSource != -1) {
+            delRowWithSource(sqlite, rowWithSource);
+        }
+    }
+
+    private void setActive_1(SQLite sqlite, int rowWithExcludeWord, int activeWindow) {
+        if (activeWindow == 1 && rowWithExcludeWord != -1) {
+            setRowWithExcludeWord(sqlite, rowWithExcludeWord);
+        }
     }
 
     private void delRowWithExcluded(SQLite sqlite, int delRowWithExcludeWord) {
