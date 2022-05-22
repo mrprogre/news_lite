@@ -1,7 +1,6 @@
 package main;
 
 import com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme;
-import database.ManageDB;
 import database.SQLite;
 import database.Utilities;
 import gui.Gui;
