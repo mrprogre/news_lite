@@ -35,62 +35,58 @@ public class Common {
 
     // Запись конфигураций приложения
     public static void writeToConfig(String p_word, String p_type) {
+        Config_ToWrite(p_word, p_type);
+    }
+
+    private static void Config_ToWrite(String p_word, String p_type) {
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(Main.SETTINGS_PATH, true), StandardCharsets.UTF_8)) {
             switch (p_type) {
                 case "keyword": {
                     String text = "keyword=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorRed": {
                     String text = "fontColorRed=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorGreen": {
                     String text = "fontColorGreen=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorBlue": {
                     String text = "fontColorBlue=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorRed": {
                     String text = "backgroundColorRed=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorGreen": {
                     String text = "backgroundColorGreen=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorBlue": {
                     String text = "backgroundColorBlue=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "email": {
                     String text = "email=" + p_word;
                     writer.write(text.trim() + "\n");
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "interval": {
@@ -98,8 +94,7 @@ public class Common {
                             .replace("s", "")
                             .replace(" min", "m");
                     writer.write(text + "\n");
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "checkbox": {
@@ -116,14 +111,18 @@ public class Common {
                             break;
                     }
                     if (text != null) writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static void finishWriter(OutputStreamWriter writer) throws IOException {
+        writer.flush();
+        writer.close();
     }
 
     // Считывание ключевых слов при добавлении/удалении в комбобоксе
