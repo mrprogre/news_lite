@@ -86,12 +86,12 @@ public class ExportToExcel {
 
                 //DATE: no bold
                 DateFormat dateFormat = new DateFormat("dd-MM-yyyy HH:mm") ;
-                WritableCellFormat wcf_date = new WritableCellFormat(dateFormat);
-                wcf_date.setAlignment(jxl.format.Alignment.CENTRE);
-                wcf_date.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf_date.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                wcf_date.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                wcf_date.setAlignment(Alignment.CENTRE);
+                WritableCellFormat _writableCellFormat_date = new WritableCellFormat(dateFormat);
+                _writableCellFormat_date.setAlignment(jxl.format.Alignment.CENTRE);
+                _writableCellFormat_date.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat_date.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                _writableCellFormat_date.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                _writableCellFormat_date.setAlignment(Alignment.CENTRE);
 
                 String[] headers = {"Number", "Source", "Title", "Date", "Link"};
                 for (int s = 0; s < headers.length; s++) {
@@ -103,7 +103,7 @@ public class ExportToExcel {
                     jxl.write.Number y1 = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), _writableCellFormat_centre_no_bold); //num
                     Label y2 = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), _writableCellFormat_centre_no_bold); //Source
                     Label y3 = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), _writableCellFormat); //Title
-                    Label y4 = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), wcf_date); //Date
+                    Label y4 = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), _writableCellFormat_date); //Date
                     //Link
                     Label y5 = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), wcf_link);
                     WritableHyperlink hl = new WritableHyperlink(4, z + 1, new URL(Gui.model.getValueAt(z, 4).toString()));
