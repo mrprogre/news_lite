@@ -35,62 +35,58 @@ public class Common {
 
     // Запись конфигураций приложения
     public static void writeToConfig(String p_word, String p_type) {
+        Config_ToWrite(p_word, p_type);
+    }
+
+    private static void Config_ToWrite(String p_word, String p_type) {
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(Main.SETTINGS_PATH, true), StandardCharsets.UTF_8)) {
             switch (p_type) {
                 case "keyword": {
                     String text = "keyword=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorRed": {
                     String text = "fontColorRed=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorGreen": {
                     String text = "fontColorGreen=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "fontColorBlue": {
                     String text = "fontColorBlue=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorRed": {
                     String text = "backgroundColorRed=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorGreen": {
                     String text = "backgroundColorGreen=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "backgroundColorBlue": {
                     String text = "backgroundColorBlue=" + p_word + "\n";
                     writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "email": {
                     String text = "email=" + p_word;
                     writer.write(text.trim() + "\n");
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "interval": {
@@ -98,8 +94,7 @@ public class Common {
                             .replace("s", "")
                             .replace(" min", "m");
                     writer.write(text + "\n");
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
                 case "checkbox": {
@@ -116,14 +111,18 @@ public class Common {
                             break;
                     }
                     if (text != null) writer.write(text);
-                    writer.flush();
-                    writer.close();
+                    finishWriter(writer);
                     break;
                 }
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static void finishWriter(OutputStreamWriter writer) throws IOException {
+        writer.flush();
+        writer.close();
     }
 
     // Считывание ключевых слов при добавлении/удалении в комбобоксе
@@ -168,39 +167,42 @@ public class Common {
                 lines[i++] = line.split("=");
             }
 
-            for (String[] f : lines) {
-                switch (f[0]) {
-                    case "interval":
-                        if (f[1].equals("1h")) {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hour");
-                        } else if (f[1].equals("1m") || f[1].equals("5m") || f[1].equals("15m")
-                                || f[1].equals("30m") || f[1].equals("45m")) {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("m", "") + " min");
-                        } else {
-                            Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hours");
-                        }
-                        break;
-                    case "email":
-                        Gui.sendEmailTo.setText(f[1].trim());
-                        break;
-                    case "keyword":
-                        Gui.keywords.addItem(f[1]);
-                        KEYWORDS_LIST.add(f[1]);
-                        break;
-                    case "checkbox:todayOrNotChbx":
-                        Gui.todayOrNotCbx.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                    case "checkbox:filterNewsChbx":
-                        Gui.onlyNewNews.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                    case "checkbox:autoSendChbx":
-                        Gui.autoSendMessage.setState(Boolean.parseBoolean(f[1]));
-                        break;
-                }
-
-            }
+            settingCase(lines);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void settingCase(String[][] lines) {
+        for (String[] f : lines) {
+            switch (f[0]) {
+                case "interval":
+                    if (f[1].equals("1h")) {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hour");
+                    } else if (f[1].equals("1m") || f[1].equals("5m") || f[1].equals("15m")
+                            || f[1].equals("30m") || f[1].equals("45m")) {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("m", "") + " min");
+                    } else {
+                        Gui.newsInterval.setSelectedItem(f[1].replace("h", "") + " hours");
+                    }
+                    break;
+                case "email":
+                    Gui.sendEmailTo.setText(f[1].trim());
+                    break;
+                case "keyword":
+                    Gui.keywords.addItem(f[1]);
+                    KEYWORDS_LIST.add(f[1]);
+                    break;
+                case "checkbox:todayOrNotChbx":
+                    Gui.todayOrNotCbx.setState(Boolean.parseBoolean(f[1]));
+                    break;
+                case "checkbox:filterNewsChbx":
+                    Gui.onlyNewNews.setState(Boolean.parseBoolean(f[1]));
+                    break;
+                case "checkbox:autoSendChbx":
+                    Gui.autoSendMessage.setState(Boolean.parseBoolean(f[1]));
+                    break;
+            }
         }
     }
 
@@ -218,30 +220,34 @@ public class Common {
                 lines[i++] = line.split("=");
             }
 
-            for (String[] f : lines) {
-                switch (f[0]) {
-                    case "fontColorRed":
-                        Main.GUI_FONT[0] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "fontColorGreen":
-                        Main.GUI_FONT[1] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "fontColorBlue":
-                        Main.GUI_FONT[2] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorRed":
-                        Main.GUI_BACKGROUND[0] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorGreen":
-                        Main.GUI_BACKGROUND[1] = Integer.parseInt(f[1].trim());
-                        break;
-                    case "backgroundColorBlue":
-                        Main.GUI_BACKGROUND[2] = Integer.parseInt(f[1].trim());
-                        break;
-                }
-            }
+            colorSettingCase(lines);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void colorSettingCase(String[][] lines) {
+        for (String[] f : lines) {
+            switch (f[0]) {
+                case "fontColorRed":
+                    Main.GUI_FONT[0] = Integer.parseInt(f[1].trim());
+                    break;
+                case "fontColorGreen":
+                    Main.GUI_FONT[1] = Integer.parseInt(f[1].trim());
+                    break;
+                case "fontColorBlue":
+                    Main.GUI_FONT[2] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorRed":
+                    Main.GUI_BACKGROUND[0] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorGreen":
+                    Main.GUI_BACKGROUND[1] = Integer.parseInt(f[1].trim());
+                    break;
+                case "backgroundColorBlue":
+                    Main.GUI_BACKGROUND[2] = Integer.parseInt(f[1].trim());
+                    break;
+            }
         }
     }
 
@@ -270,6 +276,11 @@ public class Common {
     public static String getSmtp() {
         String smtp = "";
         String serviceName = EmailSender.from.substring(EmailSender.from.indexOf(64) + 1);
+        smtp = smtpSet(smtp, serviceName);
+        return smtp;
+    }
+
+    private static String smtpSet(String smtp, String serviceName) {
         switch (serviceName) {
             case "mail.ru":
             case "internet.ru":

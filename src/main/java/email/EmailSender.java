@@ -40,7 +40,7 @@ public class EmailSender {
                 new Sender().send(subject, text.toString(), from, from_pwd, to);
                 Common.console("status: e-mail sent successfully");
                 log.info("Email has been sent");
-                Gui.sendEmailBtn.setIcon(Gui.SEND_3);
+                Gui.sendEmailBtn.setIcon(Gui.WHEN_SENT_ICON);
                 Common.IS_SENDING.set(true);
                 Search.isSearchFinished.set(true);
                 Gui.progressBar.setValue(100);
