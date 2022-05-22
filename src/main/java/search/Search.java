@@ -47,7 +47,7 @@ public class Search {
     final SimpleDateFormat dateFormatHoursFirst = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
     public static final ArrayList<String> dataForEmail = new ArrayList<>();
     int newsCount = 0;
-    final Date minDate = Main.OLDEST_PUBLISH_DATE.getTime();
+    final Date minDate = Main.MIN_PUB_DATE.getTime();
     int checkDate;
     LocalTime timeStart;
     LocalTime timeEnd;
