@@ -19,33 +19,51 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
     public ButtonColumn(JTable table, int column) {
         super();
         this.table = table;
+
         renderButton = new JButton();
 
-        editButton = new JButton();
-        editButton.setFocusPainted(false);
-        editButton.addActionListener(this);
+        editButton = initEditButton();
 
+        initColumnModel(table, column);
+    }
+
+    private void initColumnModel(JTable table, int column) {
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(column).setCellRenderer(this);
         columnModel.getColumn(column).setCellEditor(this);
     }
 
+    private JButton initEditButton() {
+
+        final JButton editButton;
+        editButton = new JButton();
+        editButton.setFocusPainted(false);
+        editButton.addActionListener(this);
+        return editButton;
+    }
+
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (hasFocus) {
-            renderButton.setForeground(table.getForeground());
-            renderButton.setBackground(UIManager.getColor("Button.background"));
-            renderButton.setIcon(Gui.DELETE_ICON);
+            setRenderBtn(table);
         } else if (isSelected) {
-            renderButton.setForeground(table.getSelectionForeground());
-            //renderButton.setBackground(table.getSelectionBackground());
-            renderButton.setIcon(Gui.DELETE_ICON);
+            configureRenderBtn(table);
         } else {
-            renderButton.setForeground(table.getForeground());
-            renderButton.setBackground(UIManager.getColor("Button.background"));
-            renderButton.setIcon(Gui.DELETE_ICON);
+            setRenderBtn(table);
         }
         //renderButton.setText((value == null) ? ";" : value.toString() );
         return renderButton;
+    }
+
+    private void configureRenderBtn(JTable table) {
+        renderButton.setForeground(table.getSelectionForeground());
+        //renderButton.setBackground(table.getSelectionBackground());
+        renderButton.setIcon(Gui.DELETE_ICON);
+    }
+
+    private void setRenderBtn(JTable table) {
+        renderButton.setForeground(table.getForeground());
+        renderButton.setBackground(UIManager.getColor("Button.background"));
+        renderButton.setIcon(Gui.DELETE_ICON);
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
@@ -82,39 +100,63 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         }
 
         // окно таблицы с анализом частоты слов на основной панели (добавляем в базу)
-        if (activeWindow == 1 && rowWithExcludeWord != -1) {
-            rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
-            String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
-            // удаление из диалогового окна
-            Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
-            // добавление в базу данных и файл excluded.txt
-            sqlite.insertNewExcludedWord(source);
-        }
+        setActive_1(sqlite, rowWithExcludeWord, activeWindow);
 
         // окно источников RSS
-        if (activeWindow == 2 && rowWithSource != -1) {
-            rowWithSource = table.convertRowIndexToModel(rowWithSource);
-            String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
-            // удаление из диалогового окна
-            Dialogs.model.removeRow(rowWithSource);
-            // удаление из файла sources.txt
-            //Common.delLine(source, Main.sourcesPath);
-            // удаление из базы данных
-            sqlite.deleteSource(source);
-        }
+        setActive_2(sqlite, rowWithSource, activeWindow);
 
         // окно с исключенными из анализа слов (удаляем из базы)
-        if (activeWindow == 3 && delRowWithExcludeWord != -1) {
-            delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
-            String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
-            // удаление из диалогового окна
-            Dialogs.model.removeRow(delRowWithExcludeWord);
-            // удаление из файла excluded.txt
-            //Common.delLine(source, Main.excludedPath);
-            // удаление из базы данных
-            sqlite.deleteExcluded(source);
-        }
+        setActive_3(sqlite, delRowWithExcludeWord, activeWindow);
 
+    }
+
+    private void setActive_3(SQLite sqlite, int delRowWithExcludeWord, int activeWindow) {
+        if (activeWindow == 3 && delRowWithExcludeWord != -1) {
+            delRowWithExcluded(sqlite, delRowWithExcludeWord);
+        }
+    }
+
+    private void setActive_2(SQLite sqlite, int rowWithSource, int activeWindow) {
+        if (activeWindow == 2 && rowWithSource != -1) {
+            delRowWithSource(sqlite, rowWithSource);
+        }
+    }
+
+    private void setActive_1(SQLite sqlite, int rowWithExcludeWord, int activeWindow) {
+        if (activeWindow == 1 && rowWithExcludeWord != -1) {
+            setRowWithExcludeWord(sqlite, rowWithExcludeWord);
+        }
+    }
+
+    private void delRowWithExcluded(SQLite sqlite, int delRowWithExcludeWord) {
+        delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
+        String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
+        // удаление из диалогового окна
+        Dialogs.model.removeRow(delRowWithExcludeWord);
+        // удаление из файла excluded.txt
+        //Common.delLine(source, Main.excludedPath);
+        // удаление из базы данных
+        sqlite.deleteExcluded(source);
+    }
+
+    private void delRowWithSource(SQLite sqlite, int rowWithSource) {
+        rowWithSource = table.convertRowIndexToModel(rowWithSource);
+        String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
+        // удаление из диалогового окна
+        Dialogs.model.removeRow(rowWithSource);
+        // удаление из файла sources.txt
+        //Common.delLine(source, Main.sourcesPath);
+        // удаление из базы данных
+        sqlite.deleteSource(source);
+    }
+
+    private void setRowWithExcludeWord(SQLite sqlite, int rowWithExcludeWord) {
+        rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
+        String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
+        // удаление из диалогового окна
+        Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
+        // добавление в базу данных и файл excluded.txt
+        sqlite.insertNewExcludedWord(source);
     }
 
 }
