@@ -254,7 +254,7 @@ public class Search {
     }
 
     private void getTodayOrNotCbx(SQLite sqlite, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
-        if (Gui.todayOrNotCbx.getState() && (date_diff != 0)) {
+        if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
             newsCount++;
             Gui.labelSum.setText(String.valueOf(newsCount));
             dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
@@ -280,31 +280,6 @@ public class Search {
             }
             sqlite.insertTitleIn256(Common.sha256(title + pubDate));
 
-        } else if (!Gui.todayOrNotCbx.getState()) {
-            newsCount++;
-            Gui.labelSum.setText(String.valueOf(newsCount));
-            dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
-                    smi_source + " - " + dateToEmail);
-
-            Object[] row = new Object[]{
-                    newsCount,
-                    smi_source,
-                    title,
-                    dateFormatHoursFirst.format(pubDate),
-                    link
-            };
-            Gui.model.addRow(row);
-
-            // SQLite
-            String[] subStr = title.split(" ");
-            for (String s : subStr) {
-                if (s.length() > 3) {
-                    assert st != null;
-                    st.setString(1, Common.delNoLetter(s).toLowerCase());
-                    st.executeUpdate();
-                }
-            }
-            sqlite.insertTitleIn256(Common.sha256(title + pubDate));
         }
     }
 
