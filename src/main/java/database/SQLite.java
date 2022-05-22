@@ -58,11 +58,11 @@ public class SQLite {
     // Delete from news_dual
     public void deleteTitles() {
         try {
-            Statement statement = connection.createStatement();
+            Statement st = connection.createStatement();
             // TODO: Import query from sql-queries.xml
             String query = "DELETE FROM news_dual";
-            statement.executeUpdate(query);
-            statement.close();
+            st.executeUpdate(query);
+            st.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -212,9 +212,9 @@ public class SQLite {
                 String query = "INSERT INTO exclude(word) VALUES (?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, pWord);
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(query);
-                statement.close();
+                Statement st = connection.createStatement();
+                st.executeUpdate(query);
+                st.close();
 
                 Common.console("status: word \"" + pWord + "\" excluded from analysis");
                 LOGGER.warn("New word excluded from analysis");
@@ -251,9 +251,9 @@ public class SQLite {
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, pTitle);
                 preparedStatement.setString(2, pDate);
-                Statement statement = connection.createStatement();
-                statement.executeUpdate(query);
-                statement.close();
+                Statement st = connection.createStatement();
+                st.executeUpdate(query);
+                st.close();
             } catch (SQLException ignored) {
             }
         }
