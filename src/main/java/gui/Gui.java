@@ -1,5 +1,6 @@
 package gui;
 
+import database.DBQueries;
 import database.SQLite;
 import email.EmailSender;
 import main.Main;
@@ -38,6 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Gui extends JFrame {
     private static final Logger LOGGER = LoggerFactory.getLogger(Gui.class);
     final SQLite sqlite = new SQLite();
+    final DBQueries dbQueries = new DBQueries();
     final Search search = new Search();
     private static final Font GUI_FONT = new Font("Tahoma", Font.PLAIN, 11);
     private static final String[] INTERVALS = {"1 min", "5 min", "15 min", "30 min", "45 min", "1 hour", "2 hours",
@@ -819,7 +821,7 @@ public class Gui extends JFrame {
         addNewSource.setBackground(new Color(243, 229, 255));
         addNewSource.setBounds(902, 479, 14, 14);
         getContentPane().add(addNewSource);
-        addNewSource.addActionListener(e -> sqlite.insertNewSource());
+        addNewSource.addActionListener(e -> dbQueries.insertNewSource());
         addNewSource.addMouseListener(new MouseAdapter() {
             // наведение мышки на кнопку
             @Override
@@ -958,7 +960,7 @@ public class Gui extends JFrame {
         onlyNewNews.addItemListener(e -> {
             isOnlyLastNews = onlyNewNews.getState();
             if (!isOnlyLastNews) {
-                sqlite.deleteFrom256();
+                dbQueries.deleteFrom256();
             }
         });
 

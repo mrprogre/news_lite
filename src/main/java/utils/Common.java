@@ -1,5 +1,6 @@
 package utils;
 
+import database.DBQueries;
 import database.SQLite;
 import email.EmailSender;
 import gui.Dialogs;
@@ -446,10 +447,10 @@ public class Common {
 
     // Заполнение диалоговых окон лога и СМИ
     public static void showDialog(String p_file) {
-        SQLite sqlite = new SQLite();
+        DBQueries dbQueries = new DBQueries();
         switch (p_file) {
             case "smi": {
-                sqlite.selectSources("active_smi");
+                dbQueries.selectSources("active_smi");
                 int i = 1;
                 for (String s : Common.SMI_SOURCE) {
                     Object[] row = new Object[]{i, s, Common.SMI_IS_ACTIVE.get(i - 1)};
@@ -461,7 +462,7 @@ public class Common {
             case "log": //TODO перенастроить лог на новый файл
                 break;
             case "excl": {
-                sqlite.selectSources("excl");
+                dbQueries.selectSources("excl");
                 int i = 1;
                 for (String s : Common.EXCLUDED_WORDS) {
                     Object[] row = new Object[]{i, s};

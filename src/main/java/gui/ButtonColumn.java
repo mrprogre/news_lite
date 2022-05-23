@@ -1,6 +1,6 @@
 package gui;
 
-import database.SQLite;
+import database.DBQueries;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -79,7 +79,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
     }
 
     public void actionPerformed(ActionEvent e) {
-        SQLite sqlite = new SQLite();
+        DBQueries dbQueries = new DBQueries();
         fireEditingStopped();
         int rowWithSource = table.getSelectedRow();
         int rowWithExcludeWord = Gui.tableForAnalysis.getSelectedRow();
@@ -100,35 +100,35 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         }
 
         // окно таблицы с анализом частоты слов на основной панели (добавляем в базу)
-        setActive_1(sqlite, rowWithExcludeWord, activeWindow);
+        setActive_1(dbQueries, rowWithExcludeWord, activeWindow);
 
         // окно источников RSS
-        setActive_2(sqlite, rowWithSource, activeWindow);
+        setActive_2(dbQueries, rowWithSource, activeWindow);
 
         // окно с исключенными из анализа слов (удаляем из базы)
-        setActive_3(sqlite, delRowWithExcludeWord, activeWindow);
+        setActive_3(dbQueries, delRowWithExcludeWord, activeWindow);
 
     }
 
-    private void setActive_3(SQLite sqlite, int delRowWithExcludeWord, int activeWindow) {
+    private void setActive_3(DBQueries sqlite, int delRowWithExcludeWord, int activeWindow) {
         if (activeWindow == 3 && delRowWithExcludeWord != -1) {
             delRowWithExcluded(sqlite, delRowWithExcludeWord);
         }
     }
 
-    private void setActive_2(SQLite sqlite, int rowWithSource, int activeWindow) {
+    private void setActive_2(DBQueries sqlite, int rowWithSource, int activeWindow) {
         if (activeWindow == 2 && rowWithSource != -1) {
             delRowWithSource(sqlite, rowWithSource);
         }
     }
 
-    private void setActive_1(SQLite sqlite, int rowWithExcludeWord, int activeWindow) {
+    private void setActive_1(DBQueries sqlite, int rowWithExcludeWord, int activeWindow) {
         if (activeWindow == 1 && rowWithExcludeWord != -1) {
             setRowWithExcludeWord(sqlite, rowWithExcludeWord);
         }
     }
 
-    private void delRowWithExcluded(SQLite sqlite, int delRowWithExcludeWord) {
+    private void delRowWithExcluded(DBQueries sqlite, int delRowWithExcludeWord) {
         delRowWithExcludeWord = Dialogs.table.convertRowIndexToModel(delRowWithExcludeWord);
         String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
         // удаление из диалогового окна
@@ -139,7 +139,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         sqlite.deleteExcluded(source);
     }
 
-    private void delRowWithSource(SQLite sqlite, int rowWithSource) {
+    private void delRowWithSource(DBQueries sqlite, int rowWithSource) {
         rowWithSource = table.convertRowIndexToModel(rowWithSource);
         String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
         // удаление из диалогового окна
@@ -150,7 +150,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         sqlite.deleteSource(source);
     }
 
-    private void setRowWithExcludeWord(SQLite sqlite, int rowWithExcludeWord) {
+    private void setRowWithExcludeWord(DBQueries sqlite, int rowWithExcludeWord) {
         rowWithExcludeWord = Gui.tableForAnalysis.convertRowIndexToModel(rowWithExcludeWord);
         String source = (String) Gui.modelForAnalysis.getValueAt(rowWithExcludeWord, 0);
         // удаление из диалогового окна
