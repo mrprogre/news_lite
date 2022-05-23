@@ -2,6 +2,7 @@ package main;
 
 import com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme;
 import database.SQLite;
+import database.Utilities;
 import gui.Gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     public static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "News" + File.separator;
     public static final String SETTINGS_PATH = DIRECTORY_PATH + "config.txt";
-    public static final Calendar MIN_PUB_DATE = Calendar.getInstance();
+    public static final Calendar OLDEST_PUBLISH_DATE = Calendar.getInstance();
     public static final int [] GUI_FONT = new int[3];
     public static final int [] GUI_BACKGROUND = new int[3];
     // Console search
@@ -29,13 +31,18 @@ public class Main {
     public static String emailToFromConsole;
     public static int minutesIntervalForConsoleSearch;
     public static String[] keywordsFromConsole;
+    public static Properties prop;
 
     // создание директорий и файлов
     static {
-        // Минимальная дата публикации новости 01.01.2021
-        MIN_PUB_DATE.set(Calendar.YEAR, 2022);
-        MIN_PUB_DATE.set(Calendar.DAY_OF_YEAR, 1);
+        // Минимальная дата публикации новости 01.01.2022 -> 최소 게시일
+        OLDEST_PUBLISH_DATE.set(Calendar.YEAR, 2022);
+        OLDEST_PUBLISH_DATE.set(Calendar.DAY_OF_YEAR, 1);
 
+        initialFileSetting();
+    }
+
+    private static void initialFileSetting() {
         File mainDirectory = new File(DIRECTORY_PATH);
         if (!mainDirectory.exists()) mainDirectory.mkdirs();
 
@@ -70,7 +77,9 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         keywordsFromConsole = new String[args.length];
+        prop = new Properties();
         SQLite sqlite = new SQLite();
+        Utilities dbUtils = new Utilities();
         if (args.length == 0) {
             log.info("Application started");
 
@@ -94,12 +103,14 @@ public class Main {
             Gui.newsInterval.setVisible(Gui.todayOrNotCbx.getState());
             Gui.isOnlyLastNews = Gui.onlyNewNews.getState();
             sqlite.openSQLiteConnection();
+            dbUtils.loadSQLQueries();
         } else {
             // Console search
             IS_CONSOLE_SEARCH.set(true);
             emailToFromConsole = args[0];
             minutesIntervalForConsoleSearch = Integer.parseInt(args[1]);
             sqlite.openSQLiteConnection();
+            dbUtils.loadSQLQueries();
             System.arraycopy(args, 0, keywordsFromConsole, 0, args.length);
             System.out.println(Arrays.toString(keywordsFromConsole)); //***
             Search search = new Search();

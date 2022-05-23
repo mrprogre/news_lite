@@ -47,7 +47,7 @@ public class Search {
     final SimpleDateFormat dateFormatHoursFirst = new SimpleDateFormat("dd.MMM HH:mm", Locale.ENGLISH);
     public static final ArrayList<String> dataForEmail = new ArrayList<>();
     int newsCount = 0;
-    final Date minDate = Main.MIN_PUB_DATE.getTime();
+    final Date minDate = Main.OLDEST_PUBLISH_DATE.getTime();
     int checkDate;
     LocalTime timeStart;
     LocalTime timeEnd;
@@ -82,7 +82,7 @@ public class Search {
             }
 
             isSearchFinished = new AtomicBoolean(false);
-            Gui.sendEmailBtn.setIcon(Gui.SEND);
+            Gui.sendEmailBtn.setIcon(Gui.SEND_ICON);
             new Thread(Common::fill).start();
             try {
                 // начало транзакции
