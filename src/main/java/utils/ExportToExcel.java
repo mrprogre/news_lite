@@ -4,19 +4,17 @@ import gui.Gui;
 import jxl.Workbook;
 import jxl.format.Alignment;
 import jxl.format.Colour;
-import jxl.format.UnderlineStyle;
 import jxl.write.*;
 import jxl.write.biff.RowsExceededException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 import static javax.swing.JFileChooser.*;
+import static jxl.format.Colour.BLACK;
+import static jxl.format.Colour.DARK_GREEN;
+import static jxl.format.UnderlineStyle.NO_UNDERLINE;
 
 
 public class ExportToExcel extends ExportManager {
@@ -40,55 +38,64 @@ public class ExportToExcel extends ExportManager {
                 WritableSheet page = newExcel.createSheet("001", 0);
 
                 initPage(page);
+                
 
                 //no bold
-                WritableFont writableFontNoBold = new WritableFont(WritableFont.ARIAL, 11,
-                        WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE,
-                        jxl.format.Colour.BLACK);
+                WritableFont writableFontNoBold = new ExcelFont
+                        .Builder()
+                        .pointSize(11)
+                        .noBold()
+                        .underlineStyle(NO_UNDERLINE)
+                        .color(BLACK)
+                        .build();
 
                 //bold
-                WritableFont writableFontBold = new WritableFont(WritableFont.ARIAL, 11,
-                        WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE,
-                        jxl.format.Colour.BLACK);
+                WritableFont writableFontBold = new ExcelFont
+                        .Builder()
+                        .pointSize(11)
+                        .bold()
+                        .underlineStyle(NO_UNDERLINE)
+                        .color(BLACK)
+                        .build();
+                
 
                 // Hyperlinks Format
-                WritableFont hyperlinkFont = new WritableFont(WritableFont.ARIAL, 11, WritableFont.NO_BOLD);
-                hyperlinkFont.setColour(Colour.DARK_GREEN);
+                WritableFont hyperlinkFont = new ExcelFont
+                        .Builder()
+                        .pointSize(11)
+                        .noBold()
+                        .color(DARK_GREEN)
+                        .build();
+                
+                
                 WritableCellFormat hyperlinkCellFormat = new WritableCellFormat(hyperlinkFont);
-                hyperlinkCellFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                hyperlinkCellFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 hyperlinkCellFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 hyperlinkCellFormat.setWrap(true);
 
                 // Title format
                 WritableCellFormat cellTitleFormat = new WritableCellFormat(writableFontNoBold);
-                cellTitleFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                cellTitleFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 cellTitleFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 cellTitleFormat.setWrap(true);
 
                 // Number Format
                 WritableCellFormat cellNumberFormat = new WritableCellFormat(writableFontNoBold);
-                cellNumberFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                cellNumberFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 cellNumberFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 cellNumberFormat.setAlignment(Alignment.CENTRE);
                 
                 // Source Format
                 WritableCellFormat cellSourceFormat = new WritableCellFormat(writableFontNoBold);
-                cellSourceFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                cellSourceFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 cellSourceFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 cellSourceFormat.setAlignment(Alignment.CENTRE);
 
-                //no bold
-                WritableCellFormat cellNoBoldFormat = new WritableCellFormat(writableFontNoBold);
-                cellNoBoldFormat.setAlignment(jxl.format.Alignment.CENTRE);
-                cellNoBoldFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellNoBoldFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
-                cellNoBoldFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-
                 //HEADERS: color, bold
                 WritableCellFormat cellHeaderFormat = new WritableCellFormat(writableFontBold);
-                cellHeaderFormat.setAlignment(jxl.format.Alignment.CENTRE);
-                cellHeaderFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                cellHeaderFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 cellHeaderFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
+                cellHeaderFormat.setAlignment(jxl.format.Alignment.CENTRE);
                 cellHeaderFormat.setBackground(Colour.LIGHT_GREEN);
 
                 //DATE: no bold
@@ -97,7 +104,7 @@ public class ExportToExcel extends ExportManager {
                 
                 cellDateFormat.setAlignment(jxl.format.Alignment.CENTRE);
                 cellDateFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellDateFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, jxl.format.Colour.BLACK);
+                cellDateFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
                 cellDateFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
                 cellDateFormat.setAlignment(Alignment.CENTRE);
 
