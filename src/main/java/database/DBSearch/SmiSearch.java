@@ -1,5 +1,6 @@
-package database;
+package database.DBSearch;
 
+import database.Utilities;
 import utils.Common;
 
 import java.sql.ResultSet;
