@@ -44,6 +44,7 @@ public class DBQueries {
     }
 
     // запись данных по актуальным источникам из базы в массивы для поиска
+    // TODO: Make this the context to using different types of search
     public void selectSources(String pDialog) {
         if (isConnectionToSQLite) {
             switch (pDialog) {
@@ -66,7 +67,7 @@ public class DBQueries {
         if (isConnectionToSQLite) {
             try {
                 // Диалоговое окно добавления источника новостей в базу данных
-                RSSInfoFromUI rssInfoFromUI = getRSSInfoFromUI();
+                RSSInfoFromUI rssInfoFromUI = dbUtil.getRSSInfoFromUI();
 
                 if (rssInfoFromUI.getResult() == JOptionPane.YES_OPTION) {
                     //запись в БД
@@ -251,78 +252,6 @@ public class DBQueries {
             }
         }
         return countNews;
-    }
-
-
-    private void smiSearch() {
-        //sources
-        Common.SMI_SOURCE.clear();
-        Common.SMI_LINK.clear();
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("smiQuery"));
-            while (rs.next()) {
-                //int id = rs.getInt("id");
-                String source = rs.getString("source");
-                String link = rs.getString("link");
-                Common.SMI_SOURCE.add(source);
-                Common.SMI_LINK.add(link);
-            }
-            rs.close();
-            st.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void excludedSearch() {
-        Common.EXCLUDED_WORDS.clear();
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("exclQuery"));
-            while (rs.next()) {
-                String word = rs.getString("word");
-                Common.EXCLUDED_WORDS.add(word);
-            }
-            rs.close();
-            st.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void activeSMISearch() {
-        Common.SMI_SOURCE.clear();
-        Common.SMI_LINK.clear();
-        Common.SMI_IS_ACTIVE.clear();
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("activeSmiQuery"));
-            while (rs.next()) {
-                //int id = rs.getInt("id");
-                String source = rs.getString("source");
-                String link = rs.getString("link");
-                boolean isActive = rs.getBoolean("is_active");
-
-                Common.SMI_SOURCE.add(source);
-                Common.SMI_LINK.add(link);
-                Common.SMI_IS_ACTIVE.add(isActive);
-            }
-            rs.close();
-            st.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private RSSInfoFromUI getRSSInfoFromUI() {
-        JTextField sourceName = new JTextField();
-        JTextField rssLink = new JTextField();
-        Object[] newSource = {"Source:", sourceName, "Link to rss:", rssLink};
-        int result =
-                JOptionPane.showConfirmDialog(Gui.scrollPane, newSource,
-                        "New source", JOptionPane.OK_CANCEL_OPTION);
-        return new RSSInfoFromUI(sourceName, rssLink, result);
     }
 
     private int getNextMaxID() throws SQLException {
