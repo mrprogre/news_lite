@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 
-public class ExportManager {
+public abstract class ExportManager {
 
     protected static final Logger LOG = LoggerFactory.getLogger(ExportToExcel.class);
 
@@ -30,15 +30,15 @@ public class ExportManager {
         return jFileChooser;
     }
 
-    public void setExtension(String extension) {
+    protected void setExtension(String extension) {
         this.extension = extension;
     }
 
-    public void setExtensionFilter(FileNameExtensionFilter extensionFilter) {
+    protected void setExtensionFilter(FileNameExtensionFilter extensionFilter) {
         this.extensionFilter = extensionFilter;
     }
-    
-    public void setjFileChooser() {
+
+    protected void setjFileChooser() {
         jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(extensionFilter);
         jFileChooser.setCurrentDirectory(new File
