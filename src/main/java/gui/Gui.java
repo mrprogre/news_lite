@@ -435,12 +435,9 @@ public class Gui extends JFrame {
         getContentPane().add(exportBtn);
 
         //Clear addNewSource
+        clearButtonTop _clearButtonTop = new clearButtonTop(CLEAR_ICON, new Color(250, 128, 114), 1140, 9);
         JButton clearBtnTop = new JButton();
-        clearBtnTop.setToolTipText("Clear the list");
-        clearBtnTop.setBackground(new Color(250, 128, 114));
-        clearBtnTop.setIcon(CLEAR_ICON);
-        clearBtnTop.setBounds(1140, 9, 30, 22);
-
+        _clearButtonTop.buttonSetting(clearBtnTop);
         clearBtnTop.addActionListener(e -> {
             try {
                 if (model.getRowCount() == 0) {
