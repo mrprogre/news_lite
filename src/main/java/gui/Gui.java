@@ -2,6 +2,7 @@ package gui;
 
 import database.SQLite;
 import email.EmailSender;
+import gui.IconButton.*;
 import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -420,11 +421,9 @@ public class Gui extends JFrame {
         getContentPane().add(fontColorBtn);
 
         //Export to excel
+        exportButton _exportButton = new exportButton(EXCEL_ICON, new Color(255, 251, 183), 1105, 9);
         JButton exportBtn = new JButton();
-        exportBtn.setIcon(EXCEL_ICON);
-        exportBtn.setToolTipText("Export news to excel");
-        exportBtn.setBackground(new Color(255, 251, 183));
-        exportBtn.setBounds(1105, 9, 30, 22);
+        _exportButton.buttonSetting(exportBtn);
         exportBtn.addActionListener(e -> {
             if (model.getRowCount() != 0) {
                 new Thread(new ExportToExcel()::exportResultsToExcel).start();

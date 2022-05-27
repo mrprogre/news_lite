@@ -1,4 +1,4 @@
-package gui;
+package gui.IconButton;
 
 import javax.swing.*;
 import java.awt.*;

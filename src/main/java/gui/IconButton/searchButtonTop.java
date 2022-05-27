@@ -1,4 +1,4 @@
-package gui;
+package gui.IconButton;
 
 import search.Search;
 
