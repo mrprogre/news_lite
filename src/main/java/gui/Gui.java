@@ -331,12 +331,9 @@ public class Gui extends JFrame {
         getContentPane().add(topKeyword);
 
         //Search addNewSource
-        searchBtnTop = new JButton("");
-        searchBtnTop.setIcon(SEARCH_ICON);
-        searchBtnTop.setToolTipText("Без заголовков со словами " + Search.excludeFromSearch);
-        searchBtnTop.setBackground(new Color(154, 237, 196));
-        searchBtnTop.setFont(new Font("Tahoma", Font.BOLD, 10));
-        searchBtnTop.setBounds(192, 9, 30, 22);
+        searchButtonTop _searchButtonTop = new searchButtonTop(SEARCH_ICON, new Color(154, 237, 196), new Font("Tahoma", Font.BOLD, 10), 192, 9);
+        searchBtnTop = new JButton("");//_searchButtonTop.makeButton();
+        _searchButtonTop.buttonSetting(searchBtnTop);
         getContentPane().add(searchBtnTop);
         // Search by Enter
         getRootPane().setDefaultButton(searchBtnTop);
