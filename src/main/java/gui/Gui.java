@@ -535,10 +535,9 @@ public class Gui extends JFrame {
         getContentPane().add(searchBtnBottom);
 
         //Stop addNewSource (bottom)
+        stopButtonBottom _stopButtonBottom = new stopButtonBottom(STOP_ICON, new Color(255, 208, 202), 261, 561);
         stopBtnBottom = new JButton("");
-        stopBtnBottom.setIcon(STOP_ICON);
-        stopBtnBottom.setBackground(new Color(255, 208, 202));
-        stopBtnBottom.setBounds(261, 561, 30, 22);
+        _stopButtonBottom.buttonSetting(stopBtnBottom);
         stopBtnBottom.addActionListener(e -> {
             try {
                 Search.isSearchFinished.set(true);
