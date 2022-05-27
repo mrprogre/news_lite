@@ -397,11 +397,9 @@ public class Gui extends JFrame {
         getContentPane().add(backgroundColorBtn);
 
         // Выбор цвета шрифта в таблице
+        fontColorButton _fontColorButton = new fontColorButton(FONT_ICON, new Color(190, 225, 255), 1070, 9);
         JButton fontColorBtn = new JButton();
-        fontColorBtn.setToolTipText("Font color");
-        fontColorBtn.setBackground(new Color(190, 225, 255));
-        fontColorBtn.setIcon(FONT_ICON);
-        fontColorBtn.setBounds(1070, 9, 30, 22);
+        _fontColorButton.buttonSetting(fontColorBtn);
         fontColorBtn.addActionListener(e -> {
             Color color = JColorChooser.showDialog(null, "Color", Color.black);
             if (color != null) {
