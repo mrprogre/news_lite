@@ -342,10 +342,9 @@ public class Gui extends JFrame {
         searchBtnTop.addActionListener(e -> new Thread(() -> search.mainSearch("word")).start());
 
         //Stop addNewSource
+        stopButtonTop _stopButtonTop = new stopButtonTop(STOP_ICON, new Color(255, 208, 202), 192, 9);
         stopBtnTop = new JButton("");
-        stopBtnTop.setIcon(STOP_ICON);
-        stopBtnTop.setBackground(new Color(255, 208, 202));
-        stopBtnTop.setBounds(192, 9, 30, 22);
+        _stopButtonTop.buttonSetting(stopBtnTop);
         stopBtnTop.addActionListener(e -> {
             try {
                 Search.isSearchFinished.set(true);

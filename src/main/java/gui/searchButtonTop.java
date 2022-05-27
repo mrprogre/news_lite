@@ -7,7 +7,8 @@ import java.awt.*;
 
 public class searchButtonTop extends iconButtonFactory{
     public searchButtonTop(ImageIcon icon, Color color, Font font, int x, int y) {
-        super(icon, color, font, x, y);
+        super(icon, color, x, y);
+        this._font = font;
     }
 
     @Override
