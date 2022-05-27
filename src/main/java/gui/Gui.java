@@ -478,7 +478,6 @@ public class Gui extends JFrame {
         buttonAddKeywordToList _buttonAddKeywordToList = new buttonAddKeywordToList(CREATE_ICON, 95, 561);
         JButton btnAddKeywordToList = new JButton("");
         _buttonAddKeywordToList.buttonSetting(btnAddKeywordToList);
-        getContentPane().add(btnAddKeywordToList);
         btnAddKeywordToList.addActionListener(e -> {
             if (addKeywordToList.getText().length() > 0) {
                 String word = addKeywordToList.getText();
@@ -498,9 +497,12 @@ public class Gui extends JFrame {
                 addKeywordToList.setText("");
             }
         });
+        getContentPane().add(btnAddKeywordToList);
 
         //Delete from combo box
+        buttonDeleteFromList _buttonDeleteFromList = new buttonDeleteFromList(DELETE_ICON, 130, 561);
         JButton btnDelFromList = new JButton("");
+        _buttonDeleteFromList.buttonSetting(btnDelFromList);
         btnDelFromList.addActionListener(e -> {
             if (keywords.getItemCount() > 0) {
                 try {
@@ -514,8 +516,6 @@ public class Gui extends JFrame {
             }
 
         });
-        btnDelFromList.setIcon(DELETE_ICON);
-        btnDelFromList.setBounds(130, 561, 30, 22);
         getContentPane().add(btnDelFromList);
 
         //Keywords combo box
