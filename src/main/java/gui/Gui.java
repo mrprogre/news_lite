@@ -527,11 +527,9 @@ public class Gui extends JFrame {
         getContentPane().add(keywords);
 
         //Bottom search by keywords
+        searchButtonBottom _searchButtonBottom = new searchButtonBottom(SEARCH_ICON, new Font("Tahoma", Font.BOLD, 10), new Color(154, 237, 196), 261, 561);
         searchBtnBottom = new JButton("");
-        searchBtnBottom.setIcon(SEARCH_ICON);
-        searchBtnBottom.setFont(new Font("Tahoma", Font.BOLD, 10));
-        searchBtnBottom.setBackground(new Color(154, 237, 196));
-        searchBtnBottom.setBounds(261, 561, 30, 22);
+        _searchButtonBottom.buttonSetting(searchBtnBottom);
         //searchBtnBottom.addActionListener(e -> new Thread(Search::keywordsSearch).start());
         searchBtnBottom.addActionListener(e -> new Thread(() -> search.mainSearch("words")).start());
         getContentPane().add(searchBtnBottom);

@@ -10,7 +10,6 @@ public class buttonDeleteFromList extends iconButtonFactory{
     @Override
     public void buttonSetting(JButton _btn) {
         _btn.setIcon(_icon);
-        _btn.setBackground(_color);
         _btn.setBounds(x_axis, y_axis, _width, _height);
     }
 }
