@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class exportButton extends iconButtonFactory{
     public exportButton(ImageIcon icon, Color color, int x, int y) {
-        super(icon, color, x, y);
+        super(icon, x, y);
+        this._color = color;
     }
 
     @Override

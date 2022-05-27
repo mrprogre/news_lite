@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class backGroundColorButton extends iconButtonFactory{
     public backGroundColorButton(ImageIcon icon, Color color, int x, int y) {
-        super(icon, color, x, y);
+        super(icon, x, y);
+        this._color = color;
     }
 
     @Override
