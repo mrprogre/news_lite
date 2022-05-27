@@ -375,11 +375,9 @@ public class Gui extends JFrame {
 
         /* Top-Right buttons */
         // Выбор цвета фона
+        backGroundColorButton _backGroundColorButton = new backGroundColorButton(BG_ICON, new Color(189, 189, 189), 1035, 9);
         JButton backgroundColorBtn = new JButton();
-        backgroundColorBtn.setToolTipText("Background color");
-        backgroundColorBtn.setBackground(new Color(189, 189, 189));
-        backgroundColorBtn.setIcon(BG_ICON);
-        backgroundColorBtn.setBounds(1035, 9, 30, 22);
+        _backGroundColorButton.buttonSetting(backgroundColorBtn);
         backgroundColorBtn.addActionListener(e -> {
             Color color = JColorChooser.showDialog(null, "Color", Color.black);
             if (color != null) {
