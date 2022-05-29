@@ -83,6 +83,12 @@
             <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.bingzer.android.dbv</groupId>
+            <artifactId>dbquery</artifactId>
+            <version>2.2.0</version>
+            <scope>import</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -53,6 +53,9 @@ public class Search {
     LocalTime timeStart;
     LocalTime timeEnd;
     Duration searchTime;
+    private DoSearch doSearch;
+    public void search(){doSearch.search();}
+
 
     //Main search
     public void mainSearch(String pSearchType) {
@@ -247,18 +250,6 @@ public class Search {
 
 
 
-    private boolean isHref(String newsDescribe) {
-        return newsDescribe.contains("<img")
-                || newsDescribe.contains("href")
-                || newsDescribe.contains("<div")
-                || newsDescribe.contains("&#34")
-                || newsDescribe.contains("<p lang")
-                || newsDescribe.contains("&quot")
-                || newsDescribe.contains("<span")
-                || newsDescribe.contains("<ol")
-                || newsDescribe.equals("");
-    }
-
     private void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
         if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
             newsCount++;
@@ -396,5 +387,18 @@ public class Search {
                 }
             }
         }
+    }
+
+    //both method use
+    private boolean isHref(String newsDescribe) {
+        return newsDescribe.contains("<img")
+                || newsDescribe.contains("href")
+                || newsDescribe.contains("<div")
+                || newsDescribe.contains("&#34")
+                || newsDescribe.contains("<p lang")
+                || newsDescribe.contains("&quot")
+                || newsDescribe.contains("<span")
+                || newsDescribe.contains("<ol")
+                || newsDescribe.equals("");
     }
 }
