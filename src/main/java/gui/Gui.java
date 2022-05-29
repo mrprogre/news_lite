@@ -3,6 +3,7 @@ package gui;
 import database.DBQueries;
 import database.SQLite;
 import email.EmailSender;
+import gui.IconButton.*;
 import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -333,12 +334,9 @@ public class Gui extends JFrame {
         getContentPane().add(topKeyword);
 
         //Search addNewSource
-        searchBtnTop = new JButton("");
-        searchBtnTop.setIcon(SEARCH_ICON);
-        searchBtnTop.setToolTipText("Без заголовков со словами " + Search.excludeFromSearch);
-        searchBtnTop.setBackground(new Color(154, 237, 196));
-        searchBtnTop.setFont(new Font("Tahoma", Font.BOLD, 10));
-        searchBtnTop.setBounds(192, 9, 30, 22);
+        searchButtonTop _searchButtonTop = new searchButtonTop(SEARCH_ICON, new Color(154, 237, 196), new Font("Tahoma", Font.BOLD, 10), 192, 9);
+        searchBtnTop = new JButton("");//_searchButtonTop.makeButton();
+        _searchButtonTop.buttonSetting(searchBtnTop);
         getContentPane().add(searchBtnTop);
         // Search by Enter
         getRootPane().setDefaultButton(searchBtnTop);
@@ -347,10 +345,9 @@ public class Gui extends JFrame {
         searchBtnTop.addActionListener(e -> new Thread(() -> search.mainSearch("word")).start());
 
         //Stop addNewSource
+        stopButtonTop _stopButtonTop = new stopButtonTop(STOP_ICON, new Color(255, 208, 202), 192, 9);
         stopBtnTop = new JButton("");
-        stopBtnTop.setIcon(STOP_ICON);
-        stopBtnTop.setBackground(new Color(255, 208, 202));
-        stopBtnTop.setBounds(192, 9, 30, 22);
+        _stopButtonTop.buttonSetting(stopBtnTop);
         stopBtnTop.addActionListener(e -> {
             try {
                 Search.isSearchFinished.set(true);
@@ -381,11 +378,9 @@ public class Gui extends JFrame {
 
         /* Top-Right buttons */
         // Выбор цвета фона
+        backGroundColorButton _backGroundColorButton = new backGroundColorButton(BG_ICON, new Color(189, 189, 189), 1035, 9);
         JButton backgroundColorBtn = new JButton();
-        backgroundColorBtn.setToolTipText("Background color");
-        backgroundColorBtn.setBackground(new Color(189, 189, 189));
-        backgroundColorBtn.setIcon(BG_ICON);
-        backgroundColorBtn.setBounds(1035, 9, 30, 22);
+        _backGroundColorButton.buttonSetting(backgroundColorBtn);
         backgroundColorBtn.addActionListener(e -> {
             Color color = JColorChooser.showDialog(null, "Color", Color.black);
             if (color != null) {
@@ -405,11 +400,9 @@ public class Gui extends JFrame {
         getContentPane().add(backgroundColorBtn);
 
         // Выбор цвета шрифта в таблице
+        fontColorButton _fontColorButton = new fontColorButton(FONT_ICON, new Color(190, 225, 255), 1070, 9);
         JButton fontColorBtn = new JButton();
-        fontColorBtn.setToolTipText("Font color");
-        fontColorBtn.setBackground(new Color(190, 225, 255));
-        fontColorBtn.setIcon(FONT_ICON);
-        fontColorBtn.setBounds(1070, 9, 30, 22);
+        _fontColorButton.buttonSetting(fontColorBtn);
         fontColorBtn.addActionListener(e -> {
             Color color = JColorChooser.showDialog(null, "Color", Color.black);
             if (color != null) {
@@ -430,11 +423,9 @@ public class Gui extends JFrame {
         getContentPane().add(fontColorBtn);
 
         //Export to excel
+        exportButton _exportButton = new exportButton(EXCEL_ICON, new Color(255, 251, 183), 1105, 9);
         JButton exportBtn = new JButton();
-        exportBtn.setIcon(EXCEL_ICON);
-        exportBtn.setToolTipText("Export news to excel");
-        exportBtn.setBackground(new Color(255, 251, 183));
-        exportBtn.setBounds(1105, 9, 30, 22);
+        _exportButton.buttonSetting(exportBtn);
         exportBtn.addActionListener(e -> {
             if (model.getRowCount() != 0) {
                 new Thread(new ExportToExcel()::exportResultsToExcel).start();
@@ -446,12 +437,9 @@ public class Gui extends JFrame {
         getContentPane().add(exportBtn);
 
         //Clear addNewSource
+        clearButtonTop _clearButtonTop = new clearButtonTop(CLEAR_ICON, new Color(250, 128, 114), 1140, 9);
         JButton clearBtnTop = new JButton();
-        clearBtnTop.setToolTipText("Clear the list");
-        clearBtnTop.setBackground(new Color(250, 128, 114));
-        clearBtnTop.setIcon(CLEAR_ICON);
-        clearBtnTop.setBounds(1140, 9, 30, 22);
-
+        _clearButtonTop.buttonSetting(clearBtnTop);
         clearBtnTop.addActionListener(e -> {
             try {
                 if (model.getRowCount() == 0) {
@@ -489,8 +477,9 @@ public class Gui extends JFrame {
         getContentPane().add(addKeywordToList);
 
         //Add to keywords combo box
+        buttonAddKeywordToList _buttonAddKeywordToList = new buttonAddKeywordToList(CREATE_ICON, 95, 561);
         JButton btnAddKeywordToList = new JButton("");
-        getContentPane().add(btnAddKeywordToList);
+        _buttonAddKeywordToList.buttonSetting(btnAddKeywordToList);
         btnAddKeywordToList.addActionListener(e -> {
             if (addKeywordToList.getText().length() > 0) {
                 String word = addKeywordToList.getText();
@@ -510,11 +499,12 @@ public class Gui extends JFrame {
                 addKeywordToList.setText("");
             }
         });
-        btnAddKeywordToList.setIcon(CREATE_ICON);
-        btnAddKeywordToList.setBounds(95, 561, 30, 22);
+        getContentPane().add(btnAddKeywordToList);
 
         //Delete from combo box
+        buttonDeleteFromList _buttonDeleteFromList = new buttonDeleteFromList(DELETE_ICON, 130, 561);
         JButton btnDelFromList = new JButton("");
+        _buttonDeleteFromList.buttonSetting(btnDelFromList);
         btnDelFromList.addActionListener(e -> {
             if (keywords.getItemCount() > 0) {
                 try {
@@ -528,8 +518,6 @@ public class Gui extends JFrame {
             }
 
         });
-        btnDelFromList.setIcon(DELETE_ICON);
-        btnDelFromList.setBounds(130, 561, 30, 22);
         getContentPane().add(btnDelFromList);
 
         //Keywords combo box
@@ -541,20 +529,17 @@ public class Gui extends JFrame {
         getContentPane().add(keywords);
 
         //Bottom search by keywords
+        searchButtonBottom _searchButtonBottom = new searchButtonBottom(SEARCH_ICON, new Font("Tahoma", Font.BOLD, 10), new Color(154, 237, 196), 261, 561);
         searchBtnBottom = new JButton("");
-        searchBtnBottom.setIcon(SEARCH_ICON);
-        searchBtnBottom.setFont(new Font("Tahoma", Font.BOLD, 10));
-        searchBtnBottom.setBackground(new Color(154, 237, 196));
-        searchBtnBottom.setBounds(261, 561, 30, 22);
+        _searchButtonBottom.buttonSetting(searchBtnBottom);
         //searchBtnBottom.addActionListener(e -> new Thread(Search::keywordsSearch).start());
         searchBtnBottom.addActionListener(e -> new Thread(() -> search.mainSearch("words")).start());
         getContentPane().add(searchBtnBottom);
 
         //Stop addNewSource (bottom)
+        stopButtonBottom _stopButtonBottom = new stopButtonBottom(STOP_ICON, new Color(255, 208, 202), 261, 561);
         stopBtnBottom = new JButton("");
-        stopBtnBottom.setIcon(STOP_ICON);
-        stopBtnBottom.setBackground(new Color(255, 208, 202));
-        stopBtnBottom.setBounds(261, 561, 30, 22);
+        _stopButtonBottom.buttonSetting(stopBtnBottom);
         stopBtnBottom.addActionListener(e -> {
             try {
                 Search.isSearchFinished.set(true);
