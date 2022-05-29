@@ -36,4 +36,12 @@ public class SQLite {
             System.out.println(e.getMessage());
         }
     }
+
+    private static class DB{
+        private static final SQLite DBInstance = new SQLite();
+    }
+
+    public static SQLite getInstance(){
+        return DB.DBInstance;
+    }
 }
