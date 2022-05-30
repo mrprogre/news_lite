@@ -757,12 +757,10 @@ public class Gui extends JFrame {
         getContentPane().add(sendEmailBtn);
 
         // Автоматическая отправка письма с результатами
+        autoSend _autoSendMessage = new autoSend(378, 10, 66);
         autoSendMessage = new Checkbox("auto send");
-        autoSendMessage.setState(false);
-        autoSendMessage.setFocusable(false);
-        autoSendMessage.setForeground(Color.WHITE);
+        _autoSendMessage.checkBoxSetting(autoSendMessage);
         autoSendMessage.setFont(GUI_FONT);
-        autoSendMessage.setBounds(378, 10, 66, 20);
         getContentPane().add(autoSendMessage);
 
         // Диалоговое окно со списком источников "sources"
