@@ -644,6 +644,7 @@ public class Gui extends JFrame {
         todayOrNotCheckbox _todayOrNotCbx = new todayOrNotCheckbox(449, 10, 64);
         todayOrNotCbx = new Checkbox("in the last");
         todayOrNotCbx.setFont(GUI_FONT);
+        _todayOrNotCbx.checkBoxSetting(todayOrNotCbx);
         todayOrNotCbx.addItemListener(e -> newsInterval.setVisible(todayOrNotCbx.getState()));
         getContentPane().add(todayOrNotCbx);
 
