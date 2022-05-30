@@ -560,7 +560,7 @@ public class Gui extends JFrame {
         getContentPane().add(stopBtnBottom);
 
         // Автозапуск поиска по ключевым словам каждые 30 секунд
-        autoUpdateNews_Bottom _autoUpdateNewsBottom = new autoUpdateNews_Bottom(297, 561, 75);
+        autoUpdateNews _autoUpdateNewsBottom = new autoUpdateNews(297, 561, 75);
         autoUpdateNewsBottom = new Checkbox("auto update");
         _autoUpdateNewsBottom.checkBoxSetting(autoUpdateNewsBottom);
         autoUpdateNewsBottom.setFont(GUI_FONT);
@@ -649,12 +649,10 @@ public class Gui extends JFrame {
         getContentPane().add(todayOrNotCbx);
 
         // Автозапуск поиска по слову каждые 60 секунд
+        autoUpdateNews _autoUpdateNewsTop = new autoUpdateNews(297, 10, 75);
         autoUpdateNewsTop = new Checkbox("auto update");
-        autoUpdateNewsTop.setState(false);
-        autoUpdateNewsTop.setFocusable(false);
-        autoUpdateNewsTop.setForeground(Color.WHITE);
+        _autoUpdateNewsTop.checkBoxSetting(autoUpdateNewsTop);
         autoUpdateNewsTop.setFont(GUI_FONT);
-        autoUpdateNewsTop.setBounds(297, 10, 75, 20);
         getContentPane().add(autoUpdateNewsTop);
         autoUpdateNewsTop.addItemListener(e -> {
             if (autoUpdateNewsTop.getState()) {

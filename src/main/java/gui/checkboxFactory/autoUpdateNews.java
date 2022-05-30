@@ -5,8 +5,8 @@ import search.Search;
 import javax.swing.*;
 import java.awt.*;
 
-public class autoUpdateNews_Bottom extends checkBoxFactory{
-    public autoUpdateNews_Bottom(int x, int y, int w) {
+public class autoUpdateNews extends checkBoxFactory{
+    public autoUpdateNews(int x, int y, int w) {
         super(x, y, w);
     }
 
