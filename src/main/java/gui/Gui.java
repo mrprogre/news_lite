@@ -926,12 +926,10 @@ public class Gui extends JFrame {
         getContentPane().add(queryTableBox);
 
         // latest news
+        news_onlyNew _onlyNewNews = new news_onlyNew(230, 10, 65);
         onlyNewNews = new Checkbox("only new");
-        onlyNewNews.setState(false);
-        onlyNewNews.setFocusable(false);
-        onlyNewNews.setForeground(Color.WHITE);
+        _onlyNewNews.checkBoxSetting(onlyNewNews);
         onlyNewNews.setFont(GUI_FONT);
-        onlyNewNews.setBounds(230, 10, 65, 20);
         getContentPane().add(onlyNewNews);
         onlyNewNews.addItemListener(e -> {
             isOnlyLastNews = onlyNewNews.getState();
