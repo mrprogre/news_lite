@@ -3,6 +3,7 @@ package gui;
 import database.SQLite;
 import email.EmailSender;
 import gui.IconButton.*;
+import gui.checkboxFactory.*;
 import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -559,12 +560,10 @@ public class Gui extends JFrame {
         getContentPane().add(stopBtnBottom);
 
         // Автозапуск поиска по ключевым словам каждые 30 секунд
+        autoUpdateNews_Bottom _autoUpdateNewsBottom = new autoUpdateNews_Bottom(297, 561, 75);
         autoUpdateNewsBottom = new Checkbox("auto update");
-        autoUpdateNewsBottom.setState(false);
-        autoUpdateNewsBottom.setFocusable(false);
-        autoUpdateNewsBottom.setForeground(Color.WHITE);
+        _autoUpdateNewsBottom.checkBoxSetting(autoUpdateNewsBottom);
         autoUpdateNewsBottom.setFont(GUI_FONT);
-        autoUpdateNewsBottom.setBounds(297, 561, 75, 20);
         getContentPane().add(autoUpdateNewsBottom);
         autoUpdateNewsBottom.addItemListener(e -> {
             if (autoUpdateNewsBottom.getState()) {
