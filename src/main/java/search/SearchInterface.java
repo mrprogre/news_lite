@@ -21,9 +21,6 @@ public interface SearchInterface {
     public void transCommand(String command) throws SQLException;
 
     public void transDelete() throws SQLException;
-
-
-
     public void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException;
 
     public void mainSearch(String pSearchType);

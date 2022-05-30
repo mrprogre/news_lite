@@ -28,7 +28,7 @@ import static search.Search.isSearchFinished;
 import static search.Search.excludeFromSearch;
 import static search.Search.log;
 
-public class SearchMethod implements SearchInterface {
+public class SearchMethod extends Search {
     public static int j = 1;
     final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     final LocalDateTime now = LocalDateTime.now();
@@ -43,7 +43,7 @@ public class SearchMethod implements SearchInterface {
     LocalTime timeEnd;
     Duration searchTime;
 
-    @Override
+
     public void mainSearch(String pSearchType) {
         SQLite sqlite = new SQLite();
         DBQueries dbqueries = new DBQueries();
@@ -221,7 +221,7 @@ public class SearchMethod implements SearchInterface {
         }
     }
 
-    @Override
+
     public void searchByConsole() {
         DBQueries dbqueries = new DBQueries();
         if (!isSearchNow.get()) {
@@ -330,7 +330,7 @@ public class SearchMethod implements SearchInterface {
         }
     }
 
-    @Override
+
     public boolean isHref(String newsDescribe) {
         return newsDescribe.contains("<img")
                 || newsDescribe.contains("href")
@@ -356,7 +356,7 @@ public class SearchMethod implements SearchInterface {
         st_del.close();
     }
 
-    @Override
+
     public void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
         if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
             newsCount++;
