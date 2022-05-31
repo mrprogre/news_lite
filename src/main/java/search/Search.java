@@ -27,7 +27,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Search {
-    public static final Logger log = LoggerFactory.getLogger(Search.class);
+    private static final Logger log = LoggerFactory.getLogger(Search.class);
     public static List<String> excludeFromSearch;
     public static AtomicBoolean isStop;
     public static AtomicBoolean isSearchNow;
@@ -39,6 +39,7 @@ public class Search {
         isSearchNow = new AtomicBoolean(false);
         isSearchFinished = new AtomicBoolean(false);
     }
+
     public static int j = 1;
     final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     final LocalDateTime now = LocalDateTime.now();
@@ -52,8 +53,9 @@ public class Search {
     LocalTime timeStart;
     LocalTime timeEnd;
     Duration searchTime;
-<<<<<<< HEAD
-=======
+    private DoSearch doSearch;
+    public void search(){doSearch.search();}
+
 
     //Main search
     public void mainSearch(String pSearchType) {
@@ -248,18 +250,6 @@ public class Search {
 
 
 
-    private boolean isHref(String newsDescribe) {
-        return newsDescribe.contains("<img")
-                || newsDescribe.contains("href")
-                || newsDescribe.contains("<div")
-                || newsDescribe.contains("&#34")
-                || newsDescribe.contains("<p lang")
-                || newsDescribe.contains("&quot")
-                || newsDescribe.contains("<span")
-                || newsDescribe.contains("<ol")
-                || newsDescribe.equals("");
-    }
-
     private void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
         if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
             newsCount++;
@@ -398,5 +388,17 @@ public class Search {
             }
         }
     }
->>>>>>> parent of cf5a324 (<DesignPattern> add interface DoSearch)
+
+    //both method use
+    private boolean isHref(String newsDescribe) {
+        return newsDescribe.contains("<img")
+                || newsDescribe.contains("href")
+                || newsDescribe.contains("<div")
+                || newsDescribe.contains("&#34")
+                || newsDescribe.contains("<p lang")
+                || newsDescribe.contains("&quot")
+                || newsDescribe.contains("<span")
+                || newsDescribe.contains("<ol")
+                || newsDescribe.equals("");
+    }
 }

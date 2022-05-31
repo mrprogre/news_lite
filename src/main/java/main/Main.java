@@ -1,15 +1,12 @@
 package main;
 
 import com.formdev.flatlaf.intellijthemes.FlatHiberbeeDarkIJTheme;
-import database.DBQueries;
 import database.SQLite;
 import database.Utilities;
 import gui.Gui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import search.Search;
-import search.SearchInterface;
-import search.SearchMethod;
 import utils.Common;
 import utils.InternetAvailabilityChecker;
 
@@ -17,11 +14,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -119,7 +113,7 @@ public class Main {
             dbUtils.loadSQLQueries();
             System.arraycopy(args, 0, keywordsFromConsole, 0, args.length);
             System.out.println(Arrays.toString(keywordsFromConsole)); //***
-            SearchMethod search = new SearchMethod();
+            Search search = new Search();
             search.searchByConsole();
             sqlite.closeSQLiteConnection();
         }

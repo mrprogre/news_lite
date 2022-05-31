@@ -6,7 +6,6 @@ import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import search.Search;
-import search.SearchInterface;
 import utils.Common;
 import utils.ExportToExcel;
 import utils.MyTimerTask;
@@ -39,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Gui extends JFrame {
     private static final Logger LOGGER = LoggerFactory.getLogger(Gui.class);
     final SQLite sqlite = new SQLite();
-    private SearchInterface search;
+    final Search search = new Search();
     private static final Font GUI_FONT = new Font("Tahoma", Font.PLAIN, 11);
     private static final String[] INTERVALS = {"1 min", "5 min", "15 min", "30 min", "45 min", "1 hour", "2 hours",
             "4 hours", "8 hours", "12 hours", "24 hours", "48 hours"};
