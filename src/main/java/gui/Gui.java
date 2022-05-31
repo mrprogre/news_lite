@@ -4,6 +4,7 @@ import database.DBQueries;
 import database.SQLite;
 import email.EmailSender;
 import gui.IconButton.*;
+import gui.checkboxFactory.*;
 import main.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -561,12 +562,10 @@ public class Gui extends JFrame {
         getContentPane().add(stopBtnBottom);
 
         // Автозапуск поиска по ключевым словам каждые 30 секунд
+        autoUpdateNews _autoUpdateNewsBottom = new autoUpdateNews(297, 561, 75);
         autoUpdateNewsBottom = new Checkbox("auto update");
-        autoUpdateNewsBottom.setState(false);
-        autoUpdateNewsBottom.setFocusable(false);
-        autoUpdateNewsBottom.setForeground(Color.WHITE);
+        _autoUpdateNewsBottom.checkBoxSetting(autoUpdateNewsBottom);
         autoUpdateNewsBottom.setFont(GUI_FONT);
-        autoUpdateNewsBottom.setBounds(297, 561, 75, 20);
         getContentPane().add(autoUpdateNewsBottom);
         autoUpdateNewsBottom.addItemListener(e -> {
             if (autoUpdateNewsBottom.getState()) {
@@ -644,22 +643,18 @@ public class Gui extends JFrame {
         getContentPane().add(newsInterval);
 
         // Today or not
+        todayOrNotCheckbox _todayOrNotCbx = new todayOrNotCheckbox(449, 10, 64);
         todayOrNotCbx = new Checkbox("in the last");
-        todayOrNotCbx.setState(true);
-        todayOrNotCbx.setFocusable(false);
-        todayOrNotCbx.setForeground(Color.WHITE);
         todayOrNotCbx.setFont(GUI_FONT);
-        todayOrNotCbx.setBounds(449, 10, 64, 20);
+        _todayOrNotCbx.checkBoxSetting(todayOrNotCbx);
         todayOrNotCbx.addItemListener(e -> newsInterval.setVisible(todayOrNotCbx.getState()));
         getContentPane().add(todayOrNotCbx);
 
         // Автозапуск поиска по слову каждые 60 секунд
+        autoUpdateNews _autoUpdateNewsTop = new autoUpdateNews(297, 10, 75);
         autoUpdateNewsTop = new Checkbox("auto update");
-        autoUpdateNewsTop.setState(false);
-        autoUpdateNewsTop.setFocusable(false);
-        autoUpdateNewsTop.setForeground(Color.WHITE);
+        _autoUpdateNewsTop.checkBoxSetting(autoUpdateNewsTop);
         autoUpdateNewsTop.setFont(GUI_FONT);
-        autoUpdateNewsTop.setBounds(297, 10, 75, 20);
         getContentPane().add(autoUpdateNewsTop);
         autoUpdateNewsTop.addItemListener(e -> {
             if (autoUpdateNewsTop.getState()) {
@@ -764,12 +759,10 @@ public class Gui extends JFrame {
         getContentPane().add(sendEmailBtn);
 
         // Автоматическая отправка письма с результатами
+        autoSend _autoSendMessage = new autoSend(378, 10, 66);
         autoSendMessage = new Checkbox("auto send");
-        autoSendMessage.setState(false);
-        autoSendMessage.setFocusable(false);
-        autoSendMessage.setForeground(Color.WHITE);
+        _autoSendMessage.checkBoxSetting(autoSendMessage);
         autoSendMessage.setFont(GUI_FONT);
-        autoSendMessage.setBounds(378, 10, 66, 20);
         getContentPane().add(autoSendMessage);
 
         // Диалоговое окно со списком источников "sources"
@@ -935,12 +928,10 @@ public class Gui extends JFrame {
         getContentPane().add(queryTableBox);
 
         // latest news
+        news_onlyNew _onlyNewNews = new news_onlyNew(230, 10, 65);
         onlyNewNews = new Checkbox("only new");
-        onlyNewNews.setState(false);
-        onlyNewNews.setFocusable(false);
-        onlyNewNews.setForeground(Color.WHITE);
+        _onlyNewNews.checkBoxSetting(onlyNewNews);
         onlyNewNews.setFont(GUI_FONT);
-        onlyNewNews.setBounds(230, 10, 65, 20);
         getContentPane().add(onlyNewNews);
         onlyNewNews.addItemListener(e -> {
             isOnlyLastNews = onlyNewNews.getState();
