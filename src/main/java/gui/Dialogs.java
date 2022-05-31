@@ -48,9 +48,7 @@ public class Dialogs extends JDialog implements KeyListener {
             case "logDlg": {
                 setLogDialog();
                 final JScrollPane scrollPane = new JScrollPane();
-                scrollPane.setBounds(10, 27, 324, 233);
-                this.getContentPane().add(scrollPane);
-                scrollPane.setViewportView(textAreaForDialogs);
+                setScrollPaneForText(scrollPane);
                 Common.showDialog("log");
                 break;
             }
@@ -86,6 +84,12 @@ public class Dialogs extends JDialog implements KeyListener {
         // делаем фокус на окно, чтобы работал захват клавиш
         this.requestFocusInWindow();
         this.setVisible(true);
+    }
+
+    private void setScrollPaneForText(JScrollPane scrollPane) {
+        scrollPane.setBounds(10, 27, 324, 233);
+        this.getContentPane().add(scrollPane);
+        scrollPane.setViewportView(textAreaForDialogs);
     }
 
     private void setScrollPane(JScrollPane scrollPane) {
