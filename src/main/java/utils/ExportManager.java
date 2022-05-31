@@ -1,5 +1,6 @@
 package utils;
 
+import jxl.write.WriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,13 +12,12 @@ public abstract class ExportManager {
 
     protected static final Logger LOG = LoggerFactory.getLogger(ExportToExcel.class);
 
-    private String[] headers = {"Number", "Source", "Title", "Date", "Link"};
+    private final String[] headers = {"Number", "Source", "Title", "Date", "Link"};
     
     private String extension;
     private FileNameExtensionFilter extensionFilter;
-
     private JFileChooser jFileChooser;
-
+    
     public String getExtension() {
         return extension;
     }
