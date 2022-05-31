@@ -10,19 +10,45 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+
+
 public class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
+
+
     final JTable table;
     final JButton renderButton;
     final JButton editButton;
     //String text;
+    InitContext editContext;
+    InitEditButton editStrategy;
+
+    InitContext renderContext;
+
+    InitRenderButton renderStrategy;
+
+
+
+    public JTable getTable(){
+        return table;
+    }
+
 
     public ButtonColumn(JTable table, int column) {
         super();
         this.table = table;
 
+        editContext = new InitContext(editStrategy = new InitEditButton());
+        editContext.excuteStrategy(this.editButton = new JButton());
+
+        this.editButton.addActionListener(this);
+
+
+        renderContext = new InitContext(renderStrategy = new InitRenderButton());
+
         renderButton = new JButton();
 
-        editButton = initEditButton();
+        //editButton = initEditButton();
 
         initColumnModel(table, column);
     }
@@ -33,22 +59,26 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         columnModel.getColumn(column).setCellEditor(this);
     }
 
-    private JButton initEditButton() {
+    //private JButton initEditButton() {
 
-        final JButton editButton;
-        editButton = new JButton();
-        editButton.setFocusPainted(false);
-        editButton.addActionListener(this);
-        return editButton;
-    }
+    //    final JButton editButton;
+    //    editButton = new JButton();
+    //    editButton.setFocusPainted(false);
+    //    editButton.addActionListener(this);
+    //    return editButton;
+    //}
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (hasFocus) {
-            setRenderBtn(table);
+            //setRenderBtn(table);
+            renderButton.setForeground(table.getForeground());
+            renderContext.excuteStrategy(renderButton);
         } else if (isSelected) {
             configureRenderBtn(table);
         } else {
-            setRenderBtn(table);
+            //setRenderBtn(table);
+            renderButton.setForeground(table.getForeground());
+            renderContext.excuteStrategy(renderButton);
         }
         //renderButton.setText((value == null) ? ";" : value.toString() );
         return renderButton;
@@ -60,11 +90,11 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         renderButton.setIcon(Gui.DELETE_ICON);
     }
 
-    private void setRenderBtn(JTable table) {
-        renderButton.setForeground(table.getForeground());
-        renderButton.setBackground(UIManager.getColor("Button.background"));
-        renderButton.setIcon(Gui.DELETE_ICON);
-    }
+    //private void setRenderBtn(JTable table) {
+    //    renderButton.setForeground(table.getForeground());
+    //    renderButton.setBackground(UIManager.getColor("Button.background"));
+    //    renderButton.setIcon(Gui.DELETE_ICON);
+    //}
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         return editButton;
