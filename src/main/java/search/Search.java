@@ -53,11 +53,9 @@ public class Search {
     LocalTime timeStart;
     LocalTime timeEnd;
     Duration searchTime;
-    private DoSearch doSearch;
-    public void search(){doSearch.search();}
-
-
+    SearchMethod searchmethod = new SearchMethod();
     //Main search
+
     public void mainSearch(String pSearchType) {
         SQLite sqlite = new SQLite();
         DBQueries dbqueries = new DBQueries();
@@ -67,7 +65,7 @@ public class Search {
             int modelRowCount = Gui.model.getRowCount();
             dataForEmail.clear();
             //выборка актуальных источников перед поиском из БД
-            dbqueries.selectSources("smi");
+            dbqueries .selectSources("smi");
             isSearchNow.set(true);
             timeStart = LocalTime.now();
             Search.j = 1;
@@ -129,7 +127,7 @@ public class Search {
                                             && !title.toLowerCase().contains(excludeFromSearch.get(2))
                                     ) {
                                         //отсеиваем новости, которые уже были найдены ранее
-                                        if (dbqueries.isTitleExists(Common.sha256(title + pubDate))
+                                        if (dbqueries .isTitleExists(Common.sha256(title + pubDate))
                                                 && SQLite.isConnectionToSQLite) {
                                             continue;
                                         }
@@ -139,16 +137,16 @@ public class Search {
                                         int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
                                         // вставка всех новостей в архив (ощутимо замедляет общий поиск)
-                                        dbqueries.insertAllTitles(title, pubDate.toString());
+                                        dbqueries .insertAllTitles(title, pubDate.toString());
 
-                                        getTodayOrNotCbx(dbqueries, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
+                                        getTodayOrNotCbx(dbqueries , st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                     }
                                 } else if (iswords) {
                                     for (String it : Common.getKeywordsFromFile()) {
                                         if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
 
                                             // отсеиваем новости которые были обнаружены ранее
-                                            if (dbqueries.isTitleExists(Common.sha256(title + pubDate)) && SQLite.isConnectionToSQLite) {
+                                            if (dbqueries .isTitleExists(Common.sha256(title + pubDate)) && SQLite.isConnectionToSQLite) {
                                                 continue;
                                             }
 
@@ -156,7 +154,7 @@ public class Search {
                                             Date currentDate = new Date();
                                             int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
-                                            getTodayOrNotCbx(dbqueries, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
+                                            getTodayOrNotCbx(dbqueries , st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                         }
                                     }
                                 }
@@ -234,54 +232,9 @@ public class Search {
             }
         }
     }
-    private void transCommand(String command) throws SQLException {
-        String q_command = command;
-        Statement st_command = SQLite.connection.createStatement();
-        st_command.execute(q_command);
-        st_command.close();
-    }
 
-    private void transDelete() throws SQLException {
-        String q_del = "delete from news_dual where title = ''";
-        Statement st_del = SQLite.connection.createStatement();
-        st_del.executeUpdate(q_del);
-        st_del.close();
-    }
-
-
-
-    private void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
-        if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
-            newsCount++;
-            Gui.labelSum.setText(String.valueOf(newsCount));
-            dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
-                    smi_source + " - " + dateToEmail);
-
-            Object[] row = new Object[]{
-                    newsCount,
-                    smi_source,
-                    title,
-                    dateFormatHoursFirst.format(pubDate),
-                    link
-            };
-            Gui.model.addRow(row);
-
-            //SQLite
-            String[] subStr = title.split(" ");
-            for (String s : subStr) {
-                if (s.length() > 3) {
-                    assert st != null;
-                    st.setString(1, Common.delNoLetter(s).toLowerCase());
-                    st.executeUpdate();
-                }
-            }
-            dbqueries.insertTitleIn256(Common.sha256(title + pubDate));
-
-        }
-    }
-
-    //Console search
     public void searchByConsole() {
+        SQLite sqlite = new SQLite();
         DBQueries dbqueries = new DBQueries();
         if (!isSearchNow.get()) {
             dataForEmail.clear();
@@ -389,7 +342,22 @@ public class Search {
         }
     }
 
-    //both method use
+    private void transCommand(String command) throws SQLException {
+        String q_command = command;
+        Statement st_command = SQLite.connection.createStatement();
+        st_command.execute(q_command);
+        st_command.close();
+    }
+
+    private void transDelete() throws SQLException {
+        String q_del = "delete from news_dual where title = ''";
+        Statement st_del = SQLite.connection.createStatement();
+        st_del.executeUpdate(q_del);
+        st_del.close();
+    }
+
+
+
     private boolean isHref(String newsDescribe) {
         return newsDescribe.contains("<img")
                 || newsDescribe.contains("href")
@@ -401,4 +369,37 @@ public class Search {
                 || newsDescribe.contains("<ol")
                 || newsDescribe.equals("");
     }
+
+    private void getTodayOrNotCbx(DBQueries sqlite, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
+        if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
+            newsCount++;
+            Gui.labelSum.setText(String.valueOf(newsCount));
+            dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
+                    smi_source + " - " + dateToEmail);
+
+            Object[] row = new Object[]{
+                    newsCount,
+                    smi_source,
+                    title,
+                    dateFormatHoursFirst.format(pubDate),
+                    link
+            };
+            Gui.model.addRow(row);
+
+            //SQLite
+            String[] subStr = title.split(" ");
+            for (String s : subStr) {
+                if (s.length() > 3) {
+                    assert st != null;
+                    st.setString(1, Common.delNoLetter(s).toLowerCase());
+                    st.executeUpdate();
+                }
+            }
+            sqlite.insertTitleIn256(Common.sha256(title + pubDate));
+
+        }
+    }
+
+    //Console search
+
 }
