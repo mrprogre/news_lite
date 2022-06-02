@@ -2,8 +2,6 @@ package team3.utils;
 
 import team3.gui.Gui;
 import jxl.Workbook;
-import jxl.format.Alignment;
-import jxl.format.Colour;
 import jxl.write.*;
 import jxl.write.biff.RowsExceededException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -12,19 +10,18 @@ import java.io.IOException;
 import java.net.URL;
 
 import static javax.swing.JFileChooser.*;
-import static jxl.format.Colour.BLACK;
-import static jxl.format.Colour.DARK_GREEN;
-import static jxl.format.UnderlineStyle.NO_UNDERLINE;
 
 
 public class ExportToExcel extends ExportManager {
 
     private File baseExcelFile;
+    private ExcelFormat excelFormat;
     
     public ExportToExcel() {
         setExtension(".xls");
         setExtensionFilter(new FileNameExtensionFilter("*.xls", "*.xls", "*.XLS", "*.*"));
         setjFileChooser();
+        this.excelFormat = new ExcelFormat();
     }
     
     public void exportResultsToExcel() {
@@ -35,104 +32,17 @@ public class ExportToExcel extends ExportManager {
             if (getjFileChooser().showDialog(null,"Save") == APPROVE_OPTION) {
 
                 WritableWorkbook newExcel = Workbook.createWorkbook(baseExcelFile);
+                
                 WritableSheet page = newExcel.createSheet("001", 0);
-
                 initPage(page);
-                
-
-                //no bold
-                WritableFont writableFontNoBold = new ExcelFont
-                        .Builder()
-                        .pointSize(11)
-                        .noBold()
-                        .underlineStyle(NO_UNDERLINE)
-                        .color(BLACK)
-                        .build();
-
-                //bold
-                WritableFont writableFontBold = new ExcelFont
-                        .Builder()
-                        .pointSize(11)
-                        .bold()
-                        .underlineStyle(NO_UNDERLINE)
-                        .color(BLACK)
-                        .build();
-                
-
-                // Hyperlinks Format
-                WritableFont hyperlinkFont = new ExcelFont
-                        .Builder()
-                        .pointSize(11)
-                        .noBold()
-                        .color(DARK_GREEN)
-                        .build();
-                
-                
-                WritableCellFormat hyperlinkCellFormat = new WritableCellFormat(hyperlinkFont);
-                hyperlinkCellFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                hyperlinkCellFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                hyperlinkCellFormat.setWrap(true);
-
-                // Title format
-                WritableCellFormat cellTitleFormat = new WritableCellFormat(writableFontNoBold);
-                cellTitleFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                cellTitleFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellTitleFormat.setWrap(true);
-
-                // Number Format
-                WritableCellFormat cellNumberFormat = new WritableCellFormat(writableFontNoBold);
-                cellNumberFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                cellNumberFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellNumberFormat.setAlignment(Alignment.CENTRE);
-                
-                // Source Format
-                WritableCellFormat cellSourceFormat = new WritableCellFormat(writableFontNoBold);
-                cellSourceFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                cellSourceFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellSourceFormat.setAlignment(Alignment.CENTRE);
-
-                //HEADERS: color, bold
-                WritableCellFormat cellHeaderFormat = new WritableCellFormat(writableFontBold);
-                cellHeaderFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                cellHeaderFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellHeaderFormat.setAlignment(jxl.format.Alignment.CENTRE);
-                cellHeaderFormat.setBackground(Colour.LIGHT_GREEN);
-
-                //DATE: no bold
-                DateFormat dataFormat = new DateFormat("dd-MM-yyyy HH:mm");
-                WritableCellFormat cellDateFormat = new WritableCellFormat(dataFormat);
-                
-                cellDateFormat.setAlignment(jxl.format.Alignment.CENTRE);
-                cellDateFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellDateFormat.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN, BLACK);
-                cellDateFormat.setVerticalAlignment(jxl.format.VerticalAlignment.CENTRE);
-                cellDateFormat.setAlignment(Alignment.CENTRE);
-
-                makeExcelHeaders(page, cellHeaderFormat);
-
-                for (int z = 0; z < Gui.model.getRowCount(); z++) {
-                    jxl.write.Number jxlNumber = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), cellNumberFormat); //num
-
-                    Label source = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), cellSourceFormat); //Source
-                    Label title = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), cellTitleFormat); //Title
-                    Label date = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), cellDateFormat); //Date
-                    Label link = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), hyperlinkCellFormat); //Link
-
-                    WritableHyperlink hyperlink = new WritableHyperlink(4, z + 1, new URL(Gui.model.getValueAt(z, 4).toString()));
-
-                    page.addHyperlink(hyperlink);
-                    page.addCell(jxlNumber);
-                    page.addCell(source);
-                    page.addCell(title);
-                    page.addCell(date);
-                    page.addCell(link);
-                    page.setRowView(z + 1, 600);
-                }
+                makeExcelHeaders(page);
+                extractGUIDataToPage(page);
                
                 newExcel.write();
                 newExcel.close();
                 
                 Common.console("status: export is done");
+                LOG.info("Export is done");
                 
             } else Common.console("status: export canceled");
         } catch (WriteException | IOException e) {
@@ -151,11 +61,32 @@ public class ExportToExcel extends ExportManager {
         page.setRowView(0, 600);
     }
 
-    private void makeExcelHeaders(WritableSheet page, WritableCellFormat cellHeaderFormat) throws WriteException{
+    private void makeExcelHeaders(WritableSheet page) throws WriteException{
         String headers[] = getHeaders();
         for (int col = 0; col < headers.length; col++) {
-            Label cellName = new Label(col, 0, headers[col], cellHeaderFormat);
+            Label cellName = new Label(col, 0, headers[col], excelFormat.headerCellFormat());
             page.addCell(cellName);
+        }
+    }
+
+    private void extractGUIDataToPage(WritableSheet page) throws WriteException, IOException{
+        for (int z = 0; z < Gui.model.getRowCount(); z++) {
+            jxl.write.Number jxlNumber = new jxl.write.Number(0, z + 1, Integer.parseInt(Gui.model.getValueAt(z, 0).toString()), excelFormat.numberCellFormat()); //num
+
+            Label source = new Label(1, z + 1, Gui.model.getValueAt(z, 1).toString(), excelFormat.sourceCellFormat()); //Source
+            Label title = new Label(2, z + 1, Gui.model.getValueAt(z, 2).toString(), excelFormat.titleCellFormat()); //Title
+            Label date = new Label(3, z + 1, Gui.model.getValueAt(z, 3).toString(), excelFormat.dateCellFormat()); //Date
+            Label link = new Label(4, z + 1, Gui.model.getValueAt(z, 4).toString(), excelFormat.hyperlinkCellFormat()); //Link
+
+            WritableHyperlink hyperlink = new WritableHyperlink(4, z + 1, new URL(Gui.model.getValueAt(z, 4).toString()));
+
+            page.addHyperlink(hyperlink);
+            page.addCell(jxlNumber);
+            page.addCell(source);
+            page.addCell(title);
+            page.addCell(date);
+            page.addCell(link);
+            page.setRowView(z + 1, 600);
         }
     }
 }
