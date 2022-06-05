@@ -18,7 +18,6 @@ public class SQLiteTest {
 
     @After
     public void tearDown() throws Exception {
-
     }
 
     @Test
@@ -32,9 +31,5 @@ public class SQLiteTest {
         sqLite.openSQLiteConnection();
         sqLite.closeSQLiteConnection();
         assertFalse(SQLite.connection.isValid(3));
-    }
-
-    @Test
-    public void getInstance() {
     }
 }
