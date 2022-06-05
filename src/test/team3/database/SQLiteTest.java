@@ -28,7 +28,10 @@ public class SQLiteTest {
     }
 
     @Test
-    public void closeSQLiteConnection() {
+    public void closeSQLiteConnection() throws SQLException {
+        sqLite.openSQLiteConnection();
+        sqLite.closeSQLiteConnection();
+        assertFalse(SQLite.connection.isValid(3));
     }
 
     @Test
