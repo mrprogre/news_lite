@@ -29,9 +29,9 @@ public class UtilitiesTest {
 
     @Test
     public void getSQLQueryFromProp() {
-    }
-
-    @Test
-    public void getRSSInfoFromUI() {
+        Properties props = new Properties();
+        utilities.loadSQLQueries(props);
+        assertEquals(utilities.getSQLQueryFromProp("deleteTitles", props),
+                "DELETE FROM news_dual");
     }
 }

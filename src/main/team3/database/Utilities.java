@@ -25,6 +25,10 @@ public class Utilities {
         return Main.prop.getProperty(entryKey);
     }
 
+    public String getSQLQueryFromProp(String entryKey, Properties props) {
+        return props.getProperty(entryKey);
+    }
+
     public RSSInfoFromUI getRSSInfoFromUI() {
         JTextField sourceName = new JTextField();
         JTextField rssLink = new JTextField();
