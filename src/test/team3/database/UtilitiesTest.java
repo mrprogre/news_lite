@@ -4,12 +4,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Properties;
+
 import static org.junit.Assert.*;
 
 public class UtilitiesTest {
+    private Utilities utilities;
 
     @Before
     public void setUp() throws Exception {
+        utilities = new Utilities();
     }
 
     @After
@@ -18,6 +22,9 @@ public class UtilitiesTest {
 
     @Test
     public void loadSQLQueries() {
+        Properties props = new Properties();
+        utilities.loadSQLQueries(props);
+        assertFalse(props.isEmpty());
     }
 
     @Test
