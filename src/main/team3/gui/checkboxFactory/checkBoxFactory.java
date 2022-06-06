@@ -14,5 +14,17 @@ public abstract class checkBoxFactory {
         this._width = w;
     }
 
+    public int getX(){
+        return this.x_axis;
+    }
+
+    public int getY(){
+        return this.y_axis;
+    }
+
+    public int getWidth(){
+        return this._width;
+    }
+
     public abstract void checkBoxSetting(Checkbox _chkbox);
 }
