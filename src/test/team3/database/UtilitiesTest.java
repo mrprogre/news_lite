@@ -31,7 +31,6 @@ public class UtilitiesTest {
     public void getSQLQueryFromProp() {
         Properties props = new Properties();
         utilities.loadSQLQueries(props);
-        assertEquals(utilities.getSQLQueryFromProp("deleteTitles", props),
-                "DELETE FROM news_dual");
+        assertEquals("DELETE FROM news_dual", utilities.getSQLQueryFromProp("deleteTitles", props));
     }
 }
