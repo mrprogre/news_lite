@@ -3,11 +3,8 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import team3.main.Main;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.Assert.*;
 
@@ -27,15 +24,37 @@ public class DBQueriesTest {
     }
 
     @Test
-    public void selectSqlite() {
-    }
-
-    @Test
-    public void selectSources() {
-    }
-
-    @Test
     public void insertNewSource() {
+        // Tests the actual SQL query and not the function insertNewSource()
+        String query = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
+        String[] queryResult = {"", ""};
+        String testSource = "google";
+        String testLink = "https://news.google.com/rss";
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, testSource);
+            preparedStatement.setString(3, testLink);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM rss_list WHERE id=1");
+            while (rs.next()){
+                queryResult[0] = rs.getString("source");
+                queryResult[1] = rs.getString("link");
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        assertEquals(testSource, queryResult[0]);
+        assertEquals(testLink, queryResult[1]);
     }
 
     @Test
