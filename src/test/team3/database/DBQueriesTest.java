@@ -41,15 +41,15 @@ public class DBQueriesTest {
             e.printStackTrace();
         }
 
-        try{
+        try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM rss_list WHERE id=1");
-            while (rs.next()){
+            while (rs.next()) {
                 queryResult[0] = rs.getString("source");
                 queryResult[1] = rs.getString("link");
             }
 
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -59,6 +59,29 @@ public class DBQueriesTest {
 
     @Test
     public void insertTitleIn256() {
+        String testTitle = "google";
+        String query = "INSERT INTO titles256(title) VALUES (?)";
+        String queryResult = "";
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setString(1, testTitle);
+            preparedStatement.executeUpdate();
+        } catch (SQLException t) {
+            t.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
+            while (rs.next()) {
+                queryResult = rs.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(testTitle, queryResult);
     }
 
     @Test
