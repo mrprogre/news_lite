@@ -103,14 +103,14 @@ public class Main {
             Gui.newsInterval.setVisible(Gui.todayOrNotCbx.getState());
             Gui.isOnlyLastNews = Gui.onlyNewNews.getState();
             sqlite.openSQLiteConnection();
-            dbUtils.loadSQLQueries();
+            dbUtils.loadSQLQueries(prop);
         } else {
             // Console search
             IS_CONSOLE_SEARCH.set(true);
             emailToFromConsole = args[0];
             minutesIntervalForConsoleSearch = Integer.parseInt(args[1]);
             sqlite.openSQLiteConnection();
-            dbUtils.loadSQLQueries();
+            dbUtils.loadSQLQueries(prop);
             System.arraycopy(args, 0, keywordsFromConsole, 0, args.length);
             System.out.println(Arrays.toString(keywordsFromConsole)); //***
             Search search = new Search();
