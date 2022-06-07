@@ -102,44 +102,12 @@ public class DBQueriesTest {
 
     @Test
     public void deleteSource() {
-        String query = "DELETE FROM rss_list WHERE source = ?";
         String testSource = "google";
         String testLink = "https://news.google.com/rss";
-        String insertQuery = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
-        boolean sourceExists = true;
 
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(insertQuery);
-            preparedStatement.setInt(1, 1);
-            preparedStatement.setString(2, testSource);
-            preparedStatement.setString(3, testLink);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try { // Actual test query
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(query);
-            preparedStatement.setString(1, testSource);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement("SELECT * FROM rss_list WHERE source=?");
-            ResultSet rs = preparedStatement.executeQuery();
-            if (!rs.next()) {
-                sourceExists = false;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        assertFalse(sourceExists);
+        addFakeSource(testSource, testLink);
+        dbQueries.deleteSource(testSource, connection);
+        assertFalse(testSourceExists());
     }
 
     private void connectToSQLite() throws SQLException {
@@ -222,5 +190,35 @@ public class DBQueriesTest {
             e.printStackTrace();
         }
         return isEmpty;
+    }
+
+    private boolean testSourceExists() {
+        boolean sourceExists = true;
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM rss_list WHERE source=?");
+            ResultSet rs = preparedStatement.executeQuery();
+            if (!rs.next()) {
+                sourceExists = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sourceExists;
+    }
+
+    private void addFakeSource(String fakeSource, String fakeLink) {
+        String insertQuery = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
+
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(insertQuery);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, fakeSource);
+            preparedStatement.setString(3, fakeLink);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
