@@ -1,6 +1,7 @@
 package team3.gui;
 
 import team3.database.DBQueries;
+import team3.database.SQLite;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class CheckBoxEditor extends DefaultCellEditor implements ItemListener {
         DBQueries dbQueries = new DBQueries();
         this.fireEditingStopped();
         String source = (String) Dialogs.model.getValueAt(row, 1);
-        dbQueries.updateIsActiveStatus(checkBox.isSelected(), source);
+        dbQueries.updateIsActiveStatus(checkBox.isSelected(), source, SQLite.connection);
     }
 
 }

@@ -1,6 +1,7 @@
 package team3.gui;
 
 import team3.database.DBQueries;
+import team3.database.SQLite;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -166,7 +167,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         // удаление из файла excluded.txt
         //Common.delLine(source, Main.excludedPath);
         // удаление из базы данных
-        sqlite.deleteExcluded(source);
+        sqlite.deleteExcluded(source, SQLite.connection);
     }
 
     private void delRowWithSource(DBQueries sqlite, int rowWithSource) {
@@ -177,7 +178,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         // удаление из файла sources.txt
         //Common.delLine(source, Main.sourcesPath);
         // удаление из базы данных
-        sqlite.deleteSource(source);
+        sqlite.deleteSource(source, SQLite.connection);
     }
 
     private void setRowWithExcludeWord(DBQueries sqlite, int rowWithExcludeWord) {
@@ -186,7 +187,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
         // удаление из диалогового окна
         Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
         // добавление в базу данных и файл excluded.txt
-        sqlite.insertNewExcludedWord(source);
+        sqlite.insertNewExcludedWord(source, SQLite.connection);
     }
 
 }

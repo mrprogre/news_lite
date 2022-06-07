@@ -3,7 +3,6 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import team3.utils.Common;
 
 import java.sql.*;
 
@@ -12,10 +11,8 @@ import static org.junit.Assert.*;
 public class DBQueriesTest {
     private Connection connection;
     private DBQueries dbQueries;
-
     @Before
     public void setUp() throws Exception {
-        dbQueries = new DBQueries();
         connectToSQLite();
     }
 
@@ -159,7 +156,7 @@ public class DBQueriesTest {
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
-            if(!rs.next()){
+            if (!rs.next()) {
                 isEmpty = true;
             }
         } catch (SQLException e) {
@@ -171,30 +168,69 @@ public class DBQueriesTest {
 
     @Test
     public void deleteFrom256() {
+        String query = "DELETE FROM titles256";
+        boolean isEmpty = false;
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(query);
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
+            if (!rs.next()) {
+                isEmpty = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(isEmpty);
     }
 
     @Test
     public void deleteSource() {
-    }
+        String query = "DELETE FROM rss_list WHERE source = ?";
+        String testSource = "google";
+        String testLink = "https://news.google.com/rss";
+        String insertQuery = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
+        boolean sourceExists = true;
 
-    @Test
-    public void deleteDuplicates() {
-    }
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(insertQuery);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, testSource);
+            preparedStatement.setString(3, testLink);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-    @Test
-    public void updateIsActiveStatus() {
-    }
+        try { // Actual test query
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setString(1, testSource);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-    @Test
-    public void deleteExcluded() {
-    }
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM rss_list WHERE source=?");
+            ResultSet rs = preparedStatement.executeQuery();
+            if (!rs.next()) {
+                sourceExists = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-    @Test
-    public void isTitleExists() {
-    }
-
-    @Test
-    public void archiveNewsCount() {
+        assertFalse(sourceExists);
     }
 
     private void connectToSQLite() throws SQLException {
