@@ -86,6 +86,33 @@ public class DBQueriesTest {
 
     @Test
     public void insertAllTitles() {
+        String query = "INSERT INTO all_news(title, news_date) VALUES (?, ?)";
+        String testTitle = "test-title";
+        String testDate = "test-date";
+        String[] queryResult = {"", ""};
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setString(1, testTitle);
+            preparedStatement.setString(2, testDate);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM all_news");
+            while (rs.next()) {
+                queryResult[0] = rs.getString("title");
+                queryResult[1] = rs.getString("news_date");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(testTitle, queryResult[0]);
+        assertEquals(testDate, queryResult[1]);
     }
 
     @Test
