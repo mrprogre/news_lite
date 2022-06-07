@@ -1,14 +1,14 @@
-package team3.search;
+package search;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
-import team3.database.DBQueries;
-import team3.database.SQLite;
-import team3.email.EmailSender;
-import team3.gui.Gui;
-import team3.main.Main;
-import team3.utils.Common;
+import database.DBQueries;
+import database.SQLite;
+import email.EmailSender;
+import gui.Gui;
+import main.Main;
+import utils.Common;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
-import static team3.search.Search.isStop;
+import static search.Search.isStop;
 
 
 public class SearchMethod implements SearchInterface {
