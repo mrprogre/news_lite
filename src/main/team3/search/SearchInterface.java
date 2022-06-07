@@ -1,12 +1,12 @@
-package search;
+package team3.search;
 
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
-import database.DBQueries;
-import database.SQLite;
-import gui.Gui;
-import utils.Common;
+import team3.database.DBQueries;
+import team3.database.SQLite;
+import team3.gui.Gui;
+import team3.utils.Common;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
