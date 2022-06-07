@@ -146,6 +146,27 @@ public class DBQueriesTest {
 
     @Test
     public void deleteTitles() {
+        String query = "DELETE FROM news_dual";
+        boolean isEmpty = false;
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(query);
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
+            if(!rs.next()){
+                isEmpty = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(isEmpty);
     }
 
     @Test
