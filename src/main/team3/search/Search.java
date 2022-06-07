@@ -53,8 +53,9 @@ public class Search {
     LocalTime timeStart;
     LocalTime timeEnd;
     Duration searchTime;
-
+    SearchInterface searchinterface;
     //Main search
+
     public void mainSearch(String pSearchType) {
         SQLite sqlite = new SQLite();
         DBQueries dbqueries = new DBQueries();
@@ -231,67 +232,10 @@ public class Search {
             }
         }
     }
-    private void transCommand(String command) throws SQLException {
-        String q_command = command;
-        Statement st_command = SQLite.connection.createStatement();
-        st_command.execute(q_command);
-        st_command.close();
-    }
 
-    private void transDelete() throws SQLException {
-        String q_del = "delete from news_dual where title = ''";
-        Statement st_del = SQLite.connection.createStatement();
-        st_del.executeUpdate(q_del);
-        st_del.close();
-    }
-
-
-
-    private boolean isHref(String newsDescribe) {
-        return newsDescribe.contains("<img")
-                || newsDescribe.contains("href")
-                || newsDescribe.contains("<div")
-                || newsDescribe.contains("&#34")
-                || newsDescribe.contains("<p lang")
-                || newsDescribe.contains("&quot")
-                || newsDescribe.contains("<span")
-                || newsDescribe.contains("<ol")
-                || newsDescribe.equals("");
-    }
-
-    private void getTodayOrNotCbx(DBQueries dbqueries, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
-        if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
-            newsCount++;
-            Gui.labelSum.setText(String.valueOf(newsCount));
-            dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
-                    smi_source + " - " + dateToEmail);
-
-            Object[] row = new Object[]{
-                    newsCount,
-                    smi_source,
-                    title,
-                    dateFormatHoursFirst.format(pubDate),
-                    link
-            };
-            Gui.model.addRow(row);
-
-            //SQLite
-            String[] subStr = title.split(" ");
-            for (String s : subStr) {
-                if (s.length() > 3) {
-                    assert st != null;
-                    st.setString(1, Common.delNoLetter(s).toLowerCase());
-                    st.executeUpdate();
-                }
-            }
-            dbqueries.insertTitleIn256(Common.sha256(title + pubDate));
-
-        }
-    }
-
-    //Console search
     public void searchByConsole() {
-        DBQueries dbqueries = new DBQueries();
+        SQLite sqlite = new SQLite();
+        DBQueries dbqueries= new DBQueries();
         if (!isSearchNow.get()) {
             dataForEmail.clear();
             dbqueries.selectSources("smi");
@@ -397,4 +341,51 @@ public class Search {
             }
         }
     }
+
+    private void transCommand(String command) throws SQLException {
+        searchinterface.transCommand(command);
+    }
+
+    private void transDelete() throws SQLException {
+        searchinterface.transDelete();
+    }
+
+
+
+    private boolean isHref(String newsDescribe) {
+        return searchinterface.isHref(newsDescribe);
+    }
+
+    private void getTodayOrNotCbx(DBQueries sqlite, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
+        if ((Gui.todayOrNotCbx.getState() && (date_diff != 0)) || (!Gui.todayOrNotCbx.getState())) {
+            newsCount++;
+            Gui.labelSum.setText(String.valueOf(newsCount));
+            dataForEmail.add(newsCount + ") " + title + "\n" + link + "\n" + newsDescribe + "\n" +
+                    smi_source + " - " + dateToEmail);
+
+            Object[] row = new Object[]{
+                    newsCount,
+                    smi_source,
+                    title,
+                    dateFormatHoursFirst.format(pubDate),
+                    link
+            };
+            Gui.model.addRow(row);
+
+            //SQLite
+            String[] subStr = title.split(" ");
+            for (String s : subStr) {
+                if (s.length() > 3) {
+                    assert st != null;
+                    st.setString(1, Common.delNoLetter(s).toLowerCase());
+                    st.executeUpdate();
+                }
+            }
+            sqlite.insertTitleIn256(Common.sha256(title + pubDate));
+
+        }
+    }
+
+    //Console search
+
 }
