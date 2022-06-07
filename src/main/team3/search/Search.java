@@ -53,7 +53,7 @@ public class Search {
     LocalTime timeStart;
     LocalTime timeEnd;
     Duration searchTime;
-    SearchInterface searchinterface;
+    SearchMethod searchmethod = new SearchMethod();
     //Main search
 
     public void mainSearch(String pSearchType) {
@@ -343,17 +343,17 @@ public class Search {
     }
 
     private void transCommand(String command) throws SQLException {
-        searchinterface.transCommand(command);
+        searchmethod.transCommand(command);
     }
 
     private void transDelete() throws SQLException {
-        searchinterface.transDelete();
+        searchmethod.transDelete();
     }
 
 
 
     private boolean isHref(String newsDescribe) {
-        return searchinterface.isHref(newsDescribe);
+        return searchmethod.isHref(newsDescribe);
     }
 
     private void getTodayOrNotCbx(DBQueries sqlite, PreparedStatement st, String smi_source, String title, String newsDescribe, Date pubDate, String dateToEmail, String link, int date_diff) throws SQLException {
