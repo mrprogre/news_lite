@@ -83,55 +83,15 @@ public class DBQueriesTest {
 
     @Test
     public void insertNewExcludedWord() {
-        String query = "INSERT INTO exclude(word) VALUES (?)";
         String testWord = "test-word";
-        String queryResult = "";
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(query);
-            preparedStatement.setString(1, testWord);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM exclude");
-            while (rs.next()) {
-                queryResult = rs.getString("word");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(testWord, queryResult);
-
+        dbQueries.insertNewExcludedWord(testWord, connection);
+        assertEquals(testWord, getTestWordFromExcluded());
     }
 
     @Test
     public void deleteTitles() {
-        String query = "DELETE FROM news_dual";
-        boolean isEmpty = false;
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(query);
-            st.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
-            if (!rs.next()) {
-                isEmpty = true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        assertTrue(isEmpty);
+        dbQueries.deleteTitles(connection);
+        assertTrue(getTitlesFromNewsDual());
     }
 
     @Test
@@ -239,5 +199,33 @@ public class DBQueriesTest {
             e.printStackTrace();
         }
         return queryResult;
+    }
+
+    private String getTestWordFromExcluded() {
+        String queryResult = "";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM exclude");
+            while (rs.next()) {
+                queryResult = rs.getString("word");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return queryResult;
+    }
+
+    private boolean getTitlesFromNewsDual() {
+        boolean isEmpty = false;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
+            if (!rs.next()) {
+                isEmpty = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isEmpty;
     }
 }

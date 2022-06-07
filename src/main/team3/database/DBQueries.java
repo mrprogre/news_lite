@@ -130,7 +130,7 @@ public class DBQueries {
                 preparedStatement.setString(1, pWord);
                 preparedStatement.executeUpdate();
 
-                Common.console("status: word \"" + pWord + "\" excluded from analysis");
+                LOGGER.warn("status: word \"" + pWord + "\" excluded from analysis");
                 LOGGER.warn("New word excluded from analysis");
             }
         } catch (SQLException e) {
