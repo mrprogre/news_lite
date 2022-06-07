@@ -3,6 +3,7 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import team3.utils.Common;
 
 import java.sql.*;
 
@@ -158,7 +159,7 @@ public class DBQueriesTest {
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
-            if(!rs.next()){
+            if (!rs.next()) {
                 isEmpty = true;
             }
         } catch (SQLException e) {
@@ -183,7 +184,7 @@ public class DBQueriesTest {
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
-            if(!rs.next()){
+            if (!rs.next()) {
                 isEmpty = true;
             }
         } catch (SQLException e) {
@@ -195,6 +196,44 @@ public class DBQueriesTest {
 
     @Test
     public void deleteSource() {
+        String query = "DELETE FROM rss_list WHERE source = ?";
+        String testSource = "google";
+        String testLink = "https://news.google.com/rss";
+        String insertQuery = "INSERT INTO rss_list(id, source, link, is_active) VALUES ( ? , ?, ?, " + 1 + ")";
+        boolean sourceExists = true;
+
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(insertQuery);
+            preparedStatement.setInt(1, 1);
+            preparedStatement.setString(2, testSource);
+            preparedStatement.setString(3, testLink);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try { // Actual test query
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setString(1, testSource);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement("SELECT * FROM rss_list WHERE source=?");
+            ResultSet rs = preparedStatement.executeQuery();
+            if (!rs.next()) {
+                sourceExists = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertFalse(sourceExists);
     }
 
     @Test
