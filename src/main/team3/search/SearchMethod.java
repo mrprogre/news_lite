@@ -40,6 +40,7 @@ public class SearchMethod implements SearchInterface {
     }
 
     public void transCommand(String command) throws SQLException {
+        SQLite sqLite = new SQLite();
         Statement st_command = SQLite.connection.createStatement();
         st_command.execute(command);
         st_command.close();
