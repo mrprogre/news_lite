@@ -17,5 +17,16 @@ public abstract class iconButtonFactory {
         this.x_axis = x; this.y_axis = y;
     }
 
+    public ImageIcon getImg(){
+        return this._icon;
+    }
+    public int getX(){
+        return this.x_axis;
+    }
+
+    public int getY(){
+        return this.y_axis;
+    }
+
     public abstract void buttonSetting(JButton _btn);
 }
