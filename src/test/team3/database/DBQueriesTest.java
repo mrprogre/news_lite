@@ -3,7 +3,6 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import team3.utils.Common;
 
 import java.sql.*;
 
@@ -11,11 +10,9 @@ import static org.junit.Assert.*;
 
 public class DBQueriesTest {
     private Connection connection;
-    private DBQueries dbQueries;
 
     @Before
     public void setUp() throws Exception {
-        dbQueries = new DBQueries();
         connectToSQLite();
     }
 
@@ -234,26 +231,6 @@ public class DBQueriesTest {
         }
 
         assertFalse(sourceExists);
-    }
-
-    @Test
-    public void deleteDuplicates() {
-    }
-
-    @Test
-    public void updateIsActiveStatus() {
-    }
-
-    @Test
-    public void deleteExcluded() {
-    }
-
-    @Test
-    public void isTitleExists() {
-    }
-
-    @Test
-    public void archiveNewsCount() {
     }
 
     private void connectToSQLite() throws SQLException {

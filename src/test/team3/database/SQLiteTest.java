@@ -12,12 +12,12 @@ public class SQLiteTest {
     private SQLite sqLite;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         sqLite = new SQLite();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     @Test
