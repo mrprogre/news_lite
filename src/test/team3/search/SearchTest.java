@@ -1,4 +1,4 @@
-package team3;
+package team3.search;
 
 import team3.main.Main;
 import org.junit.jupiter.api.Test;
@@ -16,16 +16,30 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SearchTest {
+    //SearchObject Test
     @Test
-    public void shouldToCheckInternetAvailableTest() throws IOException {
+    public void objectCreateTest() throws IOException {
+        try {
+            Search search = new Search();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //emailSenderTest
+    @Test
+    public void emailSenderTest() throws IOException {
         try {
             String subject = ("News (" + new Search().today + ")");
-            } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
+    // clearButtonTopTest.getX,getY,getIMG error
+
+
+    //searchByConsole test
     @Test
     public void shouldOpenSQLiteConnectionTest() throws SQLException {
         try {
@@ -35,7 +49,6 @@ class SearchTest {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
     }
 }
 
