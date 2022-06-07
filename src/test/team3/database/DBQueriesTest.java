@@ -67,15 +67,7 @@ public class DBQueriesTest {
         String testTitle = "google";
         String queryResult = "";
         dbQueries.insertTitleIn256(testTitle, connection);
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
-            while (rs.next()) {
-                queryResult = rs.getString("title");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        queryResult = getTestTitleFrom256(queryResult);
         assertEquals(testTitle, queryResult);
     }
 
@@ -239,5 +231,18 @@ public class DBQueriesTest {
             e.printStackTrace();
         }
         assert connection.isValid(3);
+    }
+
+    private String getTestTitleFrom256(String queryResult) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
+            while (rs.next()) {
+                queryResult = rs.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return queryResult;
     }
 }
