@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Properties;
 
 public class Utilities {
     private static final Logger LOGGER = LoggerFactory.getLogger(Utilities.class);
 
-    public void loadSQLQueries() {
+    public void loadSQLQueries(Properties props) {
         try {
-            Main.prop.loadFromXML(SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml"));
+            props.loadFromXML(SQLite.class.getClassLoader().getResourceAsStream("sql-queries.xml"));
             LOGGER.info("SQL queries loaded.");
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -22,6 +23,10 @@ public class Utilities {
 
     public String getSQLQueryFromProp(String entryKey) {
         return Main.prop.getProperty(entryKey);
+    }
+
+    public String getSQLQueryFromProp(String entryKey, Properties props) {
+        return props.getProperty(entryKey);
     }
 
     public RSSInfoFromUI getRSSInfoFromUI() {
