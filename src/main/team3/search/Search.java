@@ -127,7 +127,7 @@ public class Search {
                                             && !title.toLowerCase().contains(excludeFromSearch.get(2))
                                     ) {
                                         //отсеиваем новости, которые уже были найдены ранее
-                                        if (dbqueries.isTitleExists(Common.sha256(title + pubDate))
+                                        if (dbqueries.isTitleExists(Common.sha256(title + pubDate), SQLite.connection)
                                                 && SQLite.isConnectionToSQLite) {
                                             continue;
                                         }
@@ -137,7 +137,7 @@ public class Search {
                                         int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
                                         // вставка всех новостей в архив (ощутимо замедляет общий поиск)
-                                        dbqueries.insertAllTitles(title, pubDate.toString());
+                                        dbqueries.insertAllTitles(title, pubDate.toString(), SQLite.connection);
 
                                         getTodayOrNotCbx(dbqueries, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                     }
@@ -146,7 +146,7 @@ public class Search {
                                         if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
 
                                             // отсеиваем новости которые были обнаружены ранее
-                                            if (dbqueries.isTitleExists(Common.sha256(title + pubDate)) && SQLite.isConnectionToSQLite) {
+                                            if (dbqueries.isTitleExists(Common.sha256(title + pubDate), SQLite.connection) && SQLite.isConnectionToSQLite) {
                                                 continue;
                                             }
 
@@ -160,7 +160,7 @@ public class Search {
                                 }
                                 if (isStop.get()) return;
                             }
-                            if (!Gui.isOnlyLastNews && SQLite.isConnectionToSQLite) dbqueries.deleteFrom256();
+                            if (!Gui.isOnlyLastNews && SQLite.isConnectionToSQLite) dbqueries.deleteFrom256(SQLite.connection);
                         } catch (Exception no_rss) {
                             String smi = Common.SMI_LINK.get(Common.SMI_ID)
                                     .replaceAll(("https://|http://|www."), "");
@@ -209,18 +209,18 @@ public class Search {
                 transDelete();
 
                 // Заполняем таблицу анализа
-                if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) dbqueries.selectSqlite();
+                if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) dbqueries.selectSqlite(SQLite.connection);
 
                 // Автоматическая отправка результатов
                 if (Gui.autoSendMessage.getState() && (Gui.model.getRowCount() > 0)) {
                     Gui.sendEmailBtn.doClick();
                 }
 
-                dbqueries.deleteDuplicates();
+                dbqueries.deleteDuplicates(SQLite.connection);
                 Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
                 if (isword)
-                    Common.console("info: number of news items in the archive = " + dbqueries.archiveNewsCount());
-                log.info("number of news items in the archive = " + dbqueries.archiveNewsCount());
+                    Common.console("info: number of news items in the archive = " + dbqueries.archiveNewsCount(SQLite.connection));
+                log.info("number of news items in the archive = " + dbqueries.archiveNewsCount(SQLite.connection));
             } catch (Exception e) {
                 log.warn(e.getMessage());
                 try {
@@ -282,7 +282,7 @@ public class Search {
 
                                     if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
                                         // отсеиваем новости которые были обнаружены ранее
-                                        if (dbqueries.isTitleExists(Common.sha256(title + pubDate)) && SQLite.isConnectionToSQLite) {
+                                        if (dbqueries.isTitleExists(Common.sha256(title + pubDate), SQLite.connection) && SQLite.isConnectionToSQLite) {
                                             continue;
                                         }
 
@@ -297,7 +297,7 @@ public class Search {
                                             /**/
                                             System.out.println(newsCount + ") " + title);
                                             /**/
-                                            dbqueries.insertTitleIn256(Common.sha256(title + pubDate));
+                                            dbqueries.insertTitleIn256(Common.sha256(title + pubDate), SQLite.connection);
                                         }
                                     }
                                 }
@@ -327,7 +327,7 @@ public class Search {
                     EmailSender email = new EmailSender();
                     email.sendMessage();
                 }
-                dbqueries.deleteDuplicates();
+                dbqueries.deleteDuplicates(SQLite.connection);
                 Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -381,7 +381,7 @@ public class Search {
                     st.executeUpdate();
                 }
             }
-            sqlite.insertTitleIn256(Common.sha256(title + pubDate));
+            sqlite.insertTitleIn256(Common.sha256(title + pubDate), SQLite.connection);
 
         }
     }

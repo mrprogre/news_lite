@@ -805,7 +805,7 @@ public class Gui extends JFrame {
         addNewSource.setBackground(new Color(243, 229, 255));
         addNewSource.setBounds(902, 479, 14, 14);
         getContentPane().add(addNewSource);
-        addNewSource.addActionListener(e -> dbQueries.insertNewSource());
+        addNewSource.addActionListener(e -> dbQueries.insertNewSource(SQLite.connection));
         addNewSource.addMouseListener(new MouseAdapter() {
             // наведение мышки на кнопку
             @Override
@@ -942,7 +942,7 @@ public class Gui extends JFrame {
         onlyNewNews.addItemListener(e -> {
             isOnlyLastNews = onlyNewNews.getState();
             if (!isOnlyLastNews) {
-                dbQueries.deleteFrom256();
+                dbQueries.deleteFrom256(SQLite.connection);
             }
         });
 

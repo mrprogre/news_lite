@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class DBQueriesTest {
     private Connection connection;
-
+    private DBQueries dbQueries;
     @Before
     public void setUp() throws Exception {
         connectToSQLite();
