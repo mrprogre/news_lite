@@ -68,7 +68,6 @@ public class DBQueries {
             if (connection.isValid(3)) {
                 // Диалоговое окно добавления источника новостей в базу данных
                 RSSInfoFromUI rssInfoFromUI = dbUtil.getRSSInfoFromUI();
-
                 if (rssInfoFromUI.getResult() == JOptionPane.YES_OPTION) {
                     //запись в БД
                     PreparedStatement preparedStatement =
@@ -91,7 +90,6 @@ public class DBQueries {
 
     // вставка кода по заголовку для отсеивания ранее обнаруженных новостей
     public void insertTitleIn256(String pTitle, Connection connection) {
-
         try {
             if (connection.isValid(3)) {
                 PreparedStatement preparedStatement =
