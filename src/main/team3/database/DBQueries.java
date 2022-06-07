@@ -76,9 +76,9 @@ public class DBQueries {
                     preparedStatement.setString(2, rssInfoFromUI.getSourceName().getText());
                     preparedStatement.setString(3, rssInfoFromUI.getRssLink().getText());
                     preparedStatement.executeUpdate();
-                    Common.console("status: source added");
+                    LOGGER.warn("status: source added");
                 } else {
-                    Common.console("status: adding source canceled");
+                    LOGGER.warn("status: adding source canceled");
                 }
             }
 
