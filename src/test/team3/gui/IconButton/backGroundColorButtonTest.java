@@ -7,6 +7,11 @@ import team3.gui.checkboxFactory.todayOrNotCheckbox;
 
 import java.awt.*;
 
+/**
+ * Purpose: button Construct(backGroundColorButton)
+ * Expected: icon:Not null, Color:(20, 30, 40), location:(20,30) button
+ */
+
 import static org.junit.Assert.*;
 
 public class backGroundColorButtonTest {

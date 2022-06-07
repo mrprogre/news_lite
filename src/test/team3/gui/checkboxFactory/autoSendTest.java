@@ -4,6 +4,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Purpose: Checkbox Construct(autoSend)
+ * Expected: location:(20,30), width:40 checkbox
+ */
 public class autoSendTest {
 
     @Test

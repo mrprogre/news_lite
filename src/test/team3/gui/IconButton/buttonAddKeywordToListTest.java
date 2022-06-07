@@ -7,6 +7,11 @@ import java.awt.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * Purpose: button Construct(buttonAddKeywordToLinst)
+ * Expected: icon:Not null, Color:(20, 30, 40), location:(20,30) button
+ */
+
 public class buttonAddKeywordToListTest {
     @Test
     public void buttonAddKeywordToList_constructorTest() {
