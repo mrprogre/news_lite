@@ -96,27 +96,8 @@ public class DBQueriesTest {
 
     @Test
     public void deleteFrom256() {
-        String query = "DELETE FROM titles256";
-        boolean isEmpty = false;
-        try {
-            Statement st = connection.createStatement();
-            st.executeUpdate(query);
-            st.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
-            if (!rs.next()) {
-                isEmpty = true;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        assertTrue(isEmpty);
+        dbQueries.deleteFrom256(connection);
+        assertTrue(getTitlesFromTitles256());
     }
 
     @Test
@@ -220,6 +201,20 @@ public class DBQueriesTest {
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM news_dual");
+            if (!rs.next()) {
+                isEmpty = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isEmpty;
+    }
+
+    private boolean getTitlesFromTitles256() {
+        boolean isEmpty = false;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
             if (!rs.next()) {
                 isEmpty = true;
             }
