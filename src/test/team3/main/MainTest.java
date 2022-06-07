@@ -2,8 +2,10 @@ package team3.main;
 
 import org.junit.Test;
 import team3.utils.Common;
+import team3.utils.InternetAvailabilityChecker;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -34,6 +36,17 @@ public class MainTest {
         File configIsExists = new File(Main.DIRECTORY_PATH + "config.txt");
         assertTrue(configIsExists.exists());
     }
+
+    /**
+     * Purpose: Internet connection check
+     * Expected:
+     *  no error with testcase
+     */
+    @Test
+    public void internetCheckTest() throws IOException {
+        assertTrue(InternetAvailabilityChecker.isInternetAvailable());
+    }
+
 
 
 }
