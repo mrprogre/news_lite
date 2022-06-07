@@ -29,6 +29,11 @@ public class DBQueriesTest {
     }
 
     @Test
+    public void selectsqlite() {
+        dbQueries.selectSqlite(connection);
+    }
+
+    @Test
     public void insertTitleIn256() {
         String testTitle = "google";
         dbQueries.insertTitleIn256(testTitle, connection);
@@ -75,6 +80,8 @@ public class DBQueriesTest {
         dbQueries.deleteSource(testSource, connection);
         assertFalse(testSourceExists());
     }
+
+
 
     private void connectToSQLite() throws SQLException {
         try {

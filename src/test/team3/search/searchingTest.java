@@ -18,6 +18,15 @@ import java.lang.NullPointerException;
 import java.util.Properties;
 
 public class searchingTest {
+    @Before
+    public void setUp(){
+        Search search = new Search();
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+        Utilities dbutils = new Utilities();
+        Main.prop = new Properties();
+        dbutils.loadSQLQueries(Main.prop);
+    }
     /*
     Purpose: test for using search Method.
     Input : mainSearch("")
@@ -27,17 +36,11 @@ public class searchingTest {
     //(expected = java.lang.NullPointerException.class)
     @Test
     public void mainSearch() throws NullPointerException {
-        Search search = new Search();
-        SQLite sqLite = new SQLite();
-        sqLite.openSQLiteConnection();
-        Utilities dbutils = new Utilities();
-        Main.prop = new Properties();
-        dbutils.loadSQLQueries(Main.prop);
 //        DefaultTableModel defa
 //        Gui testgui = new Gui();
 //        String query= "insert into news_dual(title) values (?)";
 //        sqLite.
-        search.mainSearch("word");
+//        search.mainSearch("word");
     }
         /*
      Purpose: test for using search Method.
