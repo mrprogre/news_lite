@@ -3,6 +3,7 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import team3.utils.Common;
 
 import java.sql.*;
 
@@ -117,6 +118,30 @@ public class DBQueriesTest {
 
     @Test
     public void insertNewExcludedWord() {
+        String query = "INSERT INTO exclude(word) VALUES (?)";
+        String testWord = "test-word";
+        String queryResult = "";
+        try {
+            PreparedStatement preparedStatement =
+                    connection.prepareStatement(query);
+            preparedStatement.setString(1, testWord);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM exclude");
+            while (rs.next()) {
+                queryResult = rs.getString("word");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(testWord, queryResult);
+
     }
 
     @Test
