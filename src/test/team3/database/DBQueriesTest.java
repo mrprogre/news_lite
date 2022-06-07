@@ -3,7 +3,6 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import team3.utils.Common;
 
 import java.sql.*;
 
@@ -171,6 +170,27 @@ public class DBQueriesTest {
 
     @Test
     public void deleteFrom256() {
+        String query = "DELETE FROM titles256";
+        boolean isEmpty = false;
+        try {
+            Statement st = connection.createStatement();
+            st.executeUpdate(query);
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
+            if(!rs.next()){
+                isEmpty = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(isEmpty);
     }
 
     @Test
