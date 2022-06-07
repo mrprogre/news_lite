@@ -65,42 +65,21 @@ public class DBQueriesTest {
     @Test
     public void insertTitleIn256() {
         String testTitle = "google";
-        String queryResult = "";
         dbQueries.insertTitleIn256(testTitle, connection);
-        queryResult = getTestTitleFrom256(queryResult);
-        assertEquals(testTitle, queryResult);
+        assertEquals(testTitle, getTestTitleFrom256());
     }
 
     @Test
     public void insertAllTitles() {
-        String query = "INSERT INTO all_news(title, news_date) VALUES (?, ?)";
         String testTitle = "test-title";
         String testDate = "test-date";
-        String[] queryResult = {"", ""};
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(query);
-            preparedStatement.setString(1, testTitle);
-            preparedStatement.setString(2, testDate);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM all_news");
-            while (rs.next()) {
-                queryResult[0] = rs.getString("title");
-                queryResult[1] = rs.getString("news_date");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dbQueries.insertAllTitles(testTitle, testDate, connection);
+        String[] queryResult = getTitleFromAllNews();
 
         assertEquals(testTitle, queryResult[0]);
         assertEquals(testDate, queryResult[1]);
     }
+
 
     @Test
     public void insertNewExcludedWord() {
@@ -233,12 +212,28 @@ public class DBQueriesTest {
         assert connection.isValid(3);
     }
 
-    private String getTestTitleFrom256(String queryResult) {
+    private String getTestTitleFrom256() {
+        String queryResult = "";
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
             while (rs.next()) {
                 queryResult = rs.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return queryResult;
+    }
+
+    private String[] getTitleFromAllNews() {
+        String[] queryResult = {"", ""};
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM all_news");
+            while (rs.next()) {
+                queryResult[0] = rs.getString("title");
+                queryResult[1] = rs.getString("news_date");
             }
         } catch (SQLException e) {
             e.printStackTrace();
