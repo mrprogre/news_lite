@@ -1,7 +1,9 @@
-import main.Main;
+package team3;
+
+import team3.main.Main;
 import org.junit.jupiter.api.Test;
-import search.Search;
-import utils.InternetAvailabilityChecker;
+import team3.search.Search;
+import team3.utils.InternetAvailabilityChecker;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
