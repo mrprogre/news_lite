@@ -3,17 +3,24 @@ package team3.database;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import team3.main.Main;
 
 import java.sql.*;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
 public class DBQueriesTest {
     private Connection connection;
     private DBQueries dbQueries;
+
     @Before
     public void setUp() throws Exception {
         connectToSQLite();
+        dbQueries = new DBQueries();
+        Main.prop = new Properties();
+        Utilities utilities = new Utilities();
+        utilities.loadSQLQueries(Main.prop);
     }
 
     @After
@@ -58,17 +65,8 @@ public class DBQueriesTest {
     @Test
     public void insertTitleIn256() {
         String testTitle = "google";
-        String query = "INSERT INTO titles256(title) VALUES (?)";
         String queryResult = "";
-        try {
-            PreparedStatement preparedStatement =
-                    connection.prepareStatement(query);
-            preparedStatement.setString(1, testTitle);
-            preparedStatement.executeUpdate();
-        } catch (SQLException t) {
-            t.printStackTrace();
-        }
-
+        dbQueries.insertTitleIn256(testTitle, connection);
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM titles256");
@@ -78,7 +76,6 @@ public class DBQueriesTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         assertEquals(testTitle, queryResult);
     }
 
