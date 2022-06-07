@@ -32,6 +32,49 @@ public class DBQueriesTest {
     public void selectsqlite() {
         dbQueries.selectSqlite(connection);
     }
+    @Test
+    public void selectsources(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+        dbQueries.selectSources("smi");
+        dbQueries.selectSources("excl");
+        dbQueries.selectSources("active_smi");
+
+    }
+    //source : google
+    //link :https://news.google.com/rss
+    @Test
+    public void insertnewsource(){
+        dbQueries.insertNewSource(connection);
+    }
+
+    @Test
+    public void deleteduplicates(){
+        dbQueries.deleteDuplicates(connection);
+    }
+
+    @Test
+    public void updateisactivestatus(){
+        dbQueries.updateIsActiveStatus(true, "google", connection);
+    }
+
+    @Test
+    public void deleteexcluded(){
+        dbQueries.deleteExcluded("google",connection);
+    }
+
+    @Test
+    public void istitleexists(){
+        String testTitle = "test-title";
+        String testDate = "test-date";
+        dbQueries.insertAllTitles(testTitle, testDate, connection);
+        dbQueries.isTitleExists("test-title",connection);
+    }
+
+    @Test
+    public void archivenewscount(){
+        dbQueries.archiveNewsCount(connection);
+    }
 
     @Test
     public void insertTitleIn256() {
