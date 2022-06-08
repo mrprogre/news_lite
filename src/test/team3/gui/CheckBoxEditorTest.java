@@ -15,14 +15,18 @@ public class CheckBoxEditorTest {
      */
 
 
+
     @Test
     public void CheckBoxEditor_constructorTest() {
         CheckBoxEditor checkBoxEditor = new CheckBoxEditor(new JCheckBox());
+
+
 
         assertNotNull(checkBoxEditor);
         assertNotNull(checkBoxEditor.getCheckBox());
         assertNotNull(checkBoxEditor.getCellEditorValue());
         assertEquals(checkBoxEditor.getRow(), 0);
+
 
 
     }
