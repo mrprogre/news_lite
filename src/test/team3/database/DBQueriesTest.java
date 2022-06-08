@@ -37,25 +37,44 @@ public class DBQueriesTest {
 
 
 // ----bong-----
-    /*
-    Purpose: Method selectSqlite Test
-    Input : selectSqlite(connection)
-    Expected :
-            Gui.modelForAnalysis.addRow(row2);
 
+    /*
+    Purpose: Method isTitleExists Test
+    Input : isTitleExists("test-title",connection)
+    Expected :
+           isExist : true
     */
     @Test
-    public void selectsqlite() {
-        dbQueries.selectSqlite(connection);
+    public void istitleexists(){
+        String testTitle = "test-title";
+        dbQueries.insertTitleIn256(testTitle, connection);
+        boolean isExist = dbQueries.isTitleExists(testTitle,connection);
+        assertTrue(isExist);
     }
 
     /*
-    Purpose: Method selectSources Test
-    Input : selectSources("smi")
+    Purpose: Method deleteDuplicates Test
+    Input : deleteDuplicates(connection)
     Expected :
-            Equals(smi_source,Common.SMI_SOURCE);
-            Equals(smi_link,Common.SMI_LINK);
+            deleteAllDuplicates
     */
+    @Test
+    public void deleteduplicates() throws SQLException {
+        Utilities dbUtil = new Utilities();
+        Statement st = connection.createStatement();
+        boolean a = (st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates")) ==0);
+        dbQueries.deleteDuplicates(connection);
+        st.close();
+        assertTrue(a);
+    }
+
+    /*
+   Purpose: Method selectSources Test
+   Input : selectSources("smi")
+   Expected :
+           Equals(smi_source,Common.SMI_SOURCE);
+           Equals(smi_link,Common.SMI_LINK);
+   */
     @Test
     public void selectsources_smi(){
         SQLite sqLite = new SQLite();
@@ -157,6 +176,22 @@ public class DBQueriesTest {
     }
 
 
+
+    /*
+    Purpose: Method selectSqlite Test
+    Input : selectSqlite(connection)
+    Expected :
+            Gui.modelForAnalysis.addRow(row2);
+
+    */
+    @Test
+    public void selectsqlite() {
+        dbQueries.selectSqlite(connection);
+    }
+
+
+
+
     /*
     Purpose: Method insertNewSource Test
     Input :insertNewSource(connection)
@@ -170,21 +205,7 @@ public class DBQueriesTest {
         dbQueries.insertNewSource(connection);
     }
 
-    /*
-    Purpose: Method deleteDuplicates Test
-    Input : deleteDuplicates(connection)
-    Expected :
-            deleteAllDuplicates
-    */
-    @Test
-    public void deleteduplicates() throws SQLException {
-        Utilities dbUtil = new Utilities();
-        Statement st = connection.createStatement();
-        boolean a = (st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates")) ==0);
-        dbQueries.deleteDuplicates(connection);
-        st.close();
-        assertTrue(a);
-    }
+
 
 
     /*
@@ -210,21 +231,6 @@ public class DBQueriesTest {
     @Test
     public void deleteexcluded(){
         dbQueries.deleteExcluded("google",connection);
-    }
-
-
-    /*
-    Purpose: Method isTitleExists Test
-    Input : isTitleExists("test-title",connection)
-    Expected :
-           isExist : true
-    */
-    @Test
-    public void istitleexists(){
-        String testTitle = "test-title";
-        dbQueries.insertTitleIn256(testTitle, connection);
-        boolean isExist = dbQueries.isTitleExists(testTitle,connection);
-        assertTrue(isExist);
     }
 
 
