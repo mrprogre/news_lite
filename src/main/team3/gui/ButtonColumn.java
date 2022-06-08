@@ -31,7 +31,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
 
 
     public JTable getTable(){
-        return table;
+        return this.table;
     }
 
 

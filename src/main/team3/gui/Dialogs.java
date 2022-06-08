@@ -15,6 +15,8 @@ public class Dialogs extends JDialog implements KeyListener {
     static JTable table;
     public static DefaultTableModel model;
 
+
+
     public Dialogs(String p_file) {
         setTextAreaForDialogs();
 

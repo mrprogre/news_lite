@@ -18,6 +18,14 @@ public class CheckBoxEditor extends DefaultCellEditor implements ItemListener {
         this.checkBox.addItemListener(this);
     }
 
+    public int getRow() {
+        return row;
+    }
+
+    public JCheckBox getCheckBox() {
+        return checkBox;
+    }
+
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         this.row = row;
