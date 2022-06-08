@@ -4,6 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+/**
+ * Purpose: Checkbox Construct(autoUpdateNews)
+ * Expected: location:(20,30), width:40 checkbox
+ */
+
 public class autoUpdateNewsTest {
     @Test
     public void _autoUpdateNews_constructorTest() {
