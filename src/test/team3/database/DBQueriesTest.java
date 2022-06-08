@@ -177,8 +177,13 @@ public class DBQueriesTest {
             deleteAllDuplicates
     */
     @Test
-    public void deleteduplicates(){
+    public void deleteduplicates() throws SQLException {
+        Utilities dbUtil = new Utilities();
+        Statement st = connection.createStatement();
+        boolean a = (st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates")) ==0);
         dbQueries.deleteDuplicates(connection);
+        st.close();
+        assertTrue(a);
     }
 
 
@@ -191,7 +196,7 @@ public class DBQueriesTest {
             preparedStatement.executeUpdate()
     */
     @Test
-    public void updateisactivestatus(){
+    public void updateisactivestatus() throws SQLException {
         dbQueries.updateIsActiveStatus(true, "google", connection);
     }
 
@@ -212,14 +217,14 @@ public class DBQueriesTest {
     Purpose: Method isTitleExists Test
     Input : isTitleExists("test-title",connection)
     Expected :
-           dbUtil.getSQLQueryFromProp("titleExists")
+           isExist : true
     */
     @Test
     public void istitleexists(){
         String testTitle = "test-title";
-        String testDate = "test-date";
-        dbQueries.insertAllTitles(testTitle, testDate, connection);
-        dbQueries.isTitleExists("test-title",connection);
+        dbQueries.insertTitleIn256(testTitle, connection);
+        boolean isExist = dbQueries.isTitleExists(testTitle,connection);
+        assertTrue(isExist);
     }
 
 
