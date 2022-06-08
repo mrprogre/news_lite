@@ -4,12 +4,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import team3.main.Main;
+import team3.utils.Common;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
-
 public class DBQueriesTest {
     private Connection connection;
     private DBQueries dbQueries;
@@ -36,6 +37,146 @@ public class DBQueriesTest {
 
 
 // ----bong-----
+
+    /*
+    Purpose: Method isTitleExists Test
+    Input : isTitleExists("test-title",connection)
+    Expected :
+           isExist : true
+    */
+    @Test
+    public void istitleexists(){
+        String testTitle = "test-title";
+        dbQueries.insertTitleIn256(testTitle, connection);
+        boolean isExist = dbQueries.isTitleExists(testTitle,connection);
+        assertTrue(isExist);
+    }
+
+    /*
+    Purpose: Method deleteDuplicates Test
+    Input : deleteDuplicates(connection)
+    Expected :
+            deleteAllDuplicates
+    */
+    @Test
+    public void deleteduplicates() throws SQLException {
+        Utilities dbUtil = new Utilities();
+        Statement st = connection.createStatement();
+        boolean a = (st.executeUpdate(dbUtil.getSQLQueryFromProp("deleteAllDuplicates")) ==0);
+        dbQueries.deleteDuplicates(connection);
+        st.close();
+        assertTrue(a);
+    }
+
+    /*
+   Purpose: Method selectSources Test
+   Input : selectSources("smi")
+   Expected :
+           Equals(smi_source,Common.SMI_SOURCE);
+           Equals(smi_link,Common.SMI_LINK);
+   */
+    @Test
+    public void selectsources_smi(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> smi_source = new ArrayList<>();
+        ArrayList<String> smi_link = new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("smiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                smi_source.add(source);
+                smi_link.add(link);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        dbQueries.selectSources("smi");
+        assertEquals(smi_source,Common.SMI_SOURCE);
+        assertEquals(smi_link,Common.SMI_LINK);
+    }
+    /*
+    Purpose: Method selectSources Test
+    Input : selectSources("excl")
+    Expected :
+            Equals(exclude_words,Common.EXCLUDED_WORDS);
+    */
+    @Test
+    public void selectsources_excl(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> exclude_words = new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("exclQuery"));
+            while (rs.next()) {
+                String word = rs.getString("word");
+                exclude_words.add(word);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        dbQueries.selectSources("excl");
+        assertEquals(exclude_words,Common.EXCLUDED_WORDS);
+
+    }
+
+    /*
+    Purpose: Method selectSources Test
+    Input : selectSources("active_smi")
+    Expected :
+            Equals(smi_source, Common.SMI_SOURCE);
+            Equals(smi_link,Common.SMI_LINK);
+            Equals(smi_is_active,Common.SMI_IS_ACTIVE);
+    */
+    @Test
+    public void selectsources_active_smi(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> smi_source= new ArrayList<>();
+        ArrayList<String> smi_link= new ArrayList<>();
+        ArrayList<Boolean> smi_is_active= new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("activeSmiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                boolean isActive = rs.getBoolean("is_active");
+
+                smi_source.add(source);
+                smi_link.add(link);
+                smi_is_active.add(isActive);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dbQueries.selectSources("active_smi");
+        assertEquals(smi_source, Common.SMI_SOURCE);
+        assertEquals(smi_link,Common.SMI_LINK);
+        assertEquals(smi_is_active,Common.SMI_IS_ACTIVE);
+    }
+
+
+
     /*
     Purpose: Method selectSqlite Test
     Input : selectSqlite(connection)
@@ -48,21 +189,8 @@ public class DBQueriesTest {
         dbQueries.selectSqlite(connection);
     }
 
-    /*
-    Purpose: Method selectSources Test
-    Input : selectSources("smi"), selectSources("excl"), selectSources("active_smi")
-    Expected :
-            exclSearch.dbSearch()
-    */
-    @Test
-    public void selectsources(){
-        SQLite sqLite = new SQLite();
-        sqLite.openSQLiteConnection();
-        dbQueries.selectSources("smi");
-        dbQueries.selectSources("excl");
-        dbQueries.selectSources("active_smi");
 
-    }
+
 
     /*
     Purpose: Method insertNewSource Test
@@ -77,16 +205,7 @@ public class DBQueriesTest {
         dbQueries.insertNewSource(connection);
     }
 
-    /*
-    Purpose: Method deleteDuplicates Test
-    Input : deleteDuplicates(connection)
-    Expected :
-            deleteAllDuplicates
-    */
-    @Test
-    public void deleteduplicates(){
-        dbQueries.deleteDuplicates(connection);
-    }
+
 
 
     /*
@@ -98,7 +217,7 @@ public class DBQueriesTest {
             preparedStatement.executeUpdate()
     */
     @Test
-    public void updateisactivestatus(){
+    public void updateisactivestatus() throws SQLException {
         dbQueries.updateIsActiveStatus(true, "google", connection);
     }
 
@@ -112,21 +231,6 @@ public class DBQueriesTest {
     @Test
     public void deleteexcluded(){
         dbQueries.deleteExcluded("google",connection);
-    }
-
-
-    /*
-    Purpose: Method isTitleExists Test
-    Input : isTitleExists("test-title",connection)
-    Expected :
-           dbUtil.getSQLQueryFromProp("titleExists")
-    */
-    @Test
-    public void istitleexists(){
-        String testTitle = "test-title";
-        String testDate = "test-date";
-        dbQueries.insertAllTitles(testTitle, testDate, connection);
-        dbQueries.isTitleExists("test-title",connection);
     }
 
 
