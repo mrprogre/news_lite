@@ -4,12 +4,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import team3.main.Main;
+import team3.utils.Common;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
-
 public class DBQueriesTest {
     private Connection connection;
     private DBQueries dbQueries;
@@ -50,19 +51,111 @@ public class DBQueriesTest {
 
     /*
     Purpose: Method selectSources Test
-    Input : selectSources("smi"), selectSources("excl"), selectSources("active_smi")
+    Input : selectSources("smi")
     Expected :
-            exclSearch.dbSearch()
+            Equals(smi_source,Common.SMI_SOURCE);
+            Equals(smi_link,Common.SMI_LINK);
     */
     @Test
-    public void selectsources(){
+    public void selectsources_smi(){
         SQLite sqLite = new SQLite();
         sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> smi_source = new ArrayList<>();
+        ArrayList<String> smi_link = new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("smiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                smi_source.add(source);
+                smi_link.add(link);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         dbQueries.selectSources("smi");
+        assertEquals(smi_source,Common.SMI_SOURCE);
+        assertEquals(smi_link,Common.SMI_LINK);
+    }
+    /*
+    Purpose: Method selectSources Test
+    Input : selectSources("excl")
+    Expected :
+            Equals(exclude_words,Common.EXCLUDED_WORDS);
+    */
+    @Test
+    public void selectsources_excl(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> exclude_words = new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("exclQuery"));
+            while (rs.next()) {
+                String word = rs.getString("word");
+                exclude_words.add(word);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         dbQueries.selectSources("excl");
-        dbQueries.selectSources("active_smi");
+        assertEquals(exclude_words,Common.EXCLUDED_WORDS);
 
     }
+
+    /*
+    Purpose: Method selectSources Test
+    Input : selectSources("active_smi")
+    Expected :
+            Equals(smi_source, Common.SMI_SOURCE);
+            Equals(smi_link,Common.SMI_LINK);
+            Equals(smi_is_active,Common.SMI_IS_ACTIVE);
+    */
+    @Test
+    public void selectsources_active_smi(){
+        SQLite sqLite = new SQLite();
+        sqLite.openSQLiteConnection();
+
+        Utilities dbUtil = new Utilities();
+        ArrayList<String> smi_source= new ArrayList<>();
+        ArrayList<String> smi_link= new ArrayList<>();
+        ArrayList<Boolean> smi_is_active= new ArrayList<>();
+        try {
+            Statement st = SQLite.connection.createStatement();
+            ResultSet rs = st.executeQuery(dbUtil.getSQLQueryFromProp("activeSmiQuery"));
+            while (rs.next()) {
+                //int id = rs.getInt("id");
+                String source = rs.getString("source");
+                String link = rs.getString("link");
+                boolean isActive = rs.getBoolean("is_active");
+
+                smi_source.add(source);
+                smi_link.add(link);
+                smi_is_active.add(isActive);
+            }
+            rs.close();
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dbQueries.selectSources("active_smi");
+        assertEquals(smi_source, Common.SMI_SOURCE);
+        assertEquals(smi_link,Common.SMI_LINK);
+        assertEquals(smi_is_active,Common.SMI_IS_ACTIVE);
+    }
+
 
     /*
     Purpose: Method insertNewSource Test
