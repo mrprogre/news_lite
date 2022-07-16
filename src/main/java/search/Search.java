@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import main.Main;
 import utils.Common;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -25,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class Search extends SearchUtils {
-    SQLite sqLite = new SQLite();
+    private final DatabaseQueries databaseQueries;
     public static List<String> excludeFromSearch;
     public static AtomicBoolean isStop;
     public static AtomicBoolean isSearchNow;
@@ -49,10 +48,10 @@ public class Search extends SearchUtils {
         isStop = new AtomicBoolean(false);
         isSearchNow = new AtomicBoolean(false);
         isSearchFinished = new AtomicBoolean(false);
+        this.databaseQueries = new DatabaseQueries();
     }
 
     public void mainSearch(String pSearchType) {
-        DatabaseQueries databaseQueries = new DatabaseQueries();
         boolean isWord = pSearchType.equals("word");
         boolean isWords = pSearchType.equals("words");
 
@@ -60,7 +59,7 @@ public class Search extends SearchUtils {
             int modelRowCount = Gui.model.getRowCount();
             dataForEmail.clear();
             //выборка актуальных источников перед поиском из БД
-            databaseQueries.selectSources("smi", SQLite.connection);
+            databaseQueries.selectSources("smi");
             isSearchNow.set(true);
             timeStart = LocalTime.now();
             Search.j = 1;
@@ -83,8 +82,7 @@ public class Search extends SearchUtils {
             Gui.sendEmailBtn.setIcon(Gui.SEND_EMAIL_ICON);
             new Thread(Common::fill).start();
             try {
-                sqLite.transactionCommand("BEGIN TRANSACTION");
-                PreparedStatement st = SQLite.connection.prepareStatement("INSERT INTO NEWS_DUAL(TITLE) VALUES (?)");
+                databaseQueries.transactionCommand("BEGIN TRANSACTION");
 
                 Parser parser = new Parser();
                 for (Common.SMI_ID = 0; Common.SMI_ID < Common.SMI_LINK.size(); Common.SMI_ID++) {
@@ -121,41 +119,40 @@ public class Search extends SearchUtils {
                                             && !title.toLowerCase().contains(excludeFromSearch.get(2))
                                     ) {
                                         //отсеиваем новости, которые уже были найдены ранее
-                                        if (databaseQueries.isTitleExists(Common.sha256(title + pubDate), SQLite.connection)
-                                                && SQLite.isConnectionToSQLite) {
-                                            continue;
-                                        }
+//                                        if (databaseQueries.isTitleExists(Common.sha256(title + pubDate))
+//                                                && SQLite.isConnectionToSQLite) {
+//                                            continue;
+//                                        }
 
                                         //Data for a table
                                         Date currentDate = new Date();
                                         int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
                                         // вставка всех новостей в архив (ощутимо замедляет общий поиск)
-                                        databaseQueries.insertAllTitles(title, pubDate.toString(), SQLite.connection);
+                                        //databaseQueries.insertAllTitles(title, pubDate.toString());
 
-                                        mainSearchProcess(databaseQueries, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
+                                        mainSearchProcess(smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                     }
                                 } else if (isWords) {
                                     for (String it : Common.getKeywordsFromFile()) {
                                         if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
 
                                             // отсеиваем новости которые были обнаружены ранее
-                                            if (databaseQueries.isTitleExists(Common.sha256(title + pubDate), SQLite.connection) && SQLite.isConnectionToSQLite) {
-                                                continue;
-                                            }
+//                                            if (databaseQueries.isTitleExists(Common.sha256(title + pubDate)) && SQLite.isConnectionToSQLite) {
+//                                                continue;
+//                                            }
 
                                             //Data for a table
                                             Date currentDate = new Date();
                                             int date_diff = Common.compareDatesOnly(currentDate, pubDate);
 
-                                            mainSearchProcess(databaseQueries, st, smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
+                                            mainSearchProcess(smi_source, title, newsDescribe, pubDate, dateToEmail, link, date_diff);
                                         }
                                     }
                                 }
                                 if (isStop.get()) return;
                             }
-                            if (!Gui.isOnlyLastNews && SQLite.isConnectionToSQLite)
-                                databaseQueries.deleteFrom256(SQLite.connection);
+                            if (!Gui.isOnlyLastNews) databaseQueries.deleteFrom256();
                         } catch (Exception no_rss) {
                             String smi = Common.SMI_LINK.get(Common.SMI_ID)
                                     .replaceAll(("https://|http://|www."), "");
@@ -169,7 +166,7 @@ public class Search extends SearchUtils {
                         isStop.set(true);
                     }
                 }
-                st.close();
+
                 //Время поиска
                 timeEnd = LocalTime.now();
                 searchTime = Duration.between(timeStart, timeEnd);
@@ -198,28 +195,28 @@ public class Search extends SearchUtils {
                 }
 
                 // коммит транзакции
-                sqLite.transactionCommand("COMMIT");
+                databaseQueries.transactionCommand("COMMIT");
 
                 // удаляем все пустые строки
-                databaseQueries.deleteEmptyRows(SQLite.connection);
+                databaseQueries.deleteEmptyRows();
 
                 // Заполняем таблицу анализа
-                if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) databaseQueries.selectSqlite(SQLite.connection);
+                if (!Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.get()) databaseQueries.selectSqlite();
 
                 // Автоматическая отправка результатов
                 if (Gui.autoSendMessage.getState() && (Gui.model.getRowCount() > 0)) {
                     Gui.sendEmailBtn.doClick();
                 }
 
-                databaseQueries.deleteDuplicates(SQLite.connection);
+                databaseQueries.deleteDuplicates();
                 Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
                 if (isWord)
-                    Common.console("info: number of news items in the archive = " + databaseQueries.archiveNewsCount(SQLite.connection));
-                log.info("number of news items in the archive = " + databaseQueries.archiveNewsCount(SQLite.connection));
+                    Common.console("info: number of news items in the archive = " + databaseQueries.archiveNewsCount());
+                log.info("number of news items in the archive = " + databaseQueries.archiveNewsCount());
             } catch (Exception e) {
                 log.warn(e.getMessage());
                 try {
-                    sqLite.transactionCommand("ROLLBACK");
+                    databaseQueries.transactionCommand("ROLLBACK");
                 } catch (SQLException i) {
                     log.warn(i.getMessage());
                 }
@@ -228,7 +225,7 @@ public class Search extends SearchUtils {
         }
     }
 
-    private void mainSearchProcess(DatabaseQueries sqlite, PreparedStatement st, String smi_source, String title,
+    private void mainSearchProcess(String smi_source, String title,
                                    String newsDescribe, Date pubDate, String dateToEmail, String link,
                                    int date_diff) throws SQLException {
         if (date_diff != 0) {
@@ -240,16 +237,11 @@ public class Search extends SearchUtils {
             Gui.model.addRow(new Object[] {
                     newsCount, smi_source, title, dateFormatHoursFirst.format(pubDate), link
             });
+            databaseQueries.insertIntoNewsDual(title);
+            //databaseQueries.insertTitleIn256(Common.sha256(title + pubDate));
 
-            String[] subStr = title.split(" ");
-            for (String s : subStr) {
-                if (s.length() > 3) {
-                    assert st != null;
-                    st.setString(1, Common.delNoLetter(s).toLowerCase());
-                    st.executeUpdate();
-                }
-            }
-            sqlite.insertTitleIn256(Common.sha256(title + pubDate), SQLite.connection);
         }
     }
+
+
 }

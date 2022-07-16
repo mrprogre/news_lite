@@ -112,10 +112,10 @@ public class Gui extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 Search.isSearchFinished.set(true);
-                SQLite.isConnectionToSQLite = false;
+                //SQLite.isConnectionToSQLite = false;
                 Common.saveState();
                 log.info("Application closed");
-                if (SQLite.isConnectionToSQLite) sqLite.closeConnection();
+                //if (SQLite.isConnectionToSQLite) sqLite.closeConnection();
             }
 
             // сворачивание в трей
@@ -361,7 +361,7 @@ public class Gui extends JFrame {
                 stopBtnTop.setVisible(false);
                 Search.isSearchNow.set(false);
                 try {
-                    sqLite.transactionCommand("ROLLBACK");
+                    databaseQueries.transactionCommand("ROLLBACK");
                 } catch (SQLException ignored) {
                 }
             } catch (Exception t) {
@@ -381,10 +381,11 @@ public class Gui extends JFrame {
         SetCheckbox setCheckbox = new SetCheckbox(315, topLeftActionY, 65);
         setCheckbox.checkBoxSetting(onlyNewNews);
         getContentPane().add(onlyNewNews);
+
         onlyNewNews.addItemListener(e -> {
             isOnlyLastNews = onlyNewNews.getState();
             if (!isOnlyLastNews) {
-                databaseQueries.deleteFrom256(SQLite.connection);
+                databaseQueries.deleteFrom256();
             }
         });
 
@@ -590,7 +591,7 @@ public class Gui extends JFrame {
                 stopBtnBottom.setVisible(false);
                 Search.isSearchNow.set(false);
                 try {
-                    sqLite.transactionCommand("ROLLBACK");
+                    databaseQueries.transactionCommand("ROLLBACK");
                 } catch (SQLException ignored) {
                 }
             } catch (Exception t) {
@@ -789,7 +790,7 @@ public class Gui extends JFrame {
         addNewSource.setBackground(new Color(243, 229, 255));
         addNewSource.setBounds(902, 479, 14, 14);
         getContentPane().add(addNewSource);
-        addNewSource.addActionListener(e -> databaseQueries.insertNewSource(SQLite.connection));
+        addNewSource.addActionListener(e -> databaseQueries.insertNewSource());
         addNewSource.addMouseListener(new MouseAdapter() {
             // наведение мышки на кнопку
             @Override

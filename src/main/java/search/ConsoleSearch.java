@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class ConsoleSearch extends SearchUtils {
-    SQLite sqLite = new SQLite();
     DatabaseQueries databaseQueries = new DatabaseQueries();
     public static List<String> excludeFromSearch;
     public static AtomicBoolean isStop;
@@ -41,17 +40,16 @@ public class ConsoleSearch extends SearchUtils {
     }
 
     public void searchByConsole() {
-        DatabaseQueries sqlite = new DatabaseQueries();
         if (!isSearchNow.get()) {
             dataForEmail.clear();
-            sqlite.selectSources("smi", SQLite.connection);
+            databaseQueries.selectSources("smi");
             isSearchNow.set(true);
             ConsoleSearch.j = 1;
             newsCount = 0;
 
             try {
                 // начало транзакции
-                sqLite.transactionCommand("BEGIN TRANSACTION");
+                databaseQueries.transactionCommand("BEGIN TRANSACTION");
 
                 Parser parser = new Parser();
                 for (Common.SMI_ID = 0; Common.SMI_ID < Common.SMI_LINK.size(); Common.SMI_ID++) {
@@ -86,10 +84,9 @@ public class ConsoleSearch extends SearchUtils {
 
                                     if (title.toLowerCase().contains(it.toLowerCase()) && title.length() > 15 && checkDate == 1) {
                                         // отсеиваем новости которые были обнаружены ранее
-                                        if (sqlite.isTitleExists(Common.sha256(title + pubDate), SQLite.connection)
-                                                && SQLite.isConnectionToSQLite) {
-                                            continue;
-                                        }
+//                                        if (sqlite.isTitleExists(Common.sha256(title + pubDate))) {
+//                                            continue;
+//                                        }
 
                                         //Data for a table
                                         Date currentDate = new Date();
@@ -102,7 +99,7 @@ public class ConsoleSearch extends SearchUtils {
                                             /**/
                                             System.out.println(newsCount + ") " + title);
                                             /**/
-                                            sqlite.insertTitleIn256(Common.sha256(title + pubDate), SQLite.connection);
+                                            //databaseQueries.insertTitleIn256(Common.sha256(title + pubDate));
                                         }
                                     }
                                 }
@@ -117,10 +114,10 @@ public class ConsoleSearch extends SearchUtils {
                 isSearchNow.set(false);
 
                 // коммит транзакции
-                sqLite.transactionCommand("COMMIT");
+                databaseQueries.transactionCommand("COMMIT");
 
                 // удаляем все пустые строки
-                databaseQueries.deleteEmptyRows(SQLite.connection);
+                databaseQueries.deleteEmptyRows();
 
                 // Автоматическая отправка результатов
                 if (dataForEmail.size() > 0) {
@@ -128,12 +125,12 @@ public class ConsoleSearch extends SearchUtils {
                     EmailSender email = new EmailSender();
                     email.sendMessage();
                 }
-                sqlite.deleteDuplicates(SQLite.connection);
+                databaseQueries.deleteDuplicates();
                 Gui.WAS_CLICK_IN_TABLE_FOR_ANALYSIS.set(false);
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
-                    sqLite.transactionCommand("ROLLBACK");
+                    databaseQueries.transactionCommand("ROLLBACK");
                 } catch (SQLException sql) {
                     sql.printStackTrace();
                 }

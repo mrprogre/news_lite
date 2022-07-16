@@ -89,7 +89,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
             // удаление из диалогового окна
             Gui.modelForAnalysis.removeRow(rowWithExcludeWord);
             // добавление в базу данных и файл excluded.txt
-            sqlite.insertNewExcludedWord(source, SQLite.connection);
+            sqlite.insertNewExcludedWord(source);
         }
 
         // окно источников RSS
@@ -98,7 +98,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
             String source = (String) Dialogs.model.getValueAt(rowWithSource, 1);
             // удаление из диалогового окна
             Dialogs.model.removeRow(rowWithSource);
-            sqlite.deleteSource(source, SQLite.connection);
+            sqlite.deleteSource(source);
         }
 
         // окно с исключенными из анализа слов (удаляем из базы)
@@ -107,7 +107,7 @@ public class ButtonColumn extends AbstractCellEditor implements TableCellRendere
             String source = (String) Dialogs.model.getValueAt(delRowWithExcludeWord, 1);
             // удаление из диалогового окна
             Dialogs.model.removeRow(delRowWithExcludeWord);
-            sqlite.deleteExcluded(source, SQLite.connection);
+            sqlite.deleteExcluded(source);
         }
 
     }

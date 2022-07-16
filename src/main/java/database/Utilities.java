@@ -2,9 +2,11 @@ package database;
 
 import gui.Gui;
 import lombok.extern.slf4j.Slf4j;
+import model.RssInfoFromUi;
 
 import javax.swing.*;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @Slf4j
 public class Utilities {
@@ -18,16 +20,4 @@ public class Utilities {
         return new RssInfoFromUi(sourceName, rssLink, result);
     }
 
-    public int getNextMaxId(Connection connection) throws SQLException {
-        int maxIdInSource = 0;
-        PreparedStatement maxIdSt = connection.prepareStatement("SELECT MAX(ID) AS ID FROM RSS_LIST");
-
-        ResultSet rs = maxIdSt.executeQuery();
-        while (rs.next()) {
-            maxIdInSource = rs.getInt("ID");
-        }
-        rs.close();
-        maxIdSt.close();
-        return maxIdInSource + 1;
-    }
 }

@@ -80,7 +80,6 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         keywordsFromConsole = new String[args.length];
-        SQLite sqlite = new SQLite();
         if (args.length == 0) {
             log.info("Application started");
 
@@ -102,18 +101,15 @@ public class Main {
             // load config.txt
             Common.getSettingsFromFile();
             Gui.isOnlyLastNews = Gui.onlyNewNews.getState();
-            sqlite.openConnection();
         } else {
             // Console search
             IS_CONSOLE_SEARCH.set(true);
             emailToFromConsole = args[0];
             minutesIntervalForConsoleSearch = Integer.parseInt(args[1]);
-            sqlite.openConnection();
             System.arraycopy(args, 0, keywordsFromConsole, 0, args.length);
             System.out.println(Arrays.toString(keywordsFromConsole)); //***
             ConsoleSearch consoleSearch = new ConsoleSearch();
             consoleSearch.searchByConsole();
-            sqlite.closeConnection();
         }
 
         // check internet
