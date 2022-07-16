@@ -3,7 +3,6 @@ package database;
 import gui.Gui;
 import lombok.extern.slf4j.Slf4j;
 import model.ExcludeWord;
-import model.RssInfoFromUi;
 import model.RssList;
 import model.VNewsDual;
 import org.springframework.context.ApplicationContext;
@@ -13,9 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import utils.Common;
 
 import javax.swing.*;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,7 +20,6 @@ import java.util.List;
 public class DatabaseQueries {
     ApplicationContext context = new ClassPathXmlApplicationContext("context.xml");
     private final JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
-    private final Utilities dbUtil = new Utilities();
     private static final int WORD_FREQ_MATCHES = 2;
 
     // общая команда для транзакций TODO
@@ -162,15 +158,23 @@ public class DatabaseQueries {
     // вставка нового источника
     public void insertNewSource() {
         // Диалоговое окно добавления источника новостей в базу данных
-        RssInfoFromUi rssInfoFromUI = dbUtil.getRssInfoFromUi();
+        JTextField sourceName = new JTextField();
+        JTextField rssLink = new JTextField();
+        Object[] newSource = {"Source:", sourceName, "Link to rss:", rssLink};
+        int result = JOptionPane.showConfirmDialog(Gui.scrollPane, newSource,
+                "New source", JOptionPane.OK_CANCEL_OPTION);
 
-        if (rssInfoFromUI.getResult() == JOptionPane.YES_OPTION) {
-            String query = "INSERT INTO RSS_LIST(ID, SOURCE, LINK, IS_ACTIVE) VALUES (?, ?, ?, ?)";
-            jdbcTemplate.update(query, getNextRssListId(), rssInfoFromUI.getSourceName().getText(),
-                    rssInfoFromUI.getRssLink().getText(), 1);
+        // вставка нового источника
+        if (result == JOptionPane.YES_OPTION) {
+            String query = "INSERT INTO rss_list(id, source, link, is_active) VALUES (?, ?, ?, ?)";
+            jdbcTemplate.update(query,
+                    getNextRssListId(),
+                    sourceName.getText(),
+                    rssLink.getText(),
+                    1);
 
-            Common.console("status: source added");
-            log.info("New source added: " + rssInfoFromUI.getSourceName().getText());
+            Common.console("status: source added: " + sourceName.getText());
+            log.info("New source added: " + sourceName.getText());
         } else {
             Common.console("status: adding source canceled");
         }
